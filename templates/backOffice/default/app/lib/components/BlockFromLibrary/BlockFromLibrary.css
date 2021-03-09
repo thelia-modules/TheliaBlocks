@@ -1,0 +1,25 @@
+.BlockFromLibrary {
+  @apply relative;
+}
+
+.BlockFromLibrary-img {
+  @apply relative;
+}
+.BlockFromLibrary-img > img {
+  @apply object-contain h-28 w-52;
+}
+
+.BlockfromLibrary-addBlock {
+  @apply absolute inset-0 w-full hidden;
+}
+.BlockfromLibrary-addBlock > span {
+  @apply inline-flex items-center justify-center w-12 h-12 p-2 m-auto text-center;
+}
+
+.BlockFromLibrary-title {
+  @apply mt-2 text-gray-500;
+}
+
+.BlockFromLibrary:hover .BlockfromLibrary-addBlock {
+  @apply flex;
+}

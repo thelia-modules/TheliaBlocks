@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database defaultIdMethod="native" name="TheliaMain"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../vendor/thelia/propel/resources/xsd/database.xsd" >
+
+    <table name="block_group" namespace="TheliaBlocks\Model">
+        <column autoIncrement="true" name="id" primaryKey="true" required="true" type="INTEGER" />
+        <column name="slug" size="50"/>
+        <column defaultValue="0" name="visible" required="true" type="TINYINT" />
+        <column name="title" size="255" required="true"/>
+        <column name="json_content" type="LONGVARCHAR"/>
+        <unique name="slug_unique">
+          <unique-column name="slug" />
+        </unique>
+        <behavior name="timestampable" />
+        <behavior name="i18n">
+            <parameter name="i18n_columns" value="title, json_content" />
+        </behavior>
+    </table>
+</database>

@@ -1,0 +1,39 @@
+@import "tailwind.css";
+@import "Button.css";
+
+.App {
+  @apply flex flex-col min-h-screen
+
+  /* grid-template-areas: "page menu"; */
+  /* grid-template-columns: minmax(min(50vw, 30ch), 1fr) fit-content(300px); */;
+}
+
+.App > .Page {
+  /* grid-area: page; */
+  @apply p-12;
+}
+.App > .Menu {
+  /* grid-area: menu; */
+}
+
+.public-DraftEditor-content a {
+  @apply text-blue-500;
+}
+
+.public-DraftEditor-content h2 {
+  @apply text-3xl;
+}
+.public-DraftEditor-content h3 {
+  @apply text-2xl;
+}
+.public-DraftEditor-content h4 {
+  @apply text-xl;
+}
+.public-DraftEditor-content h5 {
+  @apply text-lg;
+}
+.public-DraftEditor-content h6 {
+  @apply text-base;
+}
+
+@tailwind utilities;
