@@ -29,7 +29,8 @@
     </authors>
     <type>classic</type>
     <required>
-        <module version="&gt;1.0.0">OpenApi</module>
+        <module version=">=2.0.0">OpenApi</module>
+        <module version=">=2.0.0">ShortCode</module>
     </required>
     <thelia>2.5.0</thelia>
     <stability>other</stability>

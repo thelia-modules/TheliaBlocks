@@ -13,7 +13,7 @@ class TheliaBlocks extends BaseModule
     /** @var string */
     const DOMAIN_NAME = 'TheliaBlocks';
 
-    const THELIA_BLOCKS_SHORT_CODE = 'thelia_blocks';
+    const BLOCK_GROUP_SHORT_CODE = 'block_group';
 
     public function preActivation(ConnectionInterface $con = null)
     {
@@ -43,6 +43,6 @@ class TheliaBlocks extends BaseModule
 
     public function postActivation(ConnectionInterface $con = null): void
     {
-//        ShortCode::createNewShortCodeIfNotExist(self::THELIA_BLOCKS_SHORT_CODE, self::THELIA_BLOCKS_SHORT_CODE);
+        ShortCode::createNewShortCodeIfNotExist(self::BLOCK_GROUP_SHORT_CODE, self::BLOCK_GROUP_SHORT_CODE);
     }
 }

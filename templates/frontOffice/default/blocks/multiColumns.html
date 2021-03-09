@@ -1,0 +1,6 @@
+{foreach from=$data item=block}
+    {if null !== $block}
+        {$templateFileName = "blocks/"|cat:$block['type']|cat:".html"}
+        {include file=$templateFileName data=$block['data']}
+    {/if}
+{/foreach}
