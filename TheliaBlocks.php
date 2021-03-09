@@ -43,6 +43,6 @@ class TheliaBlocks extends BaseModule
 
     public function postActivation(ConnectionInterface $con = null): void
     {
-        ShortCode::createNewShortCodeIfNotExist(self::THELIA_BLOCKS_SHORT_CODE, self::THELIA_BLOCKS_SHORT_CODE);
+//        ShortCode::createNewShortCodeIfNotExist(self::THELIA_BLOCKS_SHORT_CODE, self::THELIA_BLOCKS_SHORT_CODE);
     }
 }
