@@ -1,8 +1,9 @@
-import React from "react";
+import { useCreateOrUpdatePage, usePage } from "../hooks/data";
 import { useDispatch, useSelector } from "react-redux";
-import { useCreatePage, usePage } from "../hooks/data";
-import { setPageTitle } from "../redux/page";
+
+import React from "react";
 import { RootState } from "../redux/store";
+import { setPageTitle } from "../redux/page";
 
 function PageTitle() {
   const dispatch = useDispatch();
@@ -36,8 +37,8 @@ function PageActions({ onSave }: { onSave: Function }) {
 }
 
 function PageOptions() {
-  const mutation = useCreatePage();
-  const page = usePage("1");
+  const mutation = useCreateOrUpdatePage();
+
   const pageState = useSelector((state: RootState) => state.page);
   return (
     <div className="flex">

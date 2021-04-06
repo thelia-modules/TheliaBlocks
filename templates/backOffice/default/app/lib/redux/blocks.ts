@@ -1,14 +1,17 @@
+import { IBlock, PageType } from "../types";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-import { IBlock } from "../types";
 import { reorder } from "../utils/array";
 
-export let initialState: IBlock[] = [];
+export let initialState: PageType["jsonContent"] = [];
 
 const blocksSlice = createSlice({
   name: "blocks",
   initialState,
   reducers: {
+    setBlocks(state, action: PayloadAction<IBlock[]>) {
+      state = action.payload;
+    },
     addBlock(state, action: PayloadAction<IBlock>) {
       state.push(action.payload);
     },
@@ -51,6 +54,7 @@ const blocksSlice = createSlice({
 });
 
 export const {
+  setBlocks,
   addBlock,
   deleteBlock,
   updateBlock,

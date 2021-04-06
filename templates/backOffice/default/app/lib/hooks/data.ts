@@ -1,7 +1,11 @@
+import { IBlock, PageType } from "../types";
 import axios, { AxiosRequestConfig } from "axios";
 import { useMutation, useQuery } from "react-query";
 
-import { PageType } from "../types";
+import { NumberParam } from "serialize-query-params";
+import { setBlocks } from "../redux/blocks";
+import { useDispatch } from "react-redux";
+import { useQueryParam } from "use-query-params";
 
 async function fetcher(url: string, config: AxiosRequestConfig = {}) {
   console.log(config);
@@ -18,21 +22,43 @@ async function fetcher(url: string, config: AxiosRequestConfig = {}) {
 }
 
 export function usePages() {
-  return useQuery(["pages"], () => fetcher(`/api/TheliaBlocks}`));
+  return useQuery(["pages"], () => fetcher(`/open_api/block_group/list`));
 }
 
-export function usePage(pageId: string) {
+export function usePage() {
+  const dispatch = useDispatch();
+  const [pageId] = useQueryParam("id", NumberParam);
   return useQuery(
     ["pages", pageId],
-    () => fetcher(`/api/TheliaBlocks/${pageId}`),
+    () =>
+      fetcher(`/open_api/block_group`, {
+        method: "GET",
+        params: {
+          id: pageId,
+        },
+      }),
     {
       enabled: !!pageId,
+      onSuccess: (data: IBlock[]) => {
+        dispatch(setBlocks(data));
+      },
     }
   );
 }
 
-export function useCreatePage() {
+export function useCreateOrUpdatePage() {
+  const [pageId] = useQueryParam("id", NumberParam);
+
   return useMutation((page: PageType) =>
-    fetcher("/api/TheliaBlocks", { method: "POST", data: page })
+    fetcher(`/open_api/block_group`, {
+      method: pageId ? "PATCH" : "POST",
+      data: {
+        blockGroup: {
+          id: pageId,
+          ...page,
+        },
+        locale: "en_US",
+      },
+    })
   );
 }
