@@ -1,13 +1,18 @@
 import { useCreateOrUpdatePage, usePage } from "../hooks/data";
 import { useDispatch, useSelector } from "react-redux";
 
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { RootState } from "../redux/store";
-import { setPageTitle } from "../redux/page";
+import { setPageTitle, setPageSlug } from "../redux/page";
 
 function PageTitle() {
   const dispatch = useDispatch();
   const title = useSelector((state: RootState) => state.page.title);
+
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    dispatch(setPageTitle(e.target.value));
+    dispatch(setPageSlug(e.target.value));
+  };
 
   return (
     <div className="mb-6 PageTitle">
@@ -16,7 +21,7 @@ function PageTitle() {
         value={title}
         placeholder="Titre de la page"
         className="w-full"
-        onChange={(e) => dispatch(setPageTitle(e.target.value))}
+        onChange={onChange}
       />
     </div>
   );
