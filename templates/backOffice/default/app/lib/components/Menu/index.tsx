@@ -8,8 +8,9 @@ import BlockFromLibrary from "../BlockFromLibrary";
 import { map } from "lodash-es";
 
 function Menu() {
-  const [visibleMenu, setVisibleMenu] = useState(true);
+  const [visibleMenu, setVisibleMenu] = useState<boolean>(true);
   const blocksLibrary = usePlugins();
+
   return (
     <div className={`Menu ${visibleMenu ? "Menu--visible" : ""}`}>
       <div className="Menu-content">

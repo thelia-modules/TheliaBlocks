@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 import { PageType } from "../types";
+import slugify from "../utils/slugify";
 
 export let initialState: Omit<PageType, "jsonContent"> = {
   title: "",
@@ -15,9 +16,12 @@ const pageSlice = createSlice({
     setPageTitle(state, action: PayloadAction<string>) {
       state.title = action.payload;
     },
+    setPageSlug(state, action: PayloadAction<string>) {
+      state.slug = slugify(action.payload);
+    },
   },
 });
 
-export const { setPageTitle } = pageSlice.actions;
+export const { setPageTitle, setPageSlug } = pageSlice.actions;
 
 export default pageSlice.reducer;

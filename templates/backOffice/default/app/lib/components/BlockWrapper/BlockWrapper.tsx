@@ -2,20 +2,18 @@ import "./BlockWrapper.css";
 import React, { useState } from "react";
 import { IBlock } from "../../types";
 import { useDispatch } from "react-redux";
-import { moveBlockUp, moveBlockDown } from "../../redux/blocks";
+import { deleteBlock, moveBlockUp, moveBlockDown } from "../../redux/blocks";
 
 function BlockWrapper({
   children,
   block,
   canMove = true,
   canDelete = true,
-  handleDelete,
 }: {
   children: React.ReactNode;
   block: IBlock;
   canMove?: boolean;
   canDelete?: boolean;
-  handleDelete: (block: IBlock) => any;
 }) {
   const dispatch = useDispatch();
   const [hilight, setHilight] = useState<boolean>(false);
@@ -34,7 +32,7 @@ function BlockWrapper({
             className="text-xs text-red-500"
             onClick={() => {
               if (window.confirm("la suppresion est définitive")) {
-                handleDelete(block);
+                dispatch(deleteBlock(block.id));
               }
             }}
             onMouseEnter={() => {

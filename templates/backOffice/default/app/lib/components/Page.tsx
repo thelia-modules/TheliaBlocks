@@ -22,9 +22,6 @@ function Page() {
             <BlockWrapper
               key={block.id}
               block={block}
-              handleDelete={() => {
-                dispatch(deleteBlock(block.id));
-              }}
             >
               <Block block={block} />
             </BlockWrapper>
