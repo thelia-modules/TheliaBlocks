@@ -14,8 +14,11 @@ export type IBlock = {
 };
 
 export type PageType = {
+  id?: string;
+  visible: true;
   title: string;
-  blocks: [];
+  slug: string;
+  jsonContent: IBlock[];
 };
 
 export type BlockPluginDefinition<TProp = { [key: string]: any }> = {

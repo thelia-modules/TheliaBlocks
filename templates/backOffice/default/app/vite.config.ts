@@ -8,10 +8,11 @@ export default defineConfig({
   plugins: [reactRefresh()],
   server: {
     proxy: {
-      "^/api/.*": {
+      "^/open_api/.*": {
         target: "http://localhost:8080",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, "/index_dev.php/api"),
+        rewrite: (path) =>
+          path.replace(/^\/open_api/, "/index_dev.php/open_api/"),
       },
     },
   },

@@ -2,9 +2,11 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 import { PageType } from "../types";
 
-export let initialState = {
+export let initialState: Omit<PageType, "jsonContent"> = {
   title: "",
-} as PageType;
+  visible: true,
+  slug: "",
+};
 
 const pageSlice = createSlice({
   name: "page",
