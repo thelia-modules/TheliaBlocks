@@ -9,7 +9,7 @@ export default defineConfig({
   server: {
     proxy: {
       "^/open_api/.*": {
-        target: "http://thelia-main.test",
+        target: "http://localhost:8080",
         changeOrigin: true,
         rewrite: (path) =>
           path.replace(/^\/open_api/, "/index_dev.php/open_api/"),
