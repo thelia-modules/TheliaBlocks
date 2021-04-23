@@ -36,7 +36,7 @@ function BlockFromLibrary({ block } : {
       <div className="BlockFromLibrary-img">
         <img src="//placehold.it/210x115" alt="" />
         <button
-          className="BlockfromLibrary-addBlock"
+          className="BlockFromLibrary-addBlock"
           onClick={onClick}
         >
           <span className="Button">+</span>
