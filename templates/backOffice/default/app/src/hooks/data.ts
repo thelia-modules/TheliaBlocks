@@ -1,11 +1,12 @@
-import { IBlock, PageType } from "../types";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { useMutation, useQuery } from "react-query";
-
 import { NumberParam } from "serialize-query-params";
-import { setBlocks } from "../redux/blocks";
 import { useDispatch } from "react-redux";
 import { useQueryParam } from "use-query-params";
+
+import { PageTypeResponse, PageTypeStore, IBlock } from "../types";
+import { setBlocks } from "../redux/blocks";
+import { setPage } from "../redux/page";
 
 async function fetcher(url: string, config: AxiosRequestConfig = {}) {
   try {
@@ -14,14 +15,14 @@ async function fetcher(url: string, config: AxiosRequestConfig = {}) {
       withCredentials: true,
       ...config,
     });
-    return response;
+    return response.data;
   } catch (error) {
     throw Error(error);
   }
 }
 
 export function useBlockGroupsList() {
-  return useQuery<AxiosResponse<PageType[]>, string>(["block_group"], () =>
+  return useQuery<PageTypeResponse[]>(["block_group"], () =>
     fetcher(`/open_api/block_group/list`)
   );
 }
@@ -29,7 +30,7 @@ export function useBlockGroupsList() {
 export function useBlockGroup() {
   const dispatch = useDispatch();
   const [blockGroupId] = useQueryParam("id", NumberParam);
-  return useQuery(
+  return useQuery<PageTypeResponse>(
     ["block_group", blockGroupId],
     () =>
       fetcher(`/open_api/block_group`, {
@@ -40,26 +41,45 @@ export function useBlockGroup() {
       }),
     {
       enabled: !!blockGroupId,
-      onSuccess: (data: IBlock[]) => {
-        dispatch(setBlocks(data));
+      onSuccess: (data: PageTypeResponse) => {
+        const { jsonContent, ...rest } = data;
+         
+        dispatch(setPage(rest));
+
+        if (jsonContent) {
+          dispatch(setBlocks(JSON.parse(jsonContent))); 
+        }
       },
     }
   );
 }
 
 export function useCreateOrUpdatePage() {
-  const [pageId] = useQueryParam("id", NumberParam);
+  const dispatch = useDispatch();
+  const [pageId, setPageId] = useQueryParam("id", NumberParam);
 
-  return useMutation((page: PageType) =>
-    fetcher(`/open_api/block_group`, {
-      method: pageId ? "PATCH" : "POST",
-      data: {
-        blockGroup: {
-          id: pageId,
-          ...page,
+  return useMutation(({ page, blocks } : { page: PageTypeStore, blocks: IBlock[]}) =>
+    fetcher(
+      `/open_api/block_group`,
+      {
+        method: pageId ? "PATCH" : "POST",
+        data: {
+          blockGroup: {
+            id: pageId,
+            ...page,
+            jsonContent: JSON.stringify(blocks),
+          },
+          locale: "en_US",
         },
-        locale: "en_US",
+      }
+    ),
+    {
+      onSuccess: (data: PageTypeStore) => {
+        if(!pageId && data.id) {
+          dispatch(setPage(data));
+          setPageId(parseInt(data.id, 10));
+        }
       },
-    })
+    }
   );
 }

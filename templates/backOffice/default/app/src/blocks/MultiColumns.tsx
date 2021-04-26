@@ -10,7 +10,7 @@ import Block from "../components/Block";
 
 import { nanoid } from "nanoid";
 import { usePlugins, __PLUGINS } from "../pluginManager";
-import BlockWrapper from "../components/BlockWrapper/BlockWrapper";
+import BlockWrapper from "../components/BlockWrapper";
 
 export type MultiColumnssData = Array<IBlock | null>;
 

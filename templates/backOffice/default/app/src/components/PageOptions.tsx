@@ -1,33 +1,106 @@
-import { useCreateOrUpdatePage, usePage } from "../hooks/data";
+import React, { useState, ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { NumberParam } from "serialize-query-params";
+import { useQueryParam } from "use-query-params";
 
-import React, { ChangeEvent } from "react";
 import { RootState } from "../redux/store";
-import { setPageTitle, setPageSlug } from "../redux/page";
+import { setPage, setPageTitle, setPageSlug, initialState as initialPageState } from "../redux/page";
+import { setBlocks, initialState as initialBlocksState } from "../redux/blocks";
+import { useCreateOrUpdatePage, usePages } from "../hooks/data";
+import { PageType } from "../types";
+
+function PagesDropdown({
+  search,
+  onPageClick,
+}: {
+  search: string;
+  onPageClick: (page: PageType) => any;
+}) {
+  const {
+    isLoading,
+    isError,
+    error,
+    data,
+  }: {
+    isLoading: boolean;
+    isError: boolean;
+    error: any;
+    data: any;
+  } = usePages();
+
+  if (isLoading) {
+    return <span>Loading ...</span>;
+  }
+
+  if (isError) {
+    return <span>Error: {error.message}</span>;
+  }
+
+  const autoCompleteResults = data.filter(
+    ({ title } : { title: PageType["title"] }) =>
+      title?.search(new RegExp(search, "i")) !== -1
+  );
+  if (!autoCompleteResults.length) {
+    return null;
+  }
+
+  return (
+    <ul className="border border-gray-400 divide-y divide-gray-300 top-full">
+      {autoCompleteResults.map((page: PageType) => (
+        <li
+          key={page.id}
+          onClick={() => onPageClick(page)}
+          className="px-4 py-1 cursor-pointer"
+        >
+          {page.title}
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 function PageTitle() {
   const dispatch = useDispatch();
-  const title = useSelector((state: RootState) => state.page.title);
+  const pageState = useSelector((state: RootState) => state.page);
+  const [, setPageId] = useQueryParam("id", NumberParam);
 
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     dispatch(setPageTitle(e.target.value));
     dispatch(setPageSlug(e.target.value));
+  };
+
+  const onPageClick = (page: PageType) => {
+    if (page?.id) {
+      setPageId(parseInt(page.id, 10));
+    }
   };
 
   return (
     <div className="mb-6 PageTitle">
       <input
         type="text"
-        value={title}
+        value={pageState.title}
         placeholder="Titre de la page"
         className="w-full"
-        onChange={onChange}
+        onChange={onInputChange}
       />
+      {pageState.title && !pageState.id && (
+        <PagesDropdown search={pageState.title} onPageClick={onPageClick} />
+      )}
     </div>
   );
 }
 
 function PageActions({ onSave }: { onSave: Function }) {
+  const pageId = useSelector((state: RootState) => state.page.id);
+
+  const newPage = () => {
+    if(confirm("Are you sure ? New data might be lost.")){
+      setPage(initialPageState);
+      setBlocks(initialBlocksState); 
+    }
+  }
+
   return (
     <div>
       <button className="px-8 font-bold uppercase Button">Validate</button>
@@ -35,8 +108,16 @@ function PageActions({ onSave }: { onSave: Function }) {
         className="px-8 font-bold uppercase Button Button--primary"
         onClick={() => onSave()}
       >
-        Save
+        {pageId ? 'Save' : 'Create'}
       </button>
+      {pageId &&
+        <button
+          className="px-8 ml-6 font-bold uppercase Button Button--info"
+          onClick={() => newPage()}
+        >
+          New page
+        </button>
+      }
     </div>
   );
 }
@@ -44,14 +125,16 @@ function PageActions({ onSave }: { onSave: Function }) {
 function PageOptions() {
   const mutation = useCreateOrUpdatePage();
 
-  const pageState = useSelector((state: RootState) => state.page);
+  const page = useSelector((state: RootState) => state.page);
+  const blocks = useSelector((state: RootState) => state.blocks);
+  
   return (
     <div className="flex">
       <div className="flex-1">
         <PageTitle />
       </div>
       <div className="ml-6">
-        <PageActions onSave={() => mutation.mutate(pageState)} />
+        <PageActions onSave={() => mutation.mutate({ page, blocks })} />
       </div>
     </div>
   );

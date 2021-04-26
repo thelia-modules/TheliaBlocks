@@ -20,6 +20,14 @@
   @apply bg-red-700;
 }
 
+.Button--info {
+  @apply bg-blue-300;
+}
+
+.Button--info:hover {
+  @apply bg-blue-500;
+}
+
 .Button--sm {
   @apply text-sm;
 }
