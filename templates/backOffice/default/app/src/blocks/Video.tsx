@@ -1,7 +1,4 @@
-import {
-  BlockModuleComponentProps,
-  BlockPluginDefinition,
-} from "../../lib/types";
+import { BlockModuleComponentProps, BlockPluginDefinition } from "../types";
 
 import React from "react";
 
