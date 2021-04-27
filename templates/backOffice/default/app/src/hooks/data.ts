@@ -1,8 +1,7 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { useMutation, useQuery } from "react-query";
-import { NumberParam } from "serialize-query-params";
 import { useDispatch } from "react-redux";
-import { useQueryParam } from "use-query-params";
+import { useParams, useHistory } from "react-router-dom";
 
 import { GroupTypeResponse, GroupTypeStore, IBlock } from "../types";
 import { setBlocks } from "../redux/blocks";
@@ -29,20 +28,24 @@ export function useGroups() {
 
 export function useGroup() {
   const dispatch = useDispatch();
-  const [blockGroupId] = useQueryParam("id", NumberParam);
+  const { id } : { id: string } = useParams();
+  console.log(id);
+
   return useQuery<GroupTypeResponse>(
-    ["block_group", blockGroupId],
+    ["block_group", id],
     () =>
       fetcher(`/open_api/block_group`, {
         method: "GET",
         params: {
-          id: blockGroupId,
+          id,
         },
       }),
     {
-      enabled: !!blockGroupId,
+      enabled: !!id,
       onSuccess: (data: GroupTypeResponse) => {
         const { jsonContent, ...rest } = data;
+
+        console.log(data);
          
         dispatch(setGroup(rest));
 
@@ -56,28 +59,29 @@ export function useGroup() {
 
 export function useCreateOrUpdateGroup() {
   const dispatch = useDispatch();
-  const [groupId, setGroupId] = useQueryParam("id", NumberParam);
+  let history = useHistory();
+  let { id } : { id: string } = useParams();
 
   return useMutation(({ group, blocks } : { group: GroupTypeStore, blocks: IBlock[]}) =>
     fetcher(
       `/open_api/block_group`,
       {
-        method: groupId ? "PATCH" : "POST",
+        method: id ? "PATCH" : "POST",
         data: {
           blockGroup: {
-            id: groupId,
+            id,
             ...group,
             jsonContent: JSON.stringify(blocks),
           },
-          locale: "en_US",
+          locale: "fr_FR",
         },
       }
     ),
     {
       onSuccess: (data: GroupTypeStore) => {
-        if(!groupId && data.id) {
+        if(!id && data.id) {
           dispatch(setGroup(data));
-          setGroupId(parseInt(data.id, 10));
+          history.push(`/edit/${data.id}`);
         }
       },
     }

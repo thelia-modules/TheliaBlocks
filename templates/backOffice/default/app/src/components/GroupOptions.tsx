@@ -1,21 +1,16 @@
 import React, { useState, ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NumberParam } from "serialize-query-params";
-import { useQueryParam } from "use-query-params";
+import { Link } from "react-router-dom";
 
 import { RootState } from "../redux/store";
-import { setGroup, setGroupTitle, setGroupSlug, initialState as initialGroupState } from "../redux/group";
-import { setBlocks, initialState as initialBlocksState } from "../redux/blocks";
+import {
+  setGroupTitle,
+  setGroupSlug,
+} from "../redux/group";
 import { useCreateOrUpdateGroup, useGroups } from "../hooks/data";
 import { GroupTypeStore } from "../types";
 
-function GroupsDropdown({
-  search,
-  onGroupClick,
-}: {
-  search: string;
-  onGroupClick: (group: GroupTypeStore) => any;
-}) {
+function GroupsDropdown({ search }: { search: string }) {
   const {
     isLoading,
     isError,
@@ -37,7 +32,7 @@ function GroupsDropdown({
   }
 
   const autoCompleteResults = data.filter(
-    ({ title } : { title: GroupTypeStore["title"] }) =>
+    ({ title }: { title: GroupTypeStore["title"] }) =>
       title?.search(new RegExp(search, "i")) !== -1
   );
   if (!autoCompleteResults.length) {
@@ -47,12 +42,8 @@ function GroupsDropdown({
   return (
     <ul className="border border-gray-400 divide-y divide-gray-300 top-full">
       {autoCompleteResults.map((group: GroupTypeStore) => (
-        <li
-          key={group.id}
-          onClick={() => onGroupClick(group)}
-          className="px-4 py-1 cursor-pointer"
-        >
-          {group.title}
+        <li key={group.id} className="px-4 py-1 cursor-pointer">
+          <Link to={`/edit/${group.id}`}>{group.title}</Link>
         </li>
       ))}
     </ul>
@@ -62,17 +53,10 @@ function GroupsDropdown({
 function GroupTitle() {
   const dispatch = useDispatch();
   const groupState = useSelector((state: RootState) => state.group);
-  const [, setGroupId] = useQueryParam("id", NumberParam);
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     dispatch(setGroupTitle(e.target.value));
     dispatch(setGroupSlug(e.target.value));
-  };
-
-  const onGroupClick = (group: GroupTypeStore) => {
-    if (group?.id) {
-      setGroupId(parseInt(group.id, 10));
-    }
   };
 
   return (
@@ -85,7 +69,7 @@ function GroupTitle() {
         onChange={onInputChange}
       />
       {groupState.title && !groupState.id && (
-        <GroupsDropdown search={groupState.title} onGroupClick={onGroupClick} />
+        <GroupsDropdown search={groupState.title} />
       )}
     </div>
   );
@@ -94,13 +78,6 @@ function GroupTitle() {
 function GroupActions({ onSave }: { onSave: Function }) {
   const groupId = useSelector((state: RootState) => state.group.id);
 
-  const newGroup = () => {
-    if(confirm("Are you sure ? New data might be lost.")){
-      setGroup(initialGroupState);
-      setBlocks(initialBlocksState); 
-    }
-  }
-
   return (
     <div>
       <button className="px-8 font-bold uppercase Button">Validate</button>
@@ -108,16 +85,8 @@ function GroupActions({ onSave }: { onSave: Function }) {
         className="px-8 font-bold uppercase Button Button--primary"
         onClick={() => onSave()}
       >
-        {groupId ? 'Save' : 'Create'}
+        {groupId ? "Save" : "Create"}
       </button>
-      {groupId &&
-        <button
-          className="px-8 ml-6 font-bold uppercase Button Button--info"
-          onClick={() => newGroup()}
-        >
-          New group
-        </button>
-      }
     </div>
   );
 }
@@ -127,7 +96,7 @@ function GroupOptions() {
 
   const group = useSelector((state: RootState) => state.group);
   const blocks = useSelector((state: RootState) => state.blocks);
-  
+
   return (
     <div className="flex">
       <div className="flex-1">

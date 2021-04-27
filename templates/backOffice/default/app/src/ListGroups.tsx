@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import React from "react";
 import { useGroups } from "./hooks/data";
 
-export default function ListBlockGroups() {
+export default function ListGroups() {
   const res = useGroups();
 
   if(!res.data) {
