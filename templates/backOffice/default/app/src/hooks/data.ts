@@ -1,5 +1,5 @@
 import { IBlock, PageType } from "../types";
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { useMutation, useQuery } from "react-query";
 
 import { NumberParam } from "serialize-query-params";
@@ -8,7 +8,6 @@ import { useDispatch } from "react-redux";
 import { useQueryParam } from "use-query-params";
 
 async function fetcher(url: string, config: AxiosRequestConfig = {}) {
-  console.log(config);
   try {
     const response = await axios({
       url,
@@ -21,24 +20,26 @@ async function fetcher(url: string, config: AxiosRequestConfig = {}) {
   }
 }
 
-export function usePages() {
-  return useQuery(["pages"], () => fetcher(`/open_api/block_group/list`));
+export function useBlockGroupsList() {
+  return useQuery<AxiosResponse<PageType[]>, string>(["block_group"], () =>
+    fetcher(`/open_api/block_group/list`)
+  );
 }
 
-export function usePage() {
+export function useBlockGroup() {
   const dispatch = useDispatch();
-  const [pageId] = useQueryParam("id", NumberParam);
+  const [blockGroupId] = useQueryParam("id", NumberParam);
   return useQuery(
-    ["pages", pageId],
+    ["block_group", blockGroupId],
     () =>
       fetcher(`/open_api/block_group`, {
         method: "GET",
         params: {
-          id: pageId,
+          id: blockGroupId,
         },
       }),
     {
-      enabled: !!pageId,
+      enabled: !!blockGroupId,
       onSuccess: (data: IBlock[]) => {
         dispatch(setBlocks(data));
       },
