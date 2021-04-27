@@ -1,5 +1,5 @@
 .Menu {
-  @apply mt-auto sticky inset-x-0 bottom-0 shadow-md transition-transform delay-150 border-t border-gray-400 z-40;
+  @apply mt-auto sticky inset-x-0 bottom-0 shadow-md transition-transform delay-150 border-t z-40 bg-white;
   transform: translateY(calc(100% - 5.625rem));
 }
 .Menu--visible {
@@ -11,7 +11,7 @@
 }
 
 .Menu-content {
-  @apply bg-gray-100 px-12 py-6;
+  @apply px-12 py-6;
 }
 
 .Menu-title {
@@ -19,7 +19,7 @@
 }
 
 .Menu-blocks {
-  @apply divide-x flex overflow-x-auto -mx-6;
+  @apply divide-x divide-gray-100 flex overflow-x-auto -mx-6;
 }
 
 .Menu-blocks-item {

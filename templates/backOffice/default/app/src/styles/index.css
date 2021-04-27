@@ -2,18 +2,13 @@
 @import "Button.css";
 
 .App {
-  @apply flex flex-col min-h-screen
-
   /* grid-template-areas: "group menu"; */
-  /* grid-template-columns: minmax(min(50vw, 30ch), 1fr) fit-content(300px); */;
+  /* grid-template-columns: minmax(min(50vw, 30ch), 1fr) fit-content(300px); */
 }
 
 .App > .Group {
   /* grid-area: group; */
   @apply p-12;
-}
-.App > .Menu {
-  /* grid-area: menu; */
 }
 
 .public-DraftEditor-content a {

@@ -4,14 +4,16 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { addBlock } from "../../redux/blocks";
 import { __PLUGINS } from "../../pluginManager";
-import { BlockPluginDefinition } from "../../types"; 
+import { BlockPluginDefinition } from "../../types";
 
-function BlockFromLibrary({ block } : {
+function BlockFromLibrary({
+  block,
+}: {
   block: {
-    id: string,
+    id: string;
     initialData: BlockPluginDefinition["initialData"];
     type: BlockPluginDefinition["type"];
-  }
+  };
 }) {
   const dispatch = useDispatch();
   const onClick = () => {
@@ -33,16 +35,12 @@ function BlockFromLibrary({ block } : {
 
   return (
     <div className="BlockFromLibrary">
-      <div className="BlockFromLibrary-img">
-        <img src="//placehold.it/210x115" alt="" />
-        <button
-          className="BlockFromLibrary-addBlock"
-          onClick={onClick}
-        >
-          <span className="Button">+</span>
-        </button>
-      </div>
-      <div className="BlockFromLibrary-title">{block.type}</div>
+      <button
+        className="border border-gray-200 hover:border-gray-400 btn BlockFromLibrary-title"
+        onClick={onClick}
+      >
+        {block.type}
+      </button>
     </div>
   );
 }

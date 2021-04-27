@@ -21,18 +21,33 @@ function BlockWrapper({
   const [hilight, setHilight] = useState<boolean>(false);
   return (
     <div className={`BlockWrapper`}>
-      <h3 className="BlockWrapper-title">{block.type}</h3>
-      <div
-        className={`p-2 border border-gray-400 border-dashed ${
-          hilight ? "border-red-500" : ""
-        }`}
-      >
-        <div className="">{children}</div>
-      </div>
-      <div className="flex gap-6 mt-3">
+      <div className="flex items-center mb-2">
+        <h3 className="BlockWrapper-title">{block.type}</h3>
+        <div className="flex gap-6">
+          {canMove ? (
+            <div className="flex gap-3">
+              <div
+                className="cursor-pointer hover:text-blue-500"
+                onClick={() => {
+                  dispatch(moveBlockUp(block.id));
+                }}
+              >
+                ▲ up
+              </div>
+              <div
+                className="cursor-pointer hover:text-blue-500"
+                onClick={() => {
+                  dispatch(moveBlockDown(block.id));
+                }}
+              >
+                ▼ down
+              </div>
+            </div>
+          ) : null}
+        </div>
         {canDelete ? (
           <button
-            className="text-xs text-red-500"
+            className="ml-auto text-red-500"
             onClick={() => {
               if (window.confirm("la suppresion est définitive")) {
                 handleDelete(block);
@@ -45,29 +60,16 @@ function BlockWrapper({
               setHilight(false);
             }}
           >
-            Supprimer
+            <i className="fa fa-trash"></i> Supprimer
           </button>
         ) : null}
-        {canMove ? (
-          <div className="flex gap-3">
-            <div
-              className="text-xs cursor-pointer hover:text-blue-500"
-              onClick={() => {
-                dispatch(moveBlockUp(block.id));
-              }}
-            >
-              ▲ up
-            </div>
-            <div
-              className="text-xs cursor-pointer hover:text-blue-500"
-              onClick={() => {
-                dispatch(moveBlockDown(block.id));
-              }}
-            >
-              ▼ down
-            </div>
-          </div>
-        ) : null}
+      </div>
+      <div
+        className={`p-2 border border-gray-400 border-dashed ${
+          hilight ? "border-red-500" : ""
+        }`}
+      >
+        <div className="">{children}</div>
       </div>
     </div>
   );

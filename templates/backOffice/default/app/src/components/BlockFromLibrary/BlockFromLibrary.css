@@ -1,27 +1,5 @@
 .BlockFromLibrary {
-  @apply relative;
-
-  &:hover .BlockFromLibrary-addBlock {
-    @apply flex;
-  }
-
-  &-img {
-    @apply relative;
-    
-    > img {
-      @apply object-contain h-28 w-52;
-    }
-  }
-  
-  &-addBlock {
-    @apply absolute inset-0 w-full hidden;
-
-    > span {
-      @apply inline-flex items-center justify-center w-12 h-12 p-2 m-auto text-center;
-    }
-  }
-  
   &-title {
     @apply mt-2 text-gray-500;
   }
-}   
+}
