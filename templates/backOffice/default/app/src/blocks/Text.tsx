@@ -47,6 +47,7 @@ function BlockTextComponent({
   return (
     <div className="BlockText cursor-text">
       <Editor
+        editorState={localData}
         toolbar={toolbarOptions}
         onEditorStateChange={(editorState) => {
           setData(editorState);

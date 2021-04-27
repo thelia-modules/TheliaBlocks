@@ -13,12 +13,15 @@ export type IBlock = {
   data: any;
 };
 
-export type PageType = {
+export type GroupTypeStore = {
   id?: string;
   visible: true;
   title: string;
   slug: string;
-  jsonContent: IBlock[];
+};
+
+export type GroupTypeResponse = GroupTypeStore & {
+  jsonContent?: string;
 };
 
 export type BlockPluginDefinition<TProp = { [key: string]: any }> = {

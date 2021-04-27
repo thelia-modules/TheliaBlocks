@@ -1,11 +1,11 @@
-import { IBlock, PageType } from "../types";
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { useMutation, useQuery } from "react-query";
-
-import { NumberParam } from "serialize-query-params";
-import { setBlocks } from "../redux/blocks";
 import { useDispatch } from "react-redux";
-import { useQueryParam } from "use-query-params";
+import { useParams, useHistory } from "react-router-dom";
+
+import { GroupTypeResponse, GroupTypeStore, IBlock } from "../types";
+import { setBlocks } from "../redux/blocks";
+import { setGroup } from "../redux/group";
 
 async function fetcher(url: string, config: AxiosRequestConfig = {}) {
   try {
@@ -14,52 +14,76 @@ async function fetcher(url: string, config: AxiosRequestConfig = {}) {
       withCredentials: true,
       ...config,
     });
-    return response;
+    return response.data;
   } catch (error) {
     throw Error(error);
   }
 }
 
-export function useBlockGroupsList() {
-  return useQuery<AxiosResponse<PageType[]>, string>(["block_group"], () =>
+export function useGroups() {
+  return useQuery<GroupTypeResponse[]>(["block_group"], () =>
     fetcher(`/open_api/block_group/list`)
   );
 }
 
-export function useBlockGroup() {
+export function useGroup() {
   const dispatch = useDispatch();
-  const [blockGroupId] = useQueryParam("id", NumberParam);
-  return useQuery(
-    ["block_group", blockGroupId],
+  const { id } : { id: string } = useParams();
+  console.log(id);
+
+  return useQuery<GroupTypeResponse>(
+    ["block_group", id],
     () =>
       fetcher(`/open_api/block_group`, {
         method: "GET",
         params: {
-          id: blockGroupId,
+          id,
         },
       }),
     {
-      enabled: !!blockGroupId,
-      onSuccess: (data: IBlock[]) => {
-        dispatch(setBlocks(data));
+      enabled: !!id,
+      onSuccess: (data: GroupTypeResponse) => {
+        const { jsonContent, ...rest } = data;
+
+        console.log(data);
+         
+        dispatch(setGroup(rest));
+
+        if (jsonContent) {
+          dispatch(setBlocks(JSON.parse(jsonContent))); 
+        }
       },
     }
   );
 }
 
-export function useCreateOrUpdatePage() {
-  const [pageId] = useQueryParam("id", NumberParam);
+export function useCreateOrUpdateGroup() {
+  const dispatch = useDispatch();
+  let history = useHistory();
+  let { id } : { id: string } = useParams();
 
-  return useMutation((page: PageType) =>
-    fetcher(`/open_api/block_group`, {
-      method: pageId ? "PATCH" : "POST",
-      data: {
-        blockGroup: {
-          id: pageId,
-          ...page,
+  return useMutation(({ group, blocks } : { group: GroupTypeStore, blocks: IBlock[]}) =>
+    fetcher(
+      `/open_api/block_group`,
+      {
+        method: id ? "PATCH" : "POST",
+        data: {
+          blockGroup: {
+            id,
+            ...group,
+            jsonContent: JSON.stringify(blocks),
+          },
+          locale: "fr_FR",
         },
-        locale: "en_US",
+      }
+    ),
+    {
+      onSuccess: (data: GroupTypeStore) => {
+        if(!id && data.id) {
+          dispatch(setGroup(data));
+          history.push(`/edit/${data.id}`);
+        }
       },
-    })
+    }
   );
 }

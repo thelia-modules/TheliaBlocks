@@ -1,16 +1,15 @@
 import "vite/dynamic-import-polyfill";
 
-import { Link, Route, HashRouter as Router, Switch } from "react-router-dom";
-
-import CreateBlockGroup from "./CreateBlockGroup";
-import ListBlockGroups from "./ListBlockGroups";
 import React from "react";
 import ReactDOM from "react-dom";
-import blockVideo from "./blocks/Video";
-
 import { QueryClient, QueryClientProvider } from "react-query";
+import { Link, Route, HashRouter as Router, Switch } from "react-router-dom";
+import { Provider } from "react-redux";
 
-import { QueryParamProvider } from "use-query-params";
+import store from "./redux/store";
+import CreateGroup from "./CreateGroup";
+import EditGroup from "./EditGroup";
+import ListGroups from "./ListGroups";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,8 +22,8 @@ const queryClient = new QueryClient({
 
 ReactDOM.render(
   <React.StrictMode>
-    <QueryParamProvider>
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
         <Router>
           <div>
             <Link to="/" className="mr-4 btn btn-default">
@@ -36,18 +35,20 @@ ReactDOM.render(
           </div>
           <div className="mt-8">
             <Switch>
-              <Route path="/edit/:id">Edit: TODO</Route>
+              <Route path="/edit/:id">
+                <EditGroup />
+              </Route>
               <Route path="/create">
-                <CreateBlockGroup />
+                <CreateGroup />
               </Route>
               <Route path="/">
-                <ListBlockGroups />
+                <ListGroups />
               </Route>
             </Switch>
           </div>
         </Router>
-      </QueryClientProvider>
-    </QueryParamProvider>
+      </Provider>
+    </QueryClientProvider>
   </React.StrictMode>,
   document.getElementById("thelia-blocks-root")
 );

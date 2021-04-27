@@ -4,12 +4,12 @@
 .App {
   @apply flex flex-col min-h-screen
 
-  /* grid-template-areas: "page menu"; */
+  /* grid-template-areas: "group menu"; */
   /* grid-template-columns: minmax(min(50vw, 30ch), 1fr) fit-content(300px); */;
 }
 
-.App > .Page {
-  /* grid-area: page; */
+.App > .Group {
+  /* grid-area: group; */
   @apply p-12;
 }
 .App > .Menu {

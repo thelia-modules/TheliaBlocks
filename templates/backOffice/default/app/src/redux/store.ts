@@ -1,10 +1,11 @@
-import blocksReducer from "./blocks";
 import { configureStore } from "@reduxjs/toolkit";
-import pageReducer from "./page";
+
+import groupReducer from "./group";
+import blocksReducer from "./blocks";
 
 const store = configureStore({
   reducer: {
-    page: pageReducer,
+    group: groupReducer,
     blocks: blocksReducer,
   },
 });

@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
     <route id="theliablocks.route.main" path="/admin/TheliaBlocks">
-        <default key="_controller">TheliaBlocks\Controller\ConfigurationController::reactApp</default>
+        <default key="_controller">TheliaBlocks\Controller\ConfigurationController::reactAppAction</default>
     </route>
 
 </routes>
