@@ -6,15 +6,15 @@ import { useQueryParam } from "use-query-params";
 import { RootState } from "../redux/store";
 import { setPage, setPageTitle, setPageSlug, initialState as initialPageState } from "../redux/page";
 import { setBlocks, initialState as initialBlocksState } from "../redux/blocks";
-import { useCreateOrUpdatePage, usePages } from "../hooks/data";
-import { PageType } from "../types";
+import { useCreateOrUpdatePage, useBlockGroupsList } from "../hooks/data";
+import { PageTypeStore } from "../types";
 
 function PagesDropdown({
   search,
   onPageClick,
 }: {
   search: string;
-  onPageClick: (page: PageType) => any;
+  onPageClick: (page: PageTypeStore) => any;
 }) {
   const {
     isLoading,
@@ -26,7 +26,7 @@ function PagesDropdown({
     isError: boolean;
     error: any;
     data: any;
-  } = usePages();
+  } = useBlockGroupsList();
 
   if (isLoading) {
     return <span>Loading ...</span>;
@@ -37,7 +37,7 @@ function PagesDropdown({
   }
 
   const autoCompleteResults = data.filter(
-    ({ title } : { title: PageType["title"] }) =>
+    ({ title } : { title: PageTypeStore["title"] }) =>
       title?.search(new RegExp(search, "i")) !== -1
   );
   if (!autoCompleteResults.length) {
@@ -46,7 +46,7 @@ function PagesDropdown({
 
   return (
     <ul className="border border-gray-400 divide-y divide-gray-300 top-full">
-      {autoCompleteResults.map((page: PageType) => (
+      {autoCompleteResults.map((page: PageTypeStore) => (
         <li
           key={page.id}
           onClick={() => onPageClick(page)}
@@ -69,7 +69,7 @@ function PageTitle() {
     dispatch(setPageSlug(e.target.value));
   };
 
-  const onPageClick = (page: PageType) => {
+  const onPageClick = (page: PageTypeStore) => {
     if (page?.id) {
       setPageId(parseInt(page.id, 10));
     }

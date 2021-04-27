@@ -4,9 +4,14 @@ import { useBlockGroupsList } from "./hooks/data";
 
 export default function ListBlockGroups() {
   const res = useBlockGroupsList();
+
+  if(!res.data) {
+    return null;
+  }
+
   return (
     <div>
-      {res.data?.data.map((group) => (
+      {res.data.map((group) => (
         <Link to={`/edit/${group.id}`} key={group.id}>
           {group.id} - {group.slug} - {group.title}
         </Link>
