@@ -21,6 +21,7 @@ function BlockWrapper({
   const [hilight, setHilight] = useState<boolean>(false);
   return (
     <div className={`BlockWrapper`}>
+      <h3 className="BlockWrapper-title">{block.type}</h3>
       <div
         className={`p-2 border border-gray-400 border-dashed ${
           hilight ? "border-red-500" : ""

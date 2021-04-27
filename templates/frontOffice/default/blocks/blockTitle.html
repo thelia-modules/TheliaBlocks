@@ -1,0 +1,7 @@
+{if $data['text']}
+    {if $data['level']}
+        <h{$data['level']}>{$data['text'] nofilter}</h{$data['level']}>
+    {else}
+        <p>{$data['text'] nofilter}</p>
+    {/if}
+{/if}

@@ -1,0 +1,15 @@
+.BlockTitle {
+    @apply flex py-2 px-3;
+
+    &-field {
+        @apply flex flex-col;
+
+        &:not(:first-child) {
+            @apply ml-6;
+        }
+
+        label {
+            @apply mb-0;
+        }
+    }
+}
