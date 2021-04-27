@@ -12,7 +12,7 @@ function Group() {
   const blocks = useSelector((state: RootState) => state.blocks);
 
   return (
-    <div className="Group">
+    <div className="bg-white shadow Group">
       <GroupOptions />
       <div className="flex flex-col gap-6">
         {blocks.map((block) => {

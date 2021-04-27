@@ -1,25 +1,13 @@
 .Menu {
-  @apply mt-auto sticky inset-x-0 bottom-0 shadow-md transition-transform delay-150 border-t border-gray-400 z-40;
-  transform: translateY(calc(100% - 5.625rem));
-}
-.Menu--visible {
-  transform: translateY(0);
-}
-
-.Menu-header {
-  @apply flex justify-between items-center mb-6 h-10 border-b;
+  @apply mt-auto sticky inset-x-0 bottom-0 shadow-md transition-transform delay-150 border-t z-40 bg-white;
 }
 
 .Menu-content {
-  @apply bg-gray-100 px-12 py-6;
-}
-
-.Menu-title {
-  @apply text-2xl;
+  @apply px-12 py-6;
 }
 
 .Menu-blocks {
-  @apply divide-x flex overflow-x-auto -mx-6;
+  @apply divide-x divide-gray-100 flex overflow-x-auto -mx-6;
 }
 
 .Menu-blocks-item {

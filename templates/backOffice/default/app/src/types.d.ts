@@ -33,3 +33,7 @@ export type BlockPluginDefinition<TProp = { [key: string]: any }> = {
   }) => JSX.Element;
   initialData: TProp;
 };
+
+export type uiStoreType = {
+  isDirty: boolean;
+};

@@ -2,6 +2,6 @@
   position: relative;
 
   &-title {
-    @apply m-2 text-2xl font-bold;
+    @apply text-xl font-bold mr-4;
   }
 }
