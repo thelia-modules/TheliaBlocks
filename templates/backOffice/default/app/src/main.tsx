@@ -2,11 +2,10 @@ import "vite/dynamic-import-polyfill";
 
 import { Link, Route, HashRouter as Router, Switch } from "react-router-dom";
 
-import CreateBlockGroup from "./CreateBlockGroup";
-import ListBlockGroups from "./ListBlockGroups";
+import CreateGroup from "./CreateGroup";
+import ListGroups from "./ListGroups";
 import React from "react";
 import ReactDOM from "react-dom";
-import blockVideo from "./blocks/Video";
 
 import { QueryClient, QueryClientProvider } from "react-query";
 
@@ -38,10 +37,10 @@ ReactDOM.render(
             <Switch>
               <Route path="/edit/:id">Edit: TODO</Route>
               <Route path="/create">
-                <CreateBlockGroup />
+                <CreateGroup />
               </Route>
               <Route path="/">
-                <ListBlockGroups />
+                <ListGroups />
               </Route>
             </Switch>
           </div>

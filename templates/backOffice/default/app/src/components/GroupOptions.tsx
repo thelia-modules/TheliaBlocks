@@ -4,17 +4,17 @@ import { NumberParam } from "serialize-query-params";
 import { useQueryParam } from "use-query-params";
 
 import { RootState } from "../redux/store";
-import { setPage, setPageTitle, setPageSlug, initialState as initialPageState } from "../redux/page";
+import { setGroup, setGroupTitle, setGroupSlug, initialState as initialGroupState } from "../redux/group";
 import { setBlocks, initialState as initialBlocksState } from "../redux/blocks";
-import { useCreateOrUpdatePage, useBlockGroupsList } from "../hooks/data";
-import { PageTypeStore } from "../types";
+import { useCreateOrUpdateGroup, useGroups } from "../hooks/data";
+import { GroupTypeStore } from "../types";
 
-function PagesDropdown({
+function GroupsDropdown({
   search,
-  onPageClick,
+  onGroupClick,
 }: {
   search: string;
-  onPageClick: (page: PageTypeStore) => any;
+  onGroupClick: (group: GroupTypeStore) => any;
 }) {
   const {
     isLoading,
@@ -26,7 +26,7 @@ function PagesDropdown({
     isError: boolean;
     error: any;
     data: any;
-  } = useBlockGroupsList();
+  } = useGroups();
 
   if (isLoading) {
     return <span>Loading ...</span>;
@@ -37,7 +37,7 @@ function PagesDropdown({
   }
 
   const autoCompleteResults = data.filter(
-    ({ title } : { title: PageTypeStore["title"] }) =>
+    ({ title } : { title: GroupTypeStore["title"] }) =>
       title?.search(new RegExp(search, "i")) !== -1
   );
   if (!autoCompleteResults.length) {
@@ -46,57 +46,57 @@ function PagesDropdown({
 
   return (
     <ul className="border border-gray-400 divide-y divide-gray-300 top-full">
-      {autoCompleteResults.map((page: PageTypeStore) => (
+      {autoCompleteResults.map((group: GroupTypeStore) => (
         <li
-          key={page.id}
-          onClick={() => onPageClick(page)}
+          key={group.id}
+          onClick={() => onGroupClick(group)}
           className="px-4 py-1 cursor-pointer"
         >
-          {page.title}
+          {group.title}
         </li>
       ))}
     </ul>
   );
 }
 
-function PageTitle() {
+function GroupTitle() {
   const dispatch = useDispatch();
-  const pageState = useSelector((state: RootState) => state.page);
-  const [, setPageId] = useQueryParam("id", NumberParam);
+  const groupState = useSelector((state: RootState) => state.group);
+  const [, setGroupId] = useQueryParam("id", NumberParam);
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    dispatch(setPageTitle(e.target.value));
-    dispatch(setPageSlug(e.target.value));
+    dispatch(setGroupTitle(e.target.value));
+    dispatch(setGroupSlug(e.target.value));
   };
 
-  const onPageClick = (page: PageTypeStore) => {
-    if (page?.id) {
-      setPageId(parseInt(page.id, 10));
+  const onGroupClick = (group: GroupTypeStore) => {
+    if (group?.id) {
+      setGroupId(parseInt(group.id, 10));
     }
   };
 
   return (
-    <div className="mb-6 PageTitle">
+    <div className="mb-6 GroupTitle">
       <input
         type="text"
-        value={pageState.title}
-        placeholder="Titre de la page"
+        value={groupState.title}
+        placeholder="Titre de la group"
         className="w-full"
         onChange={onInputChange}
       />
-      {pageState.title && !pageState.id && (
-        <PagesDropdown search={pageState.title} onPageClick={onPageClick} />
+      {groupState.title && !groupState.id && (
+        <GroupsDropdown search={groupState.title} onGroupClick={onGroupClick} />
       )}
     </div>
   );
 }
 
-function PageActions({ onSave }: { onSave: Function }) {
-  const pageId = useSelector((state: RootState) => state.page.id);
+function GroupActions({ onSave }: { onSave: Function }) {
+  const groupId = useSelector((state: RootState) => state.group.id);
 
-  const newPage = () => {
+  const newGroup = () => {
     if(confirm("Are you sure ? New data might be lost.")){
-      setPage(initialPageState);
+      setGroup(initialGroupState);
       setBlocks(initialBlocksState); 
     }
   }
@@ -108,36 +108,36 @@ function PageActions({ onSave }: { onSave: Function }) {
         className="px-8 font-bold uppercase Button Button--primary"
         onClick={() => onSave()}
       >
-        {pageId ? 'Save' : 'Create'}
+        {groupId ? 'Save' : 'Create'}
       </button>
-      {pageId &&
+      {groupId &&
         <button
           className="px-8 ml-6 font-bold uppercase Button Button--info"
-          onClick={() => newPage()}
+          onClick={() => newGroup()}
         >
-          New page
+          New group
         </button>
       }
     </div>
   );
 }
 
-function PageOptions() {
-  const mutation = useCreateOrUpdatePage();
+function GroupOptions() {
+  const mutation = useCreateOrUpdateGroup();
 
-  const page = useSelector((state: RootState) => state.page);
+  const group = useSelector((state: RootState) => state.group);
   const blocks = useSelector((state: RootState) => state.blocks);
   
   return (
     <div className="flex">
       <div className="flex-1">
-        <PageTitle />
+        <GroupTitle />
       </div>
       <div className="ml-6">
-        <PageActions onSave={() => mutation.mutate({ page, blocks })} />
+        <GroupActions onSave={() => mutation.mutate({ group, blocks })} />
       </div>
     </div>
   );
 }
 
-export default PageOptions;
+export default GroupOptions;

@@ -13,14 +13,14 @@ export type IBlock = {
   data: any;
 };
 
-export type PageTypeStore = {
+export type GroupTypeStore = {
   id?: string;
   visible: true;
   title: string;
   slug: string;
 };
 
-export type PageTypeResponse = PageTypeStore & {
+export type GroupTypeResponse = GroupTypeStore & {
   jsonContent?: string;
 };
 

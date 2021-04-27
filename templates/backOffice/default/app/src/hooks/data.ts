@@ -4,9 +4,9 @@ import { NumberParam } from "serialize-query-params";
 import { useDispatch } from "react-redux";
 import { useQueryParam } from "use-query-params";
 
-import { PageTypeResponse, PageTypeStore, IBlock } from "../types";
+import { GroupTypeResponse, GroupTypeStore, IBlock } from "../types";
 import { setBlocks } from "../redux/blocks";
-import { setPage } from "../redux/page";
+import { setGroup } from "../redux/group";
 
 async function fetcher(url: string, config: AxiosRequestConfig = {}) {
   try {
@@ -21,16 +21,16 @@ async function fetcher(url: string, config: AxiosRequestConfig = {}) {
   }
 }
 
-export function useBlockGroupsList() {
-  return useQuery<PageTypeResponse[]>(["block_group"], () =>
+export function useGroups() {
+  return useQuery<GroupTypeResponse[]>(["block_group"], () =>
     fetcher(`/open_api/block_group/list`)
   );
 }
 
-export function useBlockGroup() {
+export function useGroup() {
   const dispatch = useDispatch();
   const [blockGroupId] = useQueryParam("id", NumberParam);
-  return useQuery<PageTypeResponse>(
+  return useQuery<GroupTypeResponse>(
     ["block_group", blockGroupId],
     () =>
       fetcher(`/open_api/block_group`, {
@@ -41,10 +41,10 @@ export function useBlockGroup() {
       }),
     {
       enabled: !!blockGroupId,
-      onSuccess: (data: PageTypeResponse) => {
+      onSuccess: (data: GroupTypeResponse) => {
         const { jsonContent, ...rest } = data;
          
-        dispatch(setPage(rest));
+        dispatch(setGroup(rest));
 
         if (jsonContent) {
           dispatch(setBlocks(JSON.parse(jsonContent))); 
@@ -54,19 +54,19 @@ export function useBlockGroup() {
   );
 }
 
-export function useCreateOrUpdatePage() {
+export function useCreateOrUpdateGroup() {
   const dispatch = useDispatch();
-  const [pageId, setPageId] = useQueryParam("id", NumberParam);
+  const [groupId, setGroupId] = useQueryParam("id", NumberParam);
 
-  return useMutation(({ page, blocks } : { page: PageTypeStore, blocks: IBlock[]}) =>
+  return useMutation(({ group, blocks } : { group: GroupTypeStore, blocks: IBlock[]}) =>
     fetcher(
       `/open_api/block_group`,
       {
-        method: pageId ? "PATCH" : "POST",
+        method: groupId ? "PATCH" : "POST",
         data: {
           blockGroup: {
-            id: pageId,
-            ...page,
+            id: groupId,
+            ...group,
             jsonContent: JSON.stringify(blocks),
           },
           locale: "en_US",
@@ -74,10 +74,10 @@ export function useCreateOrUpdatePage() {
       }
     ),
     {
-      onSuccess: (data: PageTypeStore) => {
-        if(!pageId && data.id) {
-          dispatch(setPage(data));
-          setPageId(parseInt(data.id, 10));
+      onSuccess: (data: GroupTypeStore) => {
+        if(!groupId && data.id) {
+          dispatch(setGroup(data));
+          setGroupId(parseInt(data.id, 10));
         }
       },
     }

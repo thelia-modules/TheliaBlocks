@@ -3,17 +3,17 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Block from "./Block";
 import BlockWrapper from "./BlockWrapper";
-import PageOptions from "./PageOptions";
+import GroupOptions from "./GroupOptions";
 import { RootState } from "../redux/store";
 import { deleteBlock } from "../redux/blocks";
 
-function Page() {
+function Group() {
   const dispatch = useDispatch();
   const blocks = useSelector((state: RootState) => state.blocks);
 
   return (
-    <div className="Page">
-      <PageOptions />
+    <div className="Group">
+      <GroupOptions />
       <div className="flex flex-col gap-6">
         {blocks.map((block) => {
           return (
@@ -33,4 +33,4 @@ function Page() {
   );
 }
 
-export default Page;
+export default Group;
