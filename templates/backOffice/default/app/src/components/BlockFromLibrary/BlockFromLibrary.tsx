@@ -1,10 +1,34 @@
 import "./BlockFromLibrary.css";
+import "tippy.js/dist/tippy.css";
+import 'tippy.js/themes/light.css';
 
 import React from "react";
 import { useDispatch } from "react-redux";
+import Tippy from "@tippyjs/react";
+import { nanoid } from "nanoid";
+
 import { addBlock } from "../../redux/blocks";
 import { __PLUGINS } from "../../pluginManager";
-import { BlockPluginDefinition } from "../../types";
+import { BlockPluginDefinition, BlockModuleType } from "../../types";
+import { getI18nText } from "../../utils/i18n";
+
+function BlockTooltip({
+  title,
+  image,
+  description,
+}: {
+  title: string;
+  image?: string;
+  description?: string;
+}) {
+  return (
+    <div className="px-2 py-3">
+      {image && <img className="block mb-4" src={image} alt={title} />}
+      <p className="text-2xl font-medium">{title}</p>
+      {description && <p className="mt-2 text-xl">{description}</p>}
+    </div>
+  );
+}
 
 function BlockFromLibrary({
   block,
@@ -19,7 +43,7 @@ function BlockFromLibrary({
   const onClick = () => {
     dispatch(
       addBlock({
-        id: block.id,
+        id: nanoid(),
         parent: null,
         data: block.initialData,
         type: block.type,
@@ -33,14 +57,29 @@ function BlockFromLibrary({
     }, 250);
   };
 
+  const displayedTitle = block.type.title
+    ? getI18nText(block.type.title)
+    : block.type.id;
+
   return (
     <div className="BlockFromLibrary">
-      <button
-        className="border border-gray-200 hover:border-gray-400 btn BlockFromLibrary-title"
-        onClick={onClick}
+      <Tippy
+        theme="light"
+        content={
+          <BlockTooltip
+            title={displayedTitle}
+            image={block.type.image && getI18nText(block.type.image)}
+            description={block.type.description && getI18nText(block.type.description)}
+          />
+        }
       >
-        {block.type}
-      </button>
+        <button
+          className="border border-gray-200 hover:border-gray-400 btn BlockFromLibrary-title"
+          onClick={onClick}
+        >
+          {displayedTitle}
+        </button>
+      </Tippy>
     </div>
   );
 }

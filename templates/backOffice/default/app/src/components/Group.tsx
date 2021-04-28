@@ -7,13 +7,13 @@ import GroupOptions from "./GroupOptions";
 import { RootState } from "../redux/store";
 import { deleteBlock } from "../redux/blocks";
 
-function Group() {
+function Group({ onSave }: { onSave: Function }) {
   const dispatch = useDispatch();
   const blocks = useSelector((state: RootState) => state.blocks);
 
   return (
-    <div className="bg-white shadow Group">
-      <GroupOptions />
+    <div className="p-12 bg-white shadow Group">
+      <GroupOptions onSave={onSave} />
       <div className="flex flex-col gap-6">
         {blocks.map((block) => {
           return (

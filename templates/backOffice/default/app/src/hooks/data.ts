@@ -3,6 +3,7 @@ import { useMutation, useQuery } from "react-query";
 import { useDispatch } from "react-redux";
 import { useParams, useHistory } from "react-router-dom";
 
+import { CURRENT_LOCAL } from '../constants';
 import { GroupTypeResponse, GroupTypeStore, IBlock } from "../types";
 import { setBlocks } from "../redux/blocks";
 import { setGroup } from "../redux/group";
@@ -44,8 +45,6 @@ export function useGroup() {
       enabled: !!id,
       onSuccess: (data: GroupTypeResponse) => {
         const { jsonContent, ...rest } = data;
-
-        console.log(data);
          
         dispatch(setGroup(rest));
 
@@ -73,7 +72,7 @@ export function useCreateOrUpdateGroup() {
             ...group,
             jsonContent: JSON.stringify(blocks),
           },
-          locale: "fr_FR",
+          locale: CURRENT_LOCAL,
         },
       }
     ),

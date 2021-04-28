@@ -91,19 +91,14 @@ function GroupActions({ onSave }: { onSave: Function }) {
   );
 }
 
-function GroupOptions() {
-  const mutation = useCreateOrUpdateGroup();
-
-  const group = useSelector((state: RootState) => state.group);
-  const blocks = useSelector((state: RootState) => state.blocks);
-
+function GroupOptions({ onSave }: { onSave: Function }) {
   return (
     <div className="flex">
       <div className="flex-1">
         <GroupTitle />
       </div>
       <div className="ml-6">
-        <GroupActions onSave={() => mutation.mutate({ group, blocks })} />
+        <GroupActions onSave={onSave} />
       </div>
     </div>
   );

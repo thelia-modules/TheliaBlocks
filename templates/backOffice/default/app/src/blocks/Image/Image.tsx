@@ -1,7 +1,8 @@
-import "./Image.css";
-import { BlockModuleComponentProps, BlockPluginDefinition } from "../../types";
-
 import React from "react";
+
+import "./Image.css";
+import previewImg from './preview.jpg';
+import { BlockModuleComponentProps, BlockPluginDefinition } from "../../types";
 
 export type BlockImageData = {
   src: string;
@@ -61,8 +62,23 @@ const initialData = {
   alt: "image d'example",
 };
 
+const moduleType = {
+  id: "blockImage",
+  title: {
+    default: "Image",
+    fr_FR: "Image",
+  },
+  description: {
+    default: "Display an image",
+    fr_FR: "Affiche une image",
+  },
+  image: {
+    default: 'http://localhost:3000'+ previewImg,
+  },
+};
+
 const blockImage: BlockPluginDefinition<BlockImageData> = {
-  type: "blockImage",
+  type: moduleType,
   component: BlockImageComponent,
   initialData,
 };

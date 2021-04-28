@@ -10,17 +10,30 @@ import Block from "../components/Block";
 import { usePlugins, __PLUGINS } from "../pluginManager";
 import BlockWrapper from "../components/BlockWrapper";
 
-export type MultiColumnsData = Array<IBlock>;
+type MultiColumnsData = Array<IBlock>;
 export type MultiColumnsComponentProps = {
   data: MultiColumnsData;
 };
 
-const moduleType = "multiColumns";
+const moduleType = {
+  id: "multiColumns",
+  title: {
+    default: "Columns",
+    fr_FR: "Colonnes",
+  },
+  description: {
+    default: "Display blocks in multiple columns",
+    fr_FR: "Affiche des blocks dans différentes colonnes",
+  },
+  image: {
+    default: "https://source.unsplash.com/featured/300x250?nature&multiColumns",
+  },
+};
 const MIN_COLUMNS = 2;
 const MAX_COLUMNS = 5;
 const initialColum = () => ({
   id: nanoid(),
-  type: "",
+  type: { id: "" },
   parent: null,
   data: null,
 });
@@ -40,7 +53,7 @@ function EmptyColumn({
     <div className="flex flex-col flex-grow p-2 border border-dashed">
       {isSettingBlock ? (
         blocksLibrary
-          .filter((block) => block.type !== "multiColumns")
+          .filter((block) => block.type.id !== "multiColumns")
           .map((block) => {
             return (
               <div
@@ -125,7 +138,7 @@ function MultiColumnsComponent({
     <div className="flex w-full gap-2 MultiColumns">
       {data.map((block, index) => (
         <React.Fragment key={`${block.id}-wrapper`}>
-          {(index > 0 && data.length < MAX_COLUMNS) && (
+          {index > 0 && data.length < MAX_COLUMNS && (
             <button
               key={`${block.id}-add-col`}
               className="focus:outline-none"
@@ -135,12 +148,16 @@ function MultiColumnsComponent({
               <i className="fa fa-plus"></i>
             </button>
           )}
-          {block.type === "" ? (
+          {block.type.id === "" ? (
             <EmptyColumn
               key={block.id}
               id={block.id}
               onUpdate={onUpdateEmpty}
-              onDelete={data.length > MIN_COLUMNS ? () => handleDeleteEmtpy(block) : null}
+              onDelete={
+                data.length > MIN_COLUMNS
+                  ? () => handleDeleteEmtpy(block)
+                  : null
+              }
             />
           ) : (
             <div key={block.id} className="flex-1">

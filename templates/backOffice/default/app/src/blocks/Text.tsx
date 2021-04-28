@@ -1,9 +1,6 @@
 import "draft-js/dist/Draft.css";
 
-import {
-  BlockModuleComponentProps,
-  BlockPluginDefinition,
-} from "../../lib/types";
+import { BlockModuleComponentProps, BlockPluginDefinition } from "../types";
 import { ContentState, EditorState, convertToRaw } from "draft-js";
 import React, { useEffect, useState } from "react";
 import { Editor } from "react-draft-wysiwyg";
@@ -63,11 +60,26 @@ function BlockTextComponent({
 }
 
 const initialData = {
-  value: "<p>Lorem Ipsum bla bla</p>",
+  value: "",
+};
+
+const moduleType = {
+  id: "blockText",
+  title: {
+    default: "Text",
+    fr_FR: "Texte",
+  },
+  description: {
+    default: "Display a formated text",
+    fr_FR: "Affiche un texte mis en forme",
+  },
+  image: {
+    default: "https://source.unsplash.com/featured/300x250?nature&blockText",
+  },
 };
 
 const Blocktext: BlockPluginDefinition<BlockTextData> = {
-  type: "blockText",
+  type: moduleType,
   component: BlockTextComponent,
   initialData,
 };

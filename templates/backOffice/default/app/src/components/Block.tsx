@@ -8,8 +8,8 @@ import { usePlugins } from "../pluginManager";
 function Block({ block }: { block: IBlock }) {
   const dispatch = useDispatch();
   const blocksLibrary = usePlugins();
-  const blocksObj = keyBy(blocksLibrary, "type");
-  const Component = blocksObj[block.type].component;
+  const blocksObj = keyBy(blocksLibrary, "type.id");
+  const Component = blocksObj[block.type.id].component;
   return (
     <Component
       id={block.id}

@@ -47,8 +47,23 @@ const initialData = {
   src: "4JcENw71M6c",
 };
 
+const moduleType = {
+  id: "blockVideo",
+  title: {
+    default: "Video",
+    fr_FR: "Video",
+  },
+  description: {
+    default: "Display a Youtube video",
+    fr_FR: "Affiche une vidéo Youtube",
+  },
+  image: {
+    default: "https://source.unsplash.com/featured/300x250?nature&blockVideo",
+  },
+};
+
 const blockVideo: BlockPluginDefinition<BlockVideoData> = {
-  type: "blockVideo",
+  type: moduleType,
   component: BlockVideoComponent,
   initialData,
 };
