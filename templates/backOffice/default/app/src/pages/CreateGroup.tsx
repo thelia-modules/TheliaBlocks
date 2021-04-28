@@ -13,6 +13,7 @@ export default function CreateGroup() {
   const dispatch = useDispatch();
   const group = useSelector((state: RootState) => state.group);
   const blocks = useSelector((state: RootState) => state.blocks);
+  const mutation = useCreateOrUpdateGroup();
 
   useEffect(() => {
     dispatch(setGroup(initialGroupState));
@@ -24,8 +25,6 @@ export default function CreateGroup() {
   }
 
   const onSave = () => {
-    const mutation = useCreateOrUpdateGroup();
-
     mutation.mutate({ group, blocks });
   };
 
@@ -35,7 +34,7 @@ export default function CreateGroup() {
         when={checkUnSavedChanges()}
         message="Are you sure you want to leave?"
       />
-      <Group onSave={onSave} />
+      <Group onSave={onSave} hasUnSavedChanges={checkUnSavedChanges()} />
       <Menu />
     </>
   );

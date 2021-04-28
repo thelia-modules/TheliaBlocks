@@ -13,6 +13,7 @@ export default function EditGroup() {
   const [initialHash, setInitialHash] = useState<string>("");
   const group = useSelector((state: RootState) => state.group);
   const blocks = useSelector((state: RootState) => state.blocks);
+  const mutation = useCreateOrUpdateGroup();
 
   useEffect(() => {
     if(data){
@@ -30,9 +31,8 @@ export default function EditGroup() {
   }
 
   const onSave = () => {
-    const mutation = useCreateOrUpdateGroup();
-
     mutation.mutate({ group, blocks });
+
     setInitialHash(hash({
       ...group,
       jsonContent: JSON.stringify(blocks),
@@ -45,7 +45,7 @@ export default function EditGroup() {
         when={checkUnSavedChanges()}
         message="Are you sure you want to leave?"
       />
-      <Group onSave={onSave} />
+      <Group onSave={onSave} hasUnSavedChanges={checkUnSavedChanges()} />
       <Menu />
     </>
   );
