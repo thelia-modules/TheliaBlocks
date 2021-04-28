@@ -11,7 +11,7 @@ export type i18nString = {
 
 export type BlockModuleType = {
   id: string;
-  title?: i18nString;
+  title: i18nString;
   description?: i18nString;
   image?: i18nString;
 };

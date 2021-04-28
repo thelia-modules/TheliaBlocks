@@ -9,6 +9,7 @@ import {
 import Block from "../components/Block";
 import { usePlugins, __PLUGINS } from "../pluginManager";
 import BlockWrapper from "../components/BlockWrapper";
+import { getI18nText } from "../utils/i18n";
 
 type MultiColumnsData = Array<IBlock>;
 export type MultiColumnsComponentProps = {
@@ -33,7 +34,7 @@ const MIN_COLUMNS = 2;
 const MAX_COLUMNS = 5;
 const initialColum = () => ({
   id: nanoid(),
-  type: { id: "" },
+  type: { id: "", title: { default: "" } },
   parent: null,
   data: null,
 });
@@ -54,23 +55,21 @@ function EmptyColumn({
       {isSettingBlock ? (
         blocksLibrary
           .filter((block) => block.type.id !== "multiColumns")
-          .map((block) => {
-            return (
-              <div
-                key={block.id}
-                className="hover:text-green-500"
-                onClick={() => {
-                  onUpdate({
-                    id,
-                    data: block.initialData,
-                    type: block.type,
-                  });
-                }}
-              >
-                {block.type}
-              </div>
-            );
-          })
+          .map((block) => (
+            <div
+              key={block.id}
+              className="hover:text-green-500"
+              onClick={() => {
+                onUpdate({
+                  id,
+                  data: block.initialData,
+                  type: block.type,
+                });
+              }}
+            >
+              {getI18nText(block.type.title)}
+            </div>
+          ))
       ) : (
         <div className="flex">
           <button
