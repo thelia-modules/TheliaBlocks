@@ -1,5 +1,5 @@
 .BlockFromLibrary {
   &-title {
-    @apply mt-2 text-gray-500;
+    @apply text-gray-500;
   }
 }

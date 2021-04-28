@@ -80,7 +80,7 @@ function GroupActions({ onSave }: { onSave: Function }) {
 
   return (
     <div>
-      <button className="px-8 font-bold uppercase Button">Validate</button>
+      {groupId && <button className="px-8 font-bold uppercase Button">Validate</button>}
       <button
         className="px-8 font-bold uppercase Button Button--primary"
         onClick={() => onSave()}

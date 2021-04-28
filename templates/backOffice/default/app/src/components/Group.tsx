@@ -20,7 +20,7 @@ function Group() {
             <BlockWrapper
               key={block.id}
               block={block}
-              handleDelete={() => {
+              handleDelete={(block) => {
                 dispatch(deleteBlock(block.id));
               }}
             >
