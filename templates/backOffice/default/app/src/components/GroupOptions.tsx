@@ -3,11 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import { RootState } from "../redux/store";
-import {
-  setGroupTitle,
-  setGroupSlug,
-} from "../redux/group";
-import { useCreateOrUpdateGroup, useGroups } from "../hooks/data";
+import { setGroupTitle, setGroupSlug } from "../redux/group";
+import { useGroups } from "../hooks/data";
 import { GroupTypeStore } from "../types";
 
 function GroupsDropdown({ search }: { search: string }) {
@@ -75,15 +72,24 @@ function GroupTitle() {
   );
 }
 
-function GroupActions({ onSave }: { onSave: Function }) {
+function GroupActions({
+  onSave,
+  hasUnSavedChanges,
+}: {
+  onSave: Function;
+  hasUnSavedChanges: boolean;
+}) {
   const groupId = useSelector((state: RootState) => state.group.id);
 
   return (
     <div>
-      <button className="px-8 font-bold uppercase Button">Validate</button>
+      {groupId && (
+        <button className="px-8 font-bold uppercase Button">Validate</button>
+      )}
       <button
         className="px-8 font-bold uppercase Button Button--primary"
         onClick={() => onSave()}
+        disabled={!hasUnSavedChanges}
       >
         {groupId ? "Save" : "Create"}
       </button>
@@ -91,19 +97,20 @@ function GroupActions({ onSave }: { onSave: Function }) {
   );
 }
 
-function GroupOptions() {
-  const mutation = useCreateOrUpdateGroup();
-
-  const group = useSelector((state: RootState) => state.group);
-  const blocks = useSelector((state: RootState) => state.blocks);
-
+function GroupOptions({
+  onSave,
+  hasUnSavedChanges,
+}: {
+  onSave: Function;
+  hasUnSavedChanges: boolean;
+}) {
   return (
     <div className="flex">
       <div className="flex-1">
         <GroupTitle />
       </div>
       <div className="ml-6">
-        <GroupActions onSave={() => mutation.mutate({ group, blocks })} />
+        <GroupActions onSave={onSave} hasUnSavedChanges={hasUnSavedChanges} />
       </div>
     </div>
   );

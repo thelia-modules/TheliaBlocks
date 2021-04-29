@@ -1,16 +1,6 @@
 @import "tailwind.css";
 @import "Button.css";
 
-.App {
-  /* grid-template-areas: "group menu"; */
-  /* grid-template-columns: minmax(min(50vw, 30ch), 1fr) fit-content(300px); */
-}
-
-.App > .Group {
-  /* grid-area: group; */
-  @apply p-12;
-}
-
 .public-DraftEditor-content a {
   @apply text-blue-500;
 }

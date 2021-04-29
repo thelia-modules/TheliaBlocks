@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { IBlock } from "../../types";
 import { useDispatch } from "react-redux";
 import { moveBlockUp, moveBlockDown } from "../../redux/blocks";
+import { getI18nText } from "../../utils/i18n";
 
 function BlockWrapper({
   children,
@@ -19,10 +20,14 @@ function BlockWrapper({
 }) {
   const dispatch = useDispatch();
   const [hilight, setHilight] = useState<boolean>(false);
+  const blockTitle = block.type.title
+    ? getI18nText(block.type.title)
+    : block.type.id;
+
   return (
     <div className={`BlockWrapper`}>
-      <div className="flex items-center mb-2">
-        <h3 className="BlockWrapper-title">{block.type}</h3>
+      <div className="flex items-center mb-1">
+        <h3 className="BlockWrapper-title">{blockTitle}</h3>
         <div className="flex gap-6">
           {canMove ? (
             <div className="flex gap-3">
@@ -32,7 +37,7 @@ function BlockWrapper({
                   dispatch(moveBlockUp(block.id));
                 }}
               >
-                ▲ up
+                <i className="text-sm fa fa-arrow-up"></i> up
               </div>
               <div
                 className="cursor-pointer hover:text-blue-500"
@@ -40,14 +45,14 @@ function BlockWrapper({
                   dispatch(moveBlockDown(block.id));
                 }}
               >
-                ▼ down
+                <i className="text-sm fa fa-arrow-down"></i> down
               </div>
             </div>
           ) : null}
         </div>
         {canDelete ? (
           <button
-            className="ml-auto text-red-500"
+            className="ml-auto text-sm text-red-500"
             onClick={() => {
               if (window.confirm("la suppresion est définitive")) {
                 handleDelete(block);

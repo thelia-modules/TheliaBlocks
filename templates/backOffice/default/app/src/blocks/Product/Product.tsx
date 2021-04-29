@@ -52,8 +52,23 @@ const initialData = {
   productId: null,
 };
 
+const moduleType = {
+  id: "blockProduct",
+  title: {
+    default: "Product",
+    fr_FR: "Produit",
+  },
+  description: {
+    default: "Display a product",
+    fr_FR: "Affiche un produit du catalogue",
+  },
+  image: {
+    default: "https://source.unsplash.com/featured/300x250?nature&blockProduct",
+  },
+};
+
 const blockProduct: BlockPluginDefinition<BlockProductData> = {
-  type: "blockProduct",
+  type: moduleType,
   component: BlockProductComponent,
   initialData,
 };

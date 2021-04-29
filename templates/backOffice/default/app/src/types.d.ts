@@ -1,9 +1,19 @@
-type BlockModuleType = string;
-
 type BlockModuleComponentProps<T> = {
   data: T;
   onUpdate: <T>(newData: any) => T | void;
   [key: string]: any;
+};
+
+export type i18nString = {
+  default: string,
+  [key:string]: string,
+}
+
+export type BlockModuleType = {
+  id: string;
+  title: i18nString;
+  description?: i18nString;
+  image?: i18nString;
 };
 
 export type IBlock = {

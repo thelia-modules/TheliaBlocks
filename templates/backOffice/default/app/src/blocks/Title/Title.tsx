@@ -106,8 +106,23 @@ const initialData = {
   text: "",
 };
 
+const moduleType = {
+  id: "blockTitle",
+  title: {
+    default: "Title",
+    fr_FR: "Titre",
+  },
+  description: {
+    default: "Display a title",
+    fr_FR: "Affiche un titre",
+  },
+  image: {
+    default: "https://source.unsplash.com/featured/300x250?nature&blockTitle",
+  },
+};
+
 const BlockTitle: BlockPluginDefinition<BlockTitleData> = {
-  type: "blockTitle",
+  type: moduleType,
   component: BlockTitleComponent,
   initialData,
 };

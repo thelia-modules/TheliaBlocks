@@ -1,121 +1,185 @@
+import React, { useState } from "react";
+import { nanoid } from "nanoid";
+
 import {
   IBlock,
   BlockPluginDefinition,
   BlockModuleComponentProps,
 } from "../types";
-
-import React, { useState } from "react";
-
 import Block from "../components/Block";
-
-import { nanoid } from "nanoid";
 import { usePlugins, __PLUGINS } from "../pluginManager";
 import BlockWrapper from "../components/BlockWrapper";
+import { getI18nText } from "../utils/i18n";
 
-export type MultiColumnssData = Array<IBlock | null>;
-
-export type MultiColumnssComponentProps = {
-  data: MultiColumnssData;
+type MultiColumnsData = Array<IBlock>;
+export type MultiColumnsComponentProps = {
+  data: MultiColumnsData;
 };
 
-const moduleType = "multiColumns";
+const moduleType = {
+  id: "multiColumns",
+  title: {
+    default: "Columns",
+    fr_FR: "Colonnes",
+  },
+  description: {
+    default: "Display blocks in multiple columns",
+    fr_FR: "Affiche des blocks dans différentes colonnes",
+  },
+  image: {
+    default: "https://source.unsplash.com/featured/300x250?nature&multiColumns",
+  },
+};
+const MIN_COLUMNS = 2;
+const MAX_COLUMNS = 5;
+const initialColum = () => ({
+  id: nanoid(),
+  type: { id: "", title: { default: "" } },
+  parent: null,
+  data: null,
+});
 
-function EmptyColumn({ onUpdate }: { onUpdate: Function }) {
+function EmptyColumn({
+  id,
+  onUpdate,
+  onDelete,
+}: {
+  id: IBlock["id"];
+  onUpdate: BlockModuleComponentProps<MultiColumnsData>["onUpdate"];
+  onDelete: Function | null;
+}) {
   const blocksLibrary = usePlugins();
   const [isSettingBlock, setIsSettingBlock] = useState<boolean>(false);
   return (
-    <div className="flex flex-col w-4/12 p-2 border border-dashed">
+    <div className="flex flex-col flex-grow p-2 border border-dashed">
       {isSettingBlock ? (
         blocksLibrary
-          .filter((block) => block.type !== "multiColumns")
-          .map((block) => {
-            return (
-              <div
-                key={block.id}
-                className="hover:text-green-500"
-                onClick={() => {
-                  onUpdate({
-                    id: nanoid(),
-                    data: block.initialData,
-                    type: block.type,
-                  });
-                }}
-              >
-                {block.type}
-              </div>
-            );
-          })
+          .filter((block) => block.type.id !== "multiColumns")
+          .map((block) => (
+            <div
+              key={block.id}
+              className="hover:text-green-500"
+              onClick={() => {
+                onUpdate({
+                  id,
+                  data: block.initialData,
+                  type: block.type,
+                });
+              }}
+            >
+              {getI18nText(block.type.title)}
+            </div>
+          ))
       ) : (
-        <button
-          className="flex-1 text-xl bg-gray-200 hover:bg-gray-300"
-          onClick={() => setIsSettingBlock(true)}
-        >
-          Add a bloc
-        </button>
+        <div className="flex">
+          <button
+            className="flex-1 p-2 text-xl bg-gray-200 hover:bg-gray-300"
+            onClick={() => setIsSettingBlock(true)}
+          >
+            Add a bloc
+          </button>
+          {onDelete && (
+            <button
+              className="px-4 py-2 ml-2 text-sm text-red-500 bg-gray-200 hover:bg-gray-300"
+              onClick={() => onDelete()}
+              title="Supprimer"
+            >
+              <i className="fa fa-trash"></i>
+            </button>
+          )}
+        </div>
       )}
     </div>
   );
 }
 
-function MultiColumnssComponent({
+function MultiColumnsComponent({
   data,
   id,
   onUpdate,
-}: BlockModuleComponentProps<MultiColumnssData>) {
-  return (
-    <div className="flex w-full gap-2 MultiColumnss">
-      {data.map((block, index) => {
-        if (!block) {
-          return (
-            <EmptyColumn
-              key={index}
-              onUpdate={(newBlock: IBlock) => {
-                onUpdate(
-                  data.map((col, idx) => {
-                    if (index === idx) {
-                      return {
-                        ...newBlock,
-                        parent: id,
-                      };
-                    }
-                    return col;
-                  }) as MultiColumnssData
-                );
-              }}
-            />
-          );
+}: BlockModuleComponentProps<MultiColumnsData>) {
+  const onUpdateEmpty = (newBlock: IBlock) => {
+    onUpdate(
+      data.map((col) => {
+        if (col.id === newBlock.id) {
+          return {
+            ...newBlock,
+            parent: id,
+          };
         }
-        return (
-          <div key={index} className="flex-1">
-            <BlockWrapper
-              key={block.id}
-              block={block}
-              canMove={false}
-              handleDelete={(blockToDelete) => {
-                onUpdate(
-                  data.map((col) => {
-                    if (col?.id === blockToDelete.id) {
-                      return null;
-                    }
-                    return col;
-                  }) as MultiColumnssData
-                );
-              }}
+        return col;
+      }) as MultiColumnsData
+    );
+  };
+
+  const handleDeleteEmtpy = (blockToDelete: IBlock) => {
+    onUpdate(
+      data.filter((block) => block?.id !== blockToDelete.id) as MultiColumnsData
+    );
+  };
+
+  const handleDeleteBlock = (blockToDelete: IBlock) => {
+    onUpdate(
+      data.map((col) => {
+        if (col.id === blockToDelete.id) {
+          return initialColum();
+        }
+        return col;
+      }) as MultiColumnsData
+    );
+  };
+
+  const onClickAdd = (index: number) => {
+    onUpdate([...data.slice(0, index), initialColum(), ...data.slice(index)]);
+  };
+
+  return (
+    <div className="flex w-full gap-2 MultiColumns">
+      {data.map((block, index) => (
+        <React.Fragment key={`${block.id}-wrapper`}>
+          {index > 0 && data.length < MAX_COLUMNS && (
+            <button
+              key={`${block.id}-add-col`}
+              className="focus:outline-none"
+              onClick={() => onClickAdd(index)}
+              title="Ajouter une colonne"
             >
-              <Block block={block} />
-            </BlockWrapper>
-          </div>
-        );
-      })}
+              <i className="fa fa-plus"></i>
+            </button>
+          )}
+          {block.type.id === "" ? (
+            <EmptyColumn
+              key={block.id}
+              id={block.id}
+              onUpdate={onUpdateEmpty}
+              onDelete={
+                data.length > MIN_COLUMNS
+                  ? () => handleDeleteEmtpy(block)
+                  : null
+              }
+            />
+          ) : (
+            <div key={block.id} className="flex-1">
+              <BlockWrapper
+                block={block}
+                canMove={false}
+                handleDelete={handleDeleteBlock}
+              >
+                <Block block={block} />
+              </BlockWrapper>
+            </div>
+          )}
+        </React.Fragment>
+      ))}
     </div>
   );
 }
 
-const initialData: MultiColumnssData = [null, null, null];
+const initialData: MultiColumnsData = [initialColum(), initialColum()];
 
-const multiCols: BlockPluginDefinition<MultiColumnssData> = {
+const multiCols: BlockPluginDefinition<MultiColumnsData> = {
   type: moduleType,
-  component: MultiColumnssComponent,
+  component: MultiColumnsComponent,
   initialData,
 };
 
