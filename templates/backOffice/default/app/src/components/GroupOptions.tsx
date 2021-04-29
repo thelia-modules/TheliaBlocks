@@ -72,14 +72,9 @@ function GroupTitle() {
   );
 }
 
-function GroupActions({
-  onSave,
-  hasUnSavedChanges,
-}: {
-  onSave: Function;
-  hasUnSavedChanges: boolean;
-}) {
+function GroupActions({ onSave }: { onSave: Function }) {
   const groupId = useSelector((state: RootState) => state.group.id);
+  const isUnsaved = useSelector((state: RootState) => state.ui.isUnsaved);
 
   return (
     <div>
@@ -89,7 +84,7 @@ function GroupActions({
       <button
         className="px-8 font-bold uppercase Button Button--primary"
         onClick={() => onSave()}
-        disabled={!hasUnSavedChanges}
+        disabled={!isUnsaved}
       >
         {groupId ? "Save" : "Create"}
       </button>
@@ -97,20 +92,14 @@ function GroupActions({
   );
 }
 
-function GroupOptions({
-  onSave,
-  hasUnSavedChanges,
-}: {
-  onSave: Function;
-  hasUnSavedChanges: boolean;
-}) {
+function GroupOptions({ onSave }: { onSave: Function }) {
   return (
     <div className="flex">
       <div className="flex-1">
         <GroupTitle />
       </div>
       <div className="ml-6">
-        <GroupActions onSave={onSave} hasUnSavedChanges={hasUnSavedChanges} />
+        <GroupActions onSave={onSave} />
       </div>
     </div>
   );

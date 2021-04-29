@@ -7,6 +7,7 @@ import { CURRENT_LOCAL } from '../constants';
 import { GroupTypeResponse, GroupTypeStore, IBlock } from "../types";
 import { setBlocks } from "../redux/blocks";
 import { setGroup } from "../redux/group";
+import { setUnsaved } from "../redux/ui";
 
 async function fetcher(url: string, config: AxiosRequestConfig = {}) {
   try {
@@ -30,7 +31,6 @@ export function useGroups() {
 export function useGroup() {
   const dispatch = useDispatch();
   const { id } : { id: string } = useParams();
-  console.log(id);
 
   return useQuery<GroupTypeResponse>(
     ["block_group", id],
@@ -78,6 +78,8 @@ export function useCreateOrUpdateGroup() {
     ),
     {
       onSuccess: (data: GroupTypeStore) => {
+        dispatch(setUnsaved(false));
+
         if(!id && data.id) {
           dispatch(setGroup(data));
           history.push(`/edit/${data.id}`);
