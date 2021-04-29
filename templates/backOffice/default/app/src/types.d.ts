@@ -45,5 +45,5 @@ export type BlockPluginDefinition<TProp = { [key: string]: any }> = {
 };
 
 export type uiStoreType = {
-  isDirty: boolean;
+  isUnsaved: boolean;
 };
