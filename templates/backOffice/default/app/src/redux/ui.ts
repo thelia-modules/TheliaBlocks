@@ -1,9 +1,11 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import hash from 'object-hash';
 
-import { uiStoreType } from "../types";
+import { GroupTypeResponse, uiStoreType } from "../types";
 
 export let initialState: uiStoreType = {
   isUnsaved: false,
+  hashSaved: "",
 };
 
 const uiSlice = createSlice({
@@ -13,9 +15,12 @@ const uiSlice = createSlice({
     setUnsaved(state, action: PayloadAction<boolean>) {
       state.isUnsaved = action.payload;
     },
+    setHashSaved(state, action: PayloadAction<GroupTypeResponse>) {
+      state.hashSaved = hash(action.payload);
+    },
   },
 });
 
-export const { setUnsaved } = uiSlice.actions;
+export const { setUnsaved, setHashSaved } = uiSlice.actions;
 
 export default uiSlice.reducer;

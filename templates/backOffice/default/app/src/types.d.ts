@@ -46,4 +46,5 @@ export type BlockPluginDefinition<TProp = { [key: string]: any }> = {
 
 export type uiStoreType = {
   isUnsaved: boolean;
+  hashSaved: string;
 };
