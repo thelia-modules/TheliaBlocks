@@ -5,18 +5,27 @@ import { updateBlock } from "../redux/blocks";
 import { useDispatch } from "react-redux";
 import { usePlugins } from "../pluginManager";
 
-function Block({ block }: { block: IBlock }) {
+function Block({
+  block,
+  handleUpdate,
+}: {
+  block: IBlock;
+  handleUpdate?: (newData: typeof block.data) => void;
+}) {
   const dispatch = useDispatch();
   const blocksLibrary = usePlugins();
   const blocksObj = keyBy(blocksLibrary, "type.id");
   const Component = blocksObj[block.type.id].component;
+
+  const defaultOnUpdate = (newData: typeof block.data) => {
+    dispatch(updateBlock({ id: block.id, data: newData }));
+  };
+
   return (
     <Component
       id={block.id}
       data={block.data}
-      onUpdate={(newData: typeof block.data) => {
-        dispatch(updateBlock({ id: block.id, data: newData }));
-      }}
+      onUpdate={handleUpdate || defaultOnUpdate}
     />
   );
 }
