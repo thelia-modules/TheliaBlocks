@@ -69,7 +69,7 @@ class ShortCodeListener implements EventSubscriberInterface
 
         $blockRenders = [];
         foreach ($blocks as $block) {
-            $blockRenders[] = $this->parser->render("blocks".DS.$block['type'].".html", $block);
+            $blockRenders[] = $this->parser->render("blocks".DS.$block['type']['id'].".html", $block);
         }
 
         $event->setResult(implode(' ', $blockRenders));

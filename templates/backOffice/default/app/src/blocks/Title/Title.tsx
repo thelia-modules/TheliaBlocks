@@ -58,7 +58,7 @@ function BlockTitleComponent({
 
   const onChangeLevel = (e: ChangeEvent<HTMLSelectElement>) => {
     setLevel(parseInt(e.target.value, 10));
-    onUpdate({ ...data, level: e.target.value });
+    onUpdate({ ...data, level: parseInt(e.target.value, 10) });
   };
 
   const onChangeText = (e: ChangeEvent<HTMLInputElement>) => {
