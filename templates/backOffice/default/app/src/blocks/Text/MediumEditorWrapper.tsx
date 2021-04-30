@@ -1,5 +1,5 @@
 import "medium-editor/dist/css/medium-editor.css";
-import "medium-editor/dist/css/themes/default.css";
+import "medium-editor/dist/css/themes/beagle.css";
 
 import MediumEditor, { CoreOptions } from "medium-editor";
 import React, { useEffect, useRef, useState } from "react";

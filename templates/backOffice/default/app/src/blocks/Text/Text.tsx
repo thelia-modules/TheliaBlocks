@@ -1,3 +1,4 @@
+import './Text.css';
 import { BlockModuleComponentProps, BlockPluginDefinition } from "../../types";
 
 import React, { useEffect, useState } from "react";
@@ -23,7 +24,23 @@ function BlockTextComponent({
         <Editor
           className="BlockText-editor"
           text={localData}
-          options={{ toolbar: { buttons: ["bold", "italic", "underline"] } }}
+          options={{
+            toolbar: {
+              buttons: [
+                "bold",
+                "italic",
+                "underline",
+                "unorderedlist",
+                "orderedlist",
+                "justifyLeft",
+                "justifyCenter",
+                "justifyRight",
+              ],
+              static: true,
+              updateOnEmptySelection: true,
+              align: 'center',
+            },
+          }}
           onChange={(text, medium) => {
             onUpdate({
               value: text,
