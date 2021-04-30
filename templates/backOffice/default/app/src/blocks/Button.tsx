@@ -59,6 +59,12 @@ const initialData = {
 
 const moduleType = {
   id: "blockButton",
+};
+
+const blockButton: BlockPluginDefinition<BlockButtonData> = {
+  type: moduleType,
+  component: BlockButtonComponent,
+  initialData,
   title: {
     default: "Button",
     fr_FR: "Bouton",
@@ -67,12 +73,6 @@ const moduleType = {
     default: "link to an url",
     fr_FR: "lien vers une url",
   },
-};
-
-const blockButton: BlockPluginDefinition<BlockButtonData> = {
-  type: moduleType,
-  component: BlockButtonComponent,
-  initialData,
 };
 
 export default blockButton;
