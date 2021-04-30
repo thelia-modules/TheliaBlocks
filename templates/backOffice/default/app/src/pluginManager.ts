@@ -1,4 +1,5 @@
 import ImageBlock from "./blocks/Image";
+import Group from "./blocks/Group";
 import MultiColumnss from "./blocks/MultiColumns";
 import Product from "./blocks/Product";
 import Text from "./blocks/Text";
@@ -11,6 +12,7 @@ import { nanoid } from "nanoid";
 export const __PLUGINS = [
   { id: nanoid(), ...Text },
   { id: nanoid(), ...ImageBlock },
+  { id: nanoid(), ...Group },
   { id: nanoid(), ...MultiColumnss },
   { id: nanoid(), ...Product },
   { id: nanoid(), ...Title },
