@@ -49,6 +49,12 @@ const initialData = {
 
 const moduleType = {
   id: "blockVideo",
+};
+
+const blockVideo: BlockPluginDefinition<BlockVideoData> = {
+  type: moduleType,
+  component: BlockVideoComponent,
+  initialData,
   title: {
     default: "Video",
     fr_FR: "Video",
@@ -60,12 +66,6 @@ const moduleType = {
   image: {
     default: "https://source.unsplash.com/featured/300x250?nature&blockVideo",
   },
-};
-
-const blockVideo: BlockPluginDefinition<BlockVideoData> = {
-  type: moduleType,
-  component: BlockVideoComponent,
-  initialData,
 };
 
 export default blockVideo;

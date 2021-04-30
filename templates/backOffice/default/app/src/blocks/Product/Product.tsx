@@ -54,6 +54,12 @@ const initialData = {
 
 const moduleType = {
   id: "blockProduct",
+};
+
+const blockProduct: BlockPluginDefinition<BlockProductData> = {
+  type: moduleType,
+  component: BlockProductComponent,
+  initialData,
   title: {
     default: "Product",
     fr_FR: "Produit",
@@ -65,12 +71,6 @@ const moduleType = {
   image: {
     default: "https://source.unsplash.com/featured/300x250?nature&blockProduct",
   },
-};
-
-const blockProduct: BlockPluginDefinition<BlockProductData> = {
-  type: moduleType,
-  component: BlockProductComponent,
-  initialData,
 };
 
 export default blockProduct;

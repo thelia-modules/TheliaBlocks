@@ -82,7 +82,9 @@ function BlockTitleComponent({
           value={level.toString()}
         >
           {levels.map(({ label, value }) => (
-            <option key={value} value={value}>{label}</option>
+            <option key={value} value={value}>
+              {label}
+            </option>
           ))}
         </select>
       </div>
@@ -108,6 +110,12 @@ const initialData = {
 
 const moduleType = {
   id: "blockTitle",
+};
+
+const BlockTitle: BlockPluginDefinition<BlockTitleData> = {
+  type: moduleType,
+  component: BlockTitleComponent,
+  initialData,
   title: {
     default: "Title",
     fr_FR: "Titre",
@@ -119,12 +127,6 @@ const moduleType = {
   image: {
     default: "https://source.unsplash.com/featured/300x250?nature&blockTitle",
   },
-};
-
-const BlockTitle: BlockPluginDefinition<BlockTitleData> = {
-  type: moduleType,
-  component: BlockTitleComponent,
-  initialData,
 };
 
 export default BlockTitle;

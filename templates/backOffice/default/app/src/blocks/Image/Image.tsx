@@ -1,7 +1,7 @@
 import React from "react";
 
 import "./Image.css";
-import previewImg from './preview.jpg';
+import previewImg from "./preview.jpg";
 import { BlockModuleComponentProps, BlockPluginDefinition } from "../../types";
 
 export type BlockImageData = {
@@ -64,6 +64,12 @@ const initialData = {
 
 const moduleType = {
   id: "blockImage",
+};
+
+const blockImage: BlockPluginDefinition<BlockImageData> = {
+  type: moduleType,
+  component: BlockImageComponent,
+  initialData,
   title: {
     default: "Image",
     fr_FR: "Image",
@@ -73,14 +79,8 @@ const moduleType = {
     fr_FR: "Affiche une image",
   },
   image: {
-    default: 'http://localhost:3000'+ previewImg,
+    default: "http://localhost:3000" + previewImg,
   },
-};
-
-const blockImage: BlockPluginDefinition<BlockImageData> = {
-  type: moduleType,
-  component: BlockImageComponent,
-  initialData,
 };
 
 export default blockImage;

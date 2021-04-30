@@ -5,12 +5,14 @@ type BlockModuleComponentProps<T> = {
 };
 
 export type i18nString = {
-  default: string,
-  [key:string]: string,
-}
+  default: string;
+  [key: string]: string;
+};
 
 export type BlockModuleType = {
   id: string;
+};
+export type BlockModuleI18n = {
   title: i18nString;
   description?: i18nString;
   image?: i18nString;
@@ -34,7 +36,9 @@ export type GroupTypeResponse = GroupTypeStore & {
   jsonContent?: string;
 };
 
-export type BlockPluginDefinition<TProp = { [key: string]: any }> = {
+export type BlockPluginDefinition<
+  TProp = { [key: string]: any }
+> = BlockModuleI18n & {
   readonly type: BlockModuleType;
   readonly component: (props: {
     data: TProp;

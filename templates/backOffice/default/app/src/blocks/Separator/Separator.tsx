@@ -1,4 +1,4 @@
-import './Separator.css';
+import "./Separator.css";
 
 import React, { ChangeEvent, FocusEvent } from "react";
 
@@ -9,7 +9,7 @@ export type BlockSeparatorData = {
   size: Number;
 };
 
-const types = [ 
+const types = [
   {
     label: "Espace",
     value: "space",
@@ -85,12 +85,18 @@ function BlockSeparatorComponent({
 }
 
 const initialData = {
-  type: 'space',
+  type: "space",
   size: 1,
 };
 
 const moduleType = {
   id: "blockSeparator",
+};
+
+const BlockSeparator: BlockPluginDefinition<BlockSeparatorData> = {
+  type: moduleType,
+  component: BlockSeparatorComponent,
+  initialData,
   title: {
     default: "Separator",
     fr_FR: "Séparateur",
@@ -100,14 +106,9 @@ const moduleType = {
     fr_FR: "Affiche un séparateur",
   },
   image: {
-    default: "https://source.unsplash.com/featured/300x250?nature&blockSeparator",
+    default:
+      "https://source.unsplash.com/featured/300x250?nature&blockSeparator",
   },
-};
-
-const BlockSeparator: BlockPluginDefinition<BlockSeparatorData> = {
-  type: moduleType,
-  component: BlockSeparatorComponent,
-  initialData,
 };
 
 export default BlockSeparator;

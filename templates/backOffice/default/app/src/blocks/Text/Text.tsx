@@ -1,4 +1,4 @@
-import './Text.css';
+import "./Text.css";
 import { BlockModuleComponentProps, BlockPluginDefinition } from "../../types";
 
 import React, { useEffect, useState } from "react";
@@ -38,7 +38,7 @@ function BlockTextComponent({
               ],
               static: true,
               updateOnEmptySelection: true,
-              align: 'center',
+              align: "center",
             },
           }}
           onChange={(text, medium) => {
@@ -58,6 +58,12 @@ const initialData = {
 
 const moduleType = {
   id: "blockText",
+};
+
+const Blocktext: BlockPluginDefinition<BlockTextData> = {
+  type: moduleType,
+  component: BlockTextComponent,
+  initialData,
   title: {
     default: "Text",
     fr_FR: "Texte",
@@ -69,12 +75,6 @@ const moduleType = {
   image: {
     default: "https://source.unsplash.com/featured/300x250?nature&blockText",
   },
-};
-
-const Blocktext: BlockPluginDefinition<BlockTextData> = {
-  type: moduleType,
-  component: BlockTextComponent,
-  initialData,
 };
 
 export default Blocktext;

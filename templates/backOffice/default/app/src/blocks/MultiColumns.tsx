@@ -23,17 +23,6 @@ export type MultiColumnsComponentProps = {
 
 const moduleType = {
   id: "multiColumns",
-  title: {
-    default: "Columns",
-    fr_FR: "Colonnes",
-  },
-  description: {
-    default: "Display blocks in multiple columns",
-    fr_FR: "Affiche des blocks dans différentes colonnes",
-  },
-  image: {
-    default: "https://source.unsplash.com/featured/300x250?nature&multiColumns",
-  },
 };
 const MIN_COLUMNS = 2;
 const MAX_COLUMNS = 5;
@@ -76,7 +65,7 @@ function EmptyBlock({
                 });
               }}
             >
-              {getI18nText(block.type.title)}
+              {getI18nText(block.title)}
             </div>
           ))
       ) : (
@@ -182,8 +171,10 @@ function MultiColumnsComponent({
     );
   };
 
-  const handleUpdateBlock = (currentBlock: IBlock) => (newData: IBlock["data"]) => {
-    onUpdate( 
+  const handleUpdateBlock = (currentBlock: IBlock) => (
+    newData: IBlock["data"]
+  ) => {
+    onUpdate(
       data.map((column) => ({
         ...column,
         blocks: column.blocks.map((block) => {
@@ -276,6 +267,17 @@ const multiCols: BlockPluginDefinition<MultiColumnsData> = {
   type: moduleType,
   component: MultiColumnsComponent,
   initialData,
+  title: {
+    default: "Columns",
+    fr_FR: "Colonnes",
+  },
+  description: {
+    default: "Display blocks in multiple columns",
+    fr_FR: "Affiche des blocks dans différentes colonnes",
+  },
+  image: {
+    default: "https://source.unsplash.com/featured/300x250?nature&multiColumns",
+  },
 };
 
 export default multiCols;

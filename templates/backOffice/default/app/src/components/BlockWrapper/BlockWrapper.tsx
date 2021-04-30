@@ -4,6 +4,7 @@ import { IBlock } from "../../types";
 import { useDispatch } from "react-redux";
 import { moveBlockUp, moveBlockDown } from "../../redux/blocks";
 import { getI18nText } from "../../utils/i18n";
+import { __PLUGINS } from "../../pluginManager";
 
 function BlockWrapper({
   children,
@@ -20,8 +21,11 @@ function BlockWrapper({
 }) {
   const dispatch = useDispatch();
   const [hilight, setHilight] = useState<boolean>(false);
-  const blockTitle = block.type.title
-    ? getI18nText(block.type.title)
+  const blockPluginTitle = __PLUGINS.find(
+    (plugin) => plugin.type.id === block.type.id
+  )?.title;
+  const blockTitle = blockPluginTitle
+    ? getI18nText(blockPluginTitle)
     : block.type.id;
 
   return (

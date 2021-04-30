@@ -1,6 +1,6 @@
 import "./BlockFromLibrary.css";
 import "tippy.js/dist/tippy.css";
-import 'tippy.js/themes/light.css';
+import "tippy.js/themes/light.css";
 
 import React from "react";
 import { useDispatch } from "react-redux";
@@ -9,7 +9,7 @@ import { nanoid } from "nanoid";
 
 import { addBlock } from "../../redux/blocks";
 import { __PLUGINS } from "../../pluginManager";
-import { BlockPluginDefinition, BlockModuleType } from "../../types";
+import { BlockPluginDefinition, BlockModuleI18n } from "../../types";
 import { getI18nText } from "../../utils/i18n";
 
 function BlockTooltip({
@@ -33,7 +33,7 @@ function BlockTooltip({
 function BlockFromLibrary({
   block,
 }: {
-  block: {
+  block: BlockModuleI18n & {
     id: string;
     initialData: BlockPluginDefinition["initialData"];
     type: BlockPluginDefinition["type"];
@@ -57,9 +57,7 @@ function BlockFromLibrary({
     }, 250);
   };
 
-  const displayedTitle = block.type.title
-    ? getI18nText(block.type.title)
-    : block.type.id;
+  const displayedTitle = block.title ? getI18nText(block.title) : block.type.id;
 
   return (
     <div className="BlockFromLibrary">
@@ -68,8 +66,8 @@ function BlockFromLibrary({
         content={
           <BlockTooltip
             title={displayedTitle}
-            image={block.type.image && getI18nText(block.type.image)}
-            description={block.type.description && getI18nText(block.type.description)}
+            image={block.image && getI18nText(block.image)}
+            description={block.description && getI18nText(block.description)}
           />
         }
       >
