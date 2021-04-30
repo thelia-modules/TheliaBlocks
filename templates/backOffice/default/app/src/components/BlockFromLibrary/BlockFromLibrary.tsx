@@ -1,6 +1,6 @@
 import "./BlockFromLibrary.css";
 import "tippy.js/dist/tippy.css";
-import 'tippy.js/themes/light.css';
+import "tippy.js/themes/light.css";
 
 import React from "react";
 import { useDispatch } from "react-redux";
@@ -37,6 +37,9 @@ function BlockFromLibrary({
     id: string;
     initialData: BlockPluginDefinition["initialData"];
     type: BlockPluginDefinition["type"];
+    title: BlockPluginDefinition["title"];
+    description: BlockPluginDefinition["description"];
+    image: BlockPluginDefinition["image"];
   };
 }) {
   const dispatch = useDispatch();
@@ -57,9 +60,7 @@ function BlockFromLibrary({
     }, 250);
   };
 
-  const displayedTitle = block.type.title
-    ? getI18nText(block.type.title)
-    : block.type.id;
+  const displayedTitle = block.title ? getI18nText(block.title) : block.type.id;
 
   return (
     <div className="BlockFromLibrary">
@@ -68,8 +69,8 @@ function BlockFromLibrary({
         content={
           <BlockTooltip
             title={displayedTitle}
-            image={block.type.image && getI18nText(block.type.image)}
-            description={block.type.description && getI18nText(block.type.description)}
+            image={block.image && getI18nText(block.image)}
+            description={block.description && getI18nText(block.description)}
           />
         }
       >

@@ -5,15 +5,12 @@ type BlockModuleComponentProps<T> = {
 };
 
 export type i18nString = {
-  default: string,
-  [key:string]: string,
-}
+  default: string;
+  [key: string]: string;
+};
 
 export type BlockModuleType = {
   id: string;
-  title: i18nString;
-  description?: i18nString;
-  image?: i18nString;
 };
 
 export type IBlock = {
@@ -42,6 +39,9 @@ export type BlockPluginDefinition<TProp = { [key: string]: any }> = {
     onUpdate: (props: TProp) => any;
   }) => JSX.Element;
   initialData: TProp;
+  title: i18nString;
+  description?: i18nString;
+  image?: i18nString;
 };
 
 export type uiStoreType = {
