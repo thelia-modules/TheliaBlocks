@@ -65,7 +65,7 @@ function EmptyBlock({
                 });
               }}
             >
-              {getI18nText(block.type.title)}
+              {getI18nText(block.title)}
             </div>
           ))
       ) : (
