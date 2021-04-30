@@ -9,7 +9,7 @@ import { nanoid } from "nanoid";
 
 import { addBlock } from "../../redux/blocks";
 import { __PLUGINS } from "../../pluginManager";
-import { BlockPluginDefinition, BlockModuleType } from "../../types";
+import { BlockPluginDefinition, BlockModuleI18n } from "../../types";
 import { getI18nText } from "../../utils/i18n";
 
 function BlockTooltip({
@@ -33,13 +33,10 @@ function BlockTooltip({
 function BlockFromLibrary({
   block,
 }: {
-  block: {
+  block: BlockModuleI18n & {
     id: string;
     initialData: BlockPluginDefinition["initialData"];
     type: BlockPluginDefinition["type"];
-    title: BlockPluginDefinition["title"];
-    description: BlockPluginDefinition["description"];
-    image: BlockPluginDefinition["image"];
   };
 }) {
   const dispatch = useDispatch();
