@@ -1,6 +1,6 @@
-<div class="flex gap-8">
+<div class="md:flex md:gap-8">
   {foreach $data as $column}
-    <div class="flex-1">
+    <div class="md:flex-1">
       {foreach $column["group"]["data"] as $block}
         {if $block['type']['id']}
           {$templateFileName = "blocks/"|cat:$block['type']['id']|cat:".html"}
