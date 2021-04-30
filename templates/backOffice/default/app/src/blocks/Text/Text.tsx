@@ -11,7 +11,7 @@ function BlockTextComponent({
   data,
   onUpdate,
 }: BlockModuleComponentProps<BlockTextData>) {
-  const [localData, setData] = useState<string>("");
+  const [localData, setData] = useState<string>(data.value);
 
   useEffect(() => {
     setData(data.value);
@@ -19,12 +19,18 @@ function BlockTextComponent({
 
   return (
     <div className="BlockText cursor-text">
-      <Editor
-        className="BlockText-editor"
-        text="test"
-        onChange={onUpdate}
-        options={{ toolbar: { buttons: ["bold", "italic", "underline"] } }}
-      />
+      {data !== undefined ? (
+        <Editor
+          className="BlockText-editor"
+          text={localData}
+          options={{ toolbar: { buttons: ["bold", "italic", "underline"] } }}
+          onChange={(text, medium) => {
+            onUpdate({
+              value: text,
+            });
+          }}
+        />
+      ) : null}
     </div>
   );
 }

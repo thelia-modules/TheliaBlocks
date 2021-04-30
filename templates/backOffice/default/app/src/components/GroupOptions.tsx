@@ -60,7 +60,7 @@ function GroupTitle() {
     <div className="mb-6 GroupTitle">
       <input
         type="text"
-        value={groupState.title}
+        value={groupState.title || ""}
         placeholder="Titre de la group"
         className="w-full"
         onChange={onInputChange}

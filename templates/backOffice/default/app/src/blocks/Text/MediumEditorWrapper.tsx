@@ -4,35 +4,45 @@ import "medium-editor/dist/css/themes/default.css";
 import MediumEditor, { CoreOptions } from "medium-editor";
 import React, { useEffect, useRef, useState } from "react";
 
-export default function Editor(props: {
+export default function Editor(prop: {
   text: string;
+  onChange: (newText: string, editor: MediumEditor.MediumEditor) => void;
   options?: CoreOptions;
   className?: string;
-  onChange: Function;
 }) {
-  const [text, setText] = useState(props.text);
-  const wrapperRef = useRef<any>(null);
+  const ref = useRef<HTMLElement | null>(null);
+  const [text, setText] = useState(prop.text);
+  const [editor, setEditor] = useState<MediumEditor.MediumEditor | null>(null);
 
   useEffect(() => {
-    const medium = new MediumEditor(wrapperRef.current, props.options);
+    if (ref.current) {
+      const medium = new MediumEditor(ref.current, prop.options);
+      setEditor(medium);
 
-    setText(props.text);
+      medium.subscribe("editableInput", () => {
+        if (prop.onChange && ref.current)
+          prop.onChange(ref.current.innerHTML, medium);
+      });
+    }
+  }, [ref]);
 
-    medium.subscribe("editableInput", () => {
-      if (props.onChange) props.onChange(wrapperRef.current.innerHTML, medium);
-    });
-
-    return () => {
-      medium.destroy();
-    };
+  useEffect(() => {
+    setText(prop.text);
   }, [text]);
 
-  return (
-    <div
-      ref={wrapperRef}
-      className={`focus:shadow-none focus:outline-none ${
-        props.className || ""
-      }`}
-    ></div>
-  );
+  useEffect(() => {
+    return () => {
+      if (editor) {
+        editor.destroy();
+      }
+    };
+  }, [editor]);
+
+  const editorProp = {
+    ...prop,
+    dangerouslySetInnerHTML: { __html: text },
+    ref,
+  };
+
+  return React.createElement("div", editorProp);
 }
