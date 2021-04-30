@@ -24,7 +24,9 @@ export default function CreateGroup() {
   }, []);
 
   useEffect(() => {
-    dispatch(setUnsaved(!!group.title || blocks.length > 0));
+    if(!isUnsaved){
+      dispatch(setUnsaved(!!group.title || blocks.length > 0));
+    }
   }, [group, blocks]);
 
   const onSave = () => {

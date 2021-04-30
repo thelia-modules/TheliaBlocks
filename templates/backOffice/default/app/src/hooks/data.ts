@@ -7,7 +7,7 @@ import { CURRENT_LOCAL } from '../constants';
 import { GroupTypeResponse, GroupTypeStore, IBlock } from "../types";
 import { setBlocks } from "../redux/blocks";
 import { setGroup } from "../redux/group";
-import { setUnsaved } from "../redux/ui";
+import { setHashSaved, setUnsaved } from "../redux/ui";
 
 async function fetcher(url: string, config: AxiosRequestConfig = {}) {
   try {
@@ -47,6 +47,8 @@ export function useGroup() {
         const { jsonContent, ...rest } = data;
          
         dispatch(setGroup(rest));
+        dispatch(setUnsaved(false));
+        dispatch(setHashSaved(data));
 
         if (jsonContent) {
           dispatch(setBlocks(JSON.parse(jsonContent))); 
@@ -77,8 +79,12 @@ export function useCreateOrUpdateGroup() {
       }
     ),
     {
-      onSuccess: (data: GroupTypeStore) => {
+      onSuccess: (data: GroupTypeStore, variables) => {
         dispatch(setUnsaved(false));
+        dispatch(setHashSaved({
+          ...data,
+          jsonContent: JSON.stringify(variables.blocks),
+        }));
 
         if(!id && data.id) {
           dispatch(setGroup(data));
