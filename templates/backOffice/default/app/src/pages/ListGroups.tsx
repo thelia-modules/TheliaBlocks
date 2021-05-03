@@ -1,28 +1,30 @@
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import React from "react";
-import { useGroups } from "../hooks/data";
 import Tippy from "@tippyjs/react";
-import { useState } from "react";
+import useCopyToClipboard from "react-use/lib/useCopyToClipboard";
+
+import { useGroups } from "../hooks/data";
 
 const TEXT_COPY_SHORTCODE = "Copier le shortcode";
+const TEXT_COPIED = "Copié !";
+const TEXT_ERROR_COPY = "Une erreur est survenue";
 
 export default function ListGroups() {
   const res = useGroups();
-  const [copyText, setCopyText] =  useState<string>(TEXT_COPY_SHORTCODE)
+  const [copyText, setCopyText] = useState<string>(TEXT_COPY_SHORTCODE);
+  const [copied, copyToClipboard] = useCopyToClipboard();
 
   if (!res.data) {
     return null;
   }
 
-  const copyShortcodeToClipboard = (shortcode: string) => {
-    navigator.clipboard.writeText(shortcode).then(function() {
-      setCopyText("Copié !");
+  useEffect(() => {
+    setCopyText(copied.error ? TEXT_ERROR_COPY : TEXT_COPIED);
 
-      setTimeout(() => {
-        setCopyText(TEXT_COPY_SHORTCODE);
-      }, 1500);
-    });
-  }
+    setTimeout(() => {
+      setCopyText(TEXT_COPY_SHORTCODE);
+    }, 1500);
+  }, [copied]);
 
   return (
     <ul>
@@ -32,7 +34,14 @@ export default function ListGroups() {
             {group.title} ({group.id})
           </Link>
           <Tippy content={copyText} hideOnClick={false}>
-            <button className="px-8 py-5 ml-1 hover:bg-gray-200" onClick={() => copyShortcodeToClipboard(`[block_group slug=${group.slug}]`)}><i className="fa fa-clipboard"></i></button>
+            <button
+              className="px-8 py-5 ml-1 hover:bg-gray-200"
+              onClick={() =>
+                copyToClipboard(`[block_group slug=${group.slug}]`)
+              }
+            >
+              <i className="fa fa-clipboard"></i>
+            </button>
           </Tippy>
         </li>
       ))}
