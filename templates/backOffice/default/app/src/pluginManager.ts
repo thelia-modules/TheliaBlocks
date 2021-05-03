@@ -7,6 +7,7 @@ import Separator from "./blocks/Separator";
 import Text from "./blocks/Text";
 import Title from "./blocks/Title";
 import Video from "./blocks/Video";
+import Highlight from "./blocks/Highlight";
 import { nanoid } from "nanoid";
 // const modules = import.meta.globEager("./blocks/*.tsx");
 
@@ -20,6 +21,7 @@ export const __PLUGINS = [
   { id: nanoid(), ...Video },
   { id: nanoid(), ...Separator },
   { id: nanoid(), ...Button },
+  { id: nanoid(), ...Highlight },
 ];
 
 export function registerPlugin(plugin: any) {
