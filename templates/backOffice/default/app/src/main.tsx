@@ -1,7 +1,5 @@
-import "vite/dynamic-import-polyfill";
-
 import React from "react";
-import ReactDOM from "react-dom";
+
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Link, Route, HashRouter as Router, Switch } from "react-router-dom";
 import { Provider } from "react-redux";
@@ -22,7 +20,7 @@ const queryClient = new QueryClient({
   },
 });
 
-ReactDOM.render(
+const TheliaBlocksBackOffice = () => (
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
@@ -53,6 +51,7 @@ ReactDOM.render(
         </Router>
       </Provider>
     </QueryClientProvider>
-  </React.StrictMode>,
-  document.getElementById("thelia-blocks-root")
+  </React.StrictMode>
 );
+
+export default TheliaBlocksBackOffice;
