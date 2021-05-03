@@ -14,10 +14,6 @@ export default function ListGroups() {
   const [copyText, setCopyText] = useState<string>(TEXT_COPY_SHORTCODE);
   const [copied, copyToClipboard] = useCopyToClipboard();
 
-  if (!res.data) {
-    return null;
-  }
-
   useEffect(() => {
     setCopyText(copied.error ? TEXT_ERROR_COPY : TEXT_COPIED);
 
@@ -25,6 +21,10 @@ export default function ListGroups() {
       setCopyText(TEXT_COPY_SHORTCODE);
     }, 1500);
   }, [copied]);
+
+  if (!res.data) {
+    return null;
+  }
 
   return (
     <ul>
