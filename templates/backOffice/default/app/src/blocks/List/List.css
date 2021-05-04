@@ -1,0 +1,29 @@
+.BlockList {
+    &-config {
+        @apply bg-gray-100 py-2 px-4 mb-4;
+
+        label {
+            @apply mr-4;
+        }
+    }
+
+    &-line {
+        @apply flex mb-4;
+
+        input {
+            @apply flex-grow;
+        }
+
+        button {
+            @apply mx-4 text-lg text-red-500;
+
+            &[disabled] {
+                @apply text-gray-300 cursor-not-allowed;
+            }
+        }
+    }
+
+    &-add {
+        @apply py-2 px-4 border hover:bg-gray-50;
+    }
+}
