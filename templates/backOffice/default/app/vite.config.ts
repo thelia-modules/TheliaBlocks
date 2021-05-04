@@ -2,15 +2,24 @@ const path = require("path");
 
 import { defineConfig } from "vite";
 import reactRefresh from "@vitejs/plugin-react-refresh";
-import svgr from 'vite-plugin-svgr';
+import svgr from "vite-plugin-svgr";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [reactRefresh(), svgr()],
   build: {
-    manifest: true,
+    lib: {
+      entry: path.resolve(__dirname, "src/main.tsx"),
+      name: "TheliaBlocksBackOffice",
+    },
+    target: "es2015",
     rollupOptions: {
-      input: "src/main.tsx",
+      external: ["react"],
+      output: {
+        globals: {
+          react: "React",
+        },
+      },
     },
   },
 });

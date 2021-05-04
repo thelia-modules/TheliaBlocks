@@ -1,7 +1,7 @@
 {extends file="admin-layout.tpl"}
 
 {block name="no-return-functions"}
-{$admin_current_location = 'TheliaBlocks'}
+    {$admin_current_location = 'TheliaBlocks'}
 {/block}
 
 {block name="page-title"}{intl l='Thelia blocks'}{/block}
@@ -9,20 +9,39 @@
 {block name="check-resource"}admin.content{/block}
 {block name="check-access"}view{/block}
 
-{block name="main-content"}
-
-<div id="thelia-blocks-root"></div>
-<script>
-    window.global = window;
-</script>
-<script type="module">
-    import RefreshRuntime from 'http://localhost:3000/@react-refresh'
-    RefreshRuntime.injectIntoGlobalHook(window)
-    window.$RefreshReg$ = () => {}
-    window.$RefreshSig$ = () => (type) => type
-    window.__vite_plugin_react_preamble_installed__ = true
-  </script>
-<script type="module" src="http://localhost:3000/@vite/client"></script>
-<script type="module" src="http://localhost:3000/src/main.tsx"></script>
+{block name="after-admin-css"}
+    {stylesheets file='app/dist/style.css' template="default" source="TheliaBlocks"}
+        <link rel="stylesheet" href="{$asset_url}" />
+    {/stylesheets}
 {/block}
 
+{block name="main-content"}
+    <div id="thelia-blocks-root"></div>
+
+    <script>
+        window.global = window;
+    </script>
+{/block}
+
+{block name="javascript-last-call"}
+    {if $smarty.server.THELIABLOCKS_DEV}
+        <script type="module">
+            import RefreshRuntime from 'http://localhost:3000/@react-refresh'
+            RefreshRuntime.injectIntoGlobalHook(window)
+            window.$RefreshReg$ = () => {}
+            window.$RefreshSig$ = () => (type) => type
+            window.__vite_plugin_react_preamble_installed__ = true
+        </script>
+        <script type="module" src="http://localhost:3000/@vite/client"></script>
+        <script type="module" src="http://localhost:3000/src/dev.js"></script>
+    {else}
+        <script type="text/javascript" crossorigin src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+        <script type="text/javascript" crossorigin src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+        {javascripts file='app/dist/thelia-pages.umd.js' template="default" source="TheliaBlocks"}
+            <script type="text/javascript" src="{$asset_url}"></script>
+        {/javascripts}
+        <script>
+            ReactDOM.render(React.createElement(TheliaBlocksBackOffice), document.getElementById('thelia-blocks-root'))
+        </script>
+    {/if}
+{/block}
