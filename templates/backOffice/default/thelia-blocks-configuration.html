@@ -37,9 +37,12 @@
     {else}
         <script type="text/javascript" crossorigin src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
         <script type="text/javascript" crossorigin src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
-        {javascripts file='app/dist/thelia-pages.umd.js' template="default" source="TheliaBlocks"}
+        {javascripts file='app/dist/thelia-blocks.umd.js' template="default" source="TheliaBlocks"}
             <script type="text/javascript" src="{$asset_url}"></script>
         {/javascripts}
+
+        {hook name="thelia.blocks.plugins"}
+
         <script>
             ReactDOM.render(React.createElement(TheliaBlocksBackOffice), document.getElementById('thelia-blocks-root'))
         </script>

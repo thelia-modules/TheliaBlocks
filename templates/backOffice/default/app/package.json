@@ -1,17 +1,17 @@
 {
-  "name": "thelia-pages",
+  "name": "thelia-blocks",
   "files": [
     "dist"
   ],
-  "main": "./dist/thelia-pages.umd.js",
-  "module": "./dist/thelia-pages.es.js",
+  "main": "./dist/thelia-blocks.umd.js",
+  "module": "./dist/thelia-blocks.es.js",
   "exports": {
     ".": {
-      "import": "./dist/thelia-pages.es.js",
-      "require": "./dist/thelia-pages.umd.js"
+      "import": "./dist/thelia-blocks.es.js",
+      "require": "./dist/thelia-blocks.umd.js"
     }
   },
-  "version": "0.0.0",
+  "version": "0.1.0",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
