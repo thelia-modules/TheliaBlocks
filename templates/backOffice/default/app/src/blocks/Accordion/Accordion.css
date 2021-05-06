@@ -1,0 +1,23 @@
+.Accordion {
+    &-item {
+        @apply flex flex-col flex-1 bg-gray-50 border border-gray-200 p-4;
+
+    }
+
+    &-itemHead {
+        @apply flex items-center justify-between border-b pb-3 px-4 gap-8 mb-2;
+    }
+
+    &-itemTitle {
+        @apply flex items-center gap-4 flex-grow;
+
+        label {
+            @apply mb-0;
+        }
+
+        input {
+            @apply flex-grow;
+        }
+    }
+
+}

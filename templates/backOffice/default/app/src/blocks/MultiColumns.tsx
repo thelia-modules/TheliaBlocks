@@ -23,6 +23,7 @@ const moduleType = {
 };
 const MIN_COLUMNS = 2;
 const MAX_COLUMNS = 5;
+
 const emptyColumnData = () => {
   const columnId = nanoid();
 
