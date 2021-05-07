@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "react-query";
 import { useDispatch } from "react-redux";
 import { useParams, useHistory } from "react-router-dom";
 
-import { CURRENT_LOCAL } from '../constants';
+import { CURRENT_LOCAL } from "../constants";
 import { GroupTypeResponse, GroupTypeStore, IBlock } from "../types";
 import { setBlocks } from "../redux/blocks";
 import { setGroup } from "../redux/group";
@@ -30,7 +30,7 @@ export function useGroups() {
 
 export function useGroup() {
   const dispatch = useDispatch();
-  const { id } : { id: string } = useParams();
+  const { id }: { id: string } = useParams();
 
   return useQuery<GroupTypeResponse>(
     ["block_group", id],
@@ -45,13 +45,13 @@ export function useGroup() {
       enabled: !!id,
       onSuccess: (data: GroupTypeResponse) => {
         const { jsonContent, ...rest } = data;
-         
+
         dispatch(setGroup(rest));
         dispatch(setUnsaved(false));
         dispatch(setHashSaved(data));
 
         if (jsonContent) {
-          dispatch(setBlocks(JSON.parse(jsonContent))); 
+          dispatch(setBlocks(JSON.parse(jsonContent)));
         }
       },
     }
@@ -61,12 +61,11 @@ export function useGroup() {
 export function useCreateOrUpdateGroup() {
   const dispatch = useDispatch();
   let history = useHistory();
-  let { id } : { id: string } = useParams();
+  let { id }: { id: string } = useParams();
 
-  return useMutation(({ group, blocks } : { group: GroupTypeStore, blocks: IBlock[]}) =>
-    fetcher(
-      `/open_api/block_group`,
-      {
+  return useMutation(
+    ({ group, blocks }: { group: GroupTypeStore; blocks: IBlock[] }) =>
+      fetcher(`/open_api/block_group`, {
         method: id ? "PATCH" : "POST",
         data: {
           blockGroup: {
@@ -76,21 +75,34 @@ export function useCreateOrUpdateGroup() {
           },
           locale: CURRENT_LOCAL,
         },
-      }
-    ),
+      }),
     {
       onSuccess: (data: GroupTypeStore, variables) => {
         dispatch(setUnsaved(false));
-        dispatch(setHashSaved({
-          ...data,
-          jsonContent: JSON.stringify(variables.blocks),
-        }));
+        dispatch(
+          setHashSaved({
+            ...data,
+            jsonContent: JSON.stringify(variables.blocks),
+          })
+        );
 
-        if(!id && data.id) {
+        if (!id && data.id) {
           dispatch(setGroup(data));
           history.push(`/edit/${data.id}`);
         }
       },
+    }
+  );
+}
+
+export function useDeleteGroup({ onSuccess }: { onSuccess: () => any }) {
+  return useMutation(
+    ({ id }: { id: GroupTypeStore["id"] }) =>
+      fetcher(`/open_api/block_group/${id}`, {
+        method: "DELETE",
+      }),
+    {
+      onSuccess,
     }
   );
 }

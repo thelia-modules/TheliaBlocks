@@ -58,7 +58,7 @@ function BlockWrapper({
           <button
             className="ml-auto text-sm text-red-500"
             onClick={() => {
-              if (window.confirm("la suppresion est définitive")) {
+              if (window.confirm("La suppression est définitive")) {
                 handleDelete(block);
               }
             }}

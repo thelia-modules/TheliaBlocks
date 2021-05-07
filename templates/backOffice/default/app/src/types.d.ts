@@ -27,7 +27,7 @@ export type IBlock = {
 
 export type GroupTypeStore = {
   id?: string;
-  visible: true;
+  visible: boolean;
   title: string;
   slug: string;
 };

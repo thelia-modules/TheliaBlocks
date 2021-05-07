@@ -3,8 +3,10 @@ import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Link, Route, HashRouter as Router, Switch } from "react-router-dom";
 import { Provider } from "react-redux";
+import { ToastContainer } from 'react-toastify';
 
 import "./styles/index.css";
+import 'react-toastify/dist/ReactToastify.css';
 
 import store from "./redux/store";
 import CreateGroup from "./pages/CreateGroup";
@@ -47,6 +49,7 @@ const TheliaBlocksBackOffice = () => (
                 </Route>
               </Switch>
             </div>
+            <ToastContainer autoClose={3000} />
           </div>
         </Router>
       </Provider>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Prompt } from "react-router-dom";
 import hash from 'object-hash';
+import { toast } from 'react-toastify';
 
 import { RootState } from "../redux/store";
 import { setUnsaved, setHashSaved } from "../redux/ui";
@@ -32,6 +33,7 @@ export default function EditGroup() {
 
   const onSave = () => {
     mutation.mutate({ group, blocks });
+    toast.success("Le groupe a bien été sauvegardé");
   }
 
   if(!isFetchedAfterMount || isLoading) {
