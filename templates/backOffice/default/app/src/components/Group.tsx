@@ -14,21 +14,23 @@ function Group({ onSave }: { onSave: Function }) {
   return (
     <div className="p-12 bg-white shadow Group">
       <GroupOptions onSave={onSave} />
-      <div className="flex flex-col gap-6">
-        {blocks.map((block) => {
-          return (
-            <BlockWrapper
-              key={block.id}
-              block={block}
-              handleDelete={(block) => {
-                dispatch(deleteBlock(block.id));
-              }}
-            >
-              <Block block={block} />
-            </BlockWrapper>
-          );
-        })}
-      </div>
+      {blocks.length > 0 && (
+        <div className="flex flex-col gap-6 mt-6">
+          {blocks.map((block) => {
+            return (
+              <BlockWrapper
+                key={block.id}
+                block={block}
+                handleDelete={(block) => {
+                  dispatch(deleteBlock(block.id));
+                }}
+              >
+                <Block block={block} />
+              </BlockWrapper>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { RootState } from "../redux/store";
 import { setGroupTitle, setGroupSlug } from "../redux/group";
 import { useGroups } from "../hooks/data";
 import { GroupTypeStore } from "../types";
+import slugify from "../utils/slugify";
 
 function GroupsDropdown({ search }: { search: string }) {
   const {
@@ -29,8 +30,8 @@ function GroupsDropdown({ search }: { search: string }) {
   }
 
   const autoCompleteResults = data.filter(
-    ({ title }: { title: GroupTypeStore["title"] }) =>
-      title?.search(new RegExp(search, "i")) !== -1
+    ({ slug }: { slug: GroupTypeStore["slug"] }) =>
+      slug?.search(new RegExp(slugify(search), "i")) !== -1
   );
   if (!autoCompleteResults.length) {
     return null;
@@ -57,11 +58,11 @@ function GroupTitle() {
   };
 
   return (
-    <div className="mb-6 GroupTitle">
+    <div className="GroupTitle">
       <input
         type="text"
         value={groupState.title || ""}
-        placeholder="Titre de la group"
+        placeholder="Titre du groupe"
         className="w-full"
         onChange={onInputChange}
       />
@@ -78,9 +79,9 @@ function GroupActions({ onSave }: { onSave: Function }) {
 
   return (
     <div>
-      {groupId && (
+      {/*
         <button className="px-8 font-bold uppercase Button">Validate</button>
-      )}
+      */}
       <button
         className="px-8 font-bold uppercase Button Button--primary"
         onClick={() => onSave()}
