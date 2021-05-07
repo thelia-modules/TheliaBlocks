@@ -1,0 +1,21 @@
+<div class="mb-4">
+    {foreach $data as $item}
+      {$itemContain = []}
+      {$renderTemplates = []}
+      {foreach $item["group"]["data"] as $block}
+          {if $block['type']['id']}
+              {$itemContain[] = $block['type']['id']}
+
+              {$templateFileName = "blocks/"|cat:$block['type']['id']|cat:".html"}
+              {capture name="catpure-renderTemplates" append="renderTemplates"}
+
+                  {include file=$templateFileName data=$block['data']}
+              {/capture}
+          {/if}
+      {/foreach}
+      <h3>{$item['title']}</h3>
+      <div data-theliablocks-contain="{$itemContain|implode:' '}">
+          {$renderTemplates|implode:' ' nofilter}
+      </div>
+    {/foreach}
+  </div>

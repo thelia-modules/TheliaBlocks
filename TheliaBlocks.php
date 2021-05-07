@@ -7,6 +7,7 @@ use ShortCode\ShortCode;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ServicesConfigurator;
 use Thelia\Install\Database;
 use Thelia\Module\BaseModule;
+use Thelia\Core\Template\TemplateDefinition;
 
 class TheliaBlocks extends BaseModule
 {
@@ -26,6 +27,18 @@ class TheliaBlocks extends BaseModule
         }
 
         return true;
+    }
+
+    public function getHooks()
+    {
+        return [
+            [
+                'type' => TemplateDefinition::BACK_OFFICE,
+                'code' => 'thelia.blocks.plugins',
+                'title' => 'Hook blocks plugins',
+                'description' => 'Hook to add thelia blocks plugins',
+            ],
+        ];
     }
 
     /**
