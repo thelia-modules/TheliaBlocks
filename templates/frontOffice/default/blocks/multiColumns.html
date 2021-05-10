@@ -1,4 +1,4 @@
-<div class="md:flex md:gap-8">
+<div class="tb-{$type['id']} md:flex md:gap-8">
   {foreach $data as $column}
     {$columnContain = []}
     {$renderTemplates = []}
@@ -8,12 +8,12 @@
 
             {$templateFileName = "blocks/"|cat:$block['type']['id']|cat:".html"}
             {capture name="catpure-renderTemplates" append="renderTemplates"}
-                {include file=$templateFileName data=$block['data']}
+                {include file=$templateFileName data=$block['data'] type=$block['type']}
             {/capture}
         {/if}
     {/foreach}
 
-    <div class="md:flex-1" data-theliablocks-contain="{$columnContain|implode:' '}">
+    <div class="md:flex-1" data-tb-contain="{$columnContain|implode:' '}">
         {$renderTemplates|implode:' ' nofilter}
     </div>
   {/foreach}

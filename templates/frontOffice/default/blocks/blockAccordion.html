@@ -1,4 +1,4 @@
-<div class="mb-4">
+<div class="block-{$type['id']} mb-4">
     {foreach $data as $item}
       {$itemContain = []}
       {$renderTemplates = []}
@@ -9,12 +9,12 @@
               {$templateFileName = "blocks/"|cat:$block['type']['id']|cat:".html"}
               {capture name="catpure-renderTemplates" append="renderTemplates"}
 
-                  {include file=$templateFileName data=$block['data']}
+                  {include file=$templateFileName data=$block['data'] type=$block['type']}
               {/capture}
           {/if}
       {/foreach}
       <h3>{$item['title']}</h3>
-      <div data-theliablocks-contain="{$itemContain|implode:' '}">
+      <div data-tb-contain="{$itemContain|implode:' '}">
           {$renderTemplates|implode:' ' nofilter}
       </div>
     {/foreach}
