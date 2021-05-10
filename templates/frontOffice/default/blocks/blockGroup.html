@@ -1,6 +1,8 @@
-{foreach $data as $block} 
-    {if $block['type']['id']}
-        {$templateFileName = "blocks/"|cat:$block['type']['id']|cat:".html"}
-        {include file=$templateFileName data=$block['data']} 
-    {/if} 
-{/foreach}
+<div class="tb-{$type['id']}">
+    {foreach $data as $block}
+        {if $block['type']['id']}
+            {$templateFileName = "blocks/"|cat:$block['type']['id']|cat:".html"}
+            {include file=$templateFileName data=$block['data'] type=$block['type']}
+        {/if}
+    {/foreach}
+</div>

@@ -22,9 +22,12 @@ const groupSlice = createSlice({
     setGroupSlug(state, action: PayloadAction<string>) {
       state.slug = slugify(action.payload);
     },
+    setGroupVisible(state, action: PayloadAction<boolean>) {
+      state.visible = action.payload;
+    },
   },
 });
 
-export const { setGroup, setGroupTitle, setGroupSlug } = groupSlice.actions;
+export const { setGroup, setGroupTitle, setGroupSlug, setGroupVisible } = groupSlice.actions;
 
 export default groupSlice.reducer;

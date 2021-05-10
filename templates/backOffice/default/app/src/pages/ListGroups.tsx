@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import Tippy from "@tippyjs/react";
 import useCopyToClipboard from "react-use/lib/useCopyToClipboard";
 
-import { useGroups } from "../hooks/data";
+// import { setGroupVisible } from "../redux/group";
+import { useDeleteGroup, useGroups } from "../hooks/data";
+import { GroupTypeStore } from "../types";
 
 const TEXT_COPY_SHORTCODE = "Copier le shortcode";
 const TEXT_COPIED = "Copié !";
@@ -13,6 +15,9 @@ export default function ListGroups() {
   const res = useGroups();
   const [copyText, setCopyText] = useState<string>(TEXT_COPY_SHORTCODE);
   const [copied, copyToClipboard] = useCopyToClipboard();
+  const mutation = useDeleteGroup({ onSuccess: () => {
+    res.refetch();
+  } });
 
   useEffect(() => {
     setCopyText(copied.error ? TEXT_ERROR_COPY : TEXT_COPIED);
@@ -22,8 +27,21 @@ export default function ListGroups() {
     }, 1500);
   }, [copied]);
 
+  // const updateGroupVisibility = (group: GroupTypeStore, visible: boolean) => {};
+
+  const deleteGroup = (group: GroupTypeStore) => {
+    if (window.confirm("La suppression est définitive")) {
+      mutation.mutate({ id: group.id });
+    }
+  };
+
   if (!res.data) {
-    return null;
+    return (
+      <p className="alert alert-info">
+        Aucun groupe existant. Pour créer un nouveau groupe, cliquez sur le
+        bouton "Ajouter un groupe de blocs".
+      </p>
+    );
   }
 
   return (
@@ -33,16 +51,47 @@ export default function ListGroups() {
           <Link className="flex-grow block p-5" to={`/edit/${group.id}`}>
             {group.title} ({group.id})
           </Link>
-          <Tippy content={copyText} hideOnClick={false}>
-            <button
-              className="px-8 py-5 ml-1 hover:bg-gray-200"
-              onClick={() =>
-                copyToClipboard(`[block_group slug=${group.slug}]`)
-              }
-            >
-              <i className="fa fa-clipboard"></i>
-            </button>
-          </Tippy>
+          <div>
+            {/* {group.visible ? (
+              <Tippy content={"Désactiver le groupe"} hideOnClick={false}>
+                <button
+                  className="px-6 py-5 border-l hover:bg-gray-200"
+                  onClick={() => updateGroupVisibility(group, false)}
+                >
+                  <i className="fa fa-eye"></i>
+                </button>
+              </Tippy>
+            ) : (
+              <Tippy content={"Activer le groupe"} hideOnClick={false}>
+                <button
+                  className="px-6 py-5 border-l hover:bg-gray-200"
+                  onClick={() => updateGroupVisibility(group, true)}
+                >
+                  <i className="fa fa-eye-slash"></i>
+                </button>
+              </Tippy>
+            )} */}
+            <Tippy content={copyText} hideOnClick={false}>
+              <button
+                className="px-6 py-5 border-l hover:bg-gray-200"
+                onClick={() =>
+                  copyToClipboard(`[block_group slug=${group.slug}]`)
+                }
+              >
+                <i className="fa fa-clipboard"></i>
+              </button>
+            </Tippy>
+            <Tippy content={"Supprimer le groupe"} hideOnClick={false}>
+              <button
+                className="px-6 py-5 text-red-600 border-l hover:bg-gray-200"
+                onClick={() =>
+                  deleteGroup(group)
+                }
+              >
+                <i className="fa fa-trash"></i>
+              </button>
+            </Tippy>
+          </div>
         </li>
       ))}
     </ul>

@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
+import { Prompt } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from 'react-toastify';
 
 import { setGroup, initialState as initialGroupState } from "../redux/group";
 import { setBlocks, initialState as initialBlocksState } from "../redux/blocks";
@@ -8,7 +10,6 @@ import Menu from "../components/Menu";
 import Group from "../components/Group";
 import { useCreateOrUpdateGroup } from "../hooks/data";
 import { RootState } from "../redux/store";
-import { Prompt } from "react-router-dom";
 
 export default function CreateGroup() {
   const dispatch = useDispatch();
@@ -31,6 +32,7 @@ export default function CreateGroup() {
 
   const onSave = () => {
     mutation.mutate({ group, blocks });
+    toast.success("Le groupe a bien été créé");
   };
 
   return (
