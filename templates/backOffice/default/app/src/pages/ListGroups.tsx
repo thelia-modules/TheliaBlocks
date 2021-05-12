@@ -4,7 +4,7 @@ import Tippy from "@tippyjs/react";
 import useCopyToClipboard from "react-use/lib/useCopyToClipboard";
 
 // import { setGroupVisible } from "../redux/group";
-import { useDeleteGroup, useGroups } from "../hooks/data";
+import { useDeleteGroup, useGroups, useDuplicateGroup } from "../hooks/data";
 import { GroupTypeStore } from "../types";
 
 const TEXT_COPY_SHORTCODE = "Copier le shortcode";
@@ -15,9 +15,10 @@ export default function ListGroups() {
   const res = useGroups();
   const [copyText, setCopyText] = useState<string>(TEXT_COPY_SHORTCODE);
   const [copied, copyToClipboard] = useCopyToClipboard();
-  const mutation = useDeleteGroup({ onSuccess: () => {
+  const mutationDelete = useDeleteGroup({ onSuccess: () => {
     res.refetch();
   } });
+  const mutationDuplicate = useDuplicateGroup();
 
   useEffect(() => {
     setCopyText(copied.error ? TEXT_ERROR_COPY : TEXT_COPIED);
@@ -31,8 +32,12 @@ export default function ListGroups() {
 
   const deleteGroup = (group: GroupTypeStore) => {
     if (window.confirm("La suppression est définitive")) {
-      mutation.mutate({ id: group.id });
+      mutationDelete.mutate({ id: group.id });
     }
+  };
+
+  const duplicateGroup = (group: GroupTypeStore) => {
+    mutationDuplicate.mutate({ id: group.id });
   };
 
   if (!res.data) {
@@ -71,6 +76,16 @@ export default function ListGroups() {
                 </button>
               </Tippy>
             )} */}
+            <Tippy content={"Dupliquer le groupe"} hideOnClick={false}>
+              <button
+                className="px-6 py-5 border-l hover:bg-gray-200"
+                onClick={() =>
+                  duplicateGroup(group)
+                }
+              >
+                <i className="fa fa-clone"></i>
+              </button>
+            </Tippy>
             <Tippy content={copyText} hideOnClick={false}>
               <button
                 className="px-6 py-5 border-l hover:bg-gray-200"

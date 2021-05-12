@@ -106,3 +106,19 @@ export function useDeleteGroup({ onSuccess }: { onSuccess: () => any }) {
     }
   );
 }
+
+export function useDuplicateGroup() {
+  let history = useHistory();
+
+  return useMutation(
+    ({ id }: { id: GroupTypeStore["id"] }) =>
+      fetcher(`/open_api/block_group/duplicate/${id}`, {
+        method: "POST",
+      }),
+    {
+      onSuccess: (newGroupId: GroupTypeStore["id"]) => {
+        history.push(`/edit/${newGroupId}`);
+      },
+    }
+  );
+}
