@@ -11,6 +11,8 @@ use Thelia\Core\HttpFoundation\JsonResponse;
 use Thelia\Core\HttpFoundation\Request;
 use TheliaBlocks\Model\BlockGroup;
 use TheliaBlocks\Model\BlockGroupQuery;
+use TheliaBlocks\Model\BlockGroupI18n;
+use TheliaBlocks\Model\BlockGroupI18nQuery;
 
 /**
  * @Route("/open_api/block_group", name="block_group")
@@ -221,7 +223,7 @@ class BlockGroupController extends BaseAdminOpenApiController
 
         $TheliaBlocks = array_map(
             function ($propelBlockGroup) use ($modelFactory, $request) {
-             return $modelFactory->buildModel('BlockGroup', $propelBlockGroup, $request->get('locale'));
+                return $modelFactory->buildModel('BlockGroup', $propelBlockGroup, $request->get('locale'));
             },
             iterator_to_array($propelTheliaBlocks)
         );
@@ -314,5 +316,56 @@ class BlockGroupController extends BaseAdminOpenApiController
         $blockGroup->delete();
 
         return new JsonResponse("Success", 204);
+    }
+
+    /**
+     * @Route("/duplicate/{blockGroupId}", name="duplicate_block_group", methods="POST", requirements={"blockGroupId"="\d+"})
+     *
+     * @OA\Post(
+     *     path="/block_group/duplicate/{blockGroupId}",
+     *     tags={"block group"},
+     *     summary="Duplicate a group of block",
+     *     @OA\Parameter(
+     *          name="blockGroupId",
+     *          in="path",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *     ),
+     *     @OA\Response(
+     *          response="200",
+     *          description="Success",
+     *          @OA\JsonContent(ref="#/components/schemas/BlockGroup")
+     *     ),
+     *     @OA\Response(
+     *          response="400",
+     *          description="Bad request",
+     *          @OA\JsonContent(ref="#/components/schemas/Error")
+     *     )
+     * )
+     */
+    public function duplicateBlockGroup(
+        $blockGroupId
+    ) {
+        $propelBlockGroup = BlockGroupQuery::create()->filterById($blockGroupId)->findOne();
+
+        if (null === $propelBlockGroup) {
+            return OpenApiService::jsonResponse(null, 404);
+        }
+
+        $newBlockGroup = $propelBlockGroup->copy();
+        $newBlockGroup->setSlug($newBlockGroup->getSlug() .'-'. uniqid());
+        $newBlockGroup->save();
+        $newBlockId = $newBlockGroup->getId();
+
+        $blockGroupI18ns = BlockGroupI18nQuery::create()->filterById($blockGroupId)->find();
+
+        array_map(function (BlockGroupI18n $blockI18n) use ($newBlockId) {
+            $newBlockI18n = $blockI18n->copy();
+            $newBlockI18n->setId($newBlockId)->save();
+        }, iterator_to_array($blockGroupI18ns));
+
+        return OpenApiService::jsonResponse($newBlockGroup->getId());
     }
 }
