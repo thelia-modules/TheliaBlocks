@@ -23,6 +23,14 @@ use TheliaBlocks\Model\BlockGroupQuery;
 class ItemBlockGroup extends BaseApiModel
 {
     /**
+     * @var integer
+     * @OA\Property(
+     *     type="integer",
+     * )
+     */
+    protected $id;
+
+    /**
      * @var string
      * @OA\Property(
      *     type="string",
@@ -38,6 +46,24 @@ class ItemBlockGroup extends BaseApiModel
      * @Constraint\NotBlank(groups={"read"})
      */
     protected $itemId;
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     * @return ItemBlockGroup
+     */
+    public function setId(int $id): ItemBlockGroup
+    {
+        $this->id = $id;
+        return $this;
+    }
 
     /**
      * @return string
