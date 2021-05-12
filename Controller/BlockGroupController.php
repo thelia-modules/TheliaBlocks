@@ -400,7 +400,6 @@ class BlockGroupController extends BaseAdminOpenApiController
         }
 
         $newBlockGroup = $propelBlockGroup->copy();
-        $newBlockGroup->setSlug($newBlockGroup->getSlug() .'-'. uniqid());
         $newBlockGroup->save();
         $newBlockId = $newBlockGroup->getId();
 
