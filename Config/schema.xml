@@ -17,4 +17,13 @@
             <parameter name="i18n_columns" value="title, json_content" />
         </behavior>
     </table>
+    <table name="item_block_group" namespace="TheliaBlocks\Model">
+        <column autoIncrement="true" name="id" primaryKey="true" required="true" type="INTEGER" />
+        <column name="item_type" type="VARCHAR" />
+        <column name="item_id" type="INTEGER" />
+        <column name="block_group_id" type="INTEGER" />
+        <foreign-key foreignTable="block_group" name="fk_item_block_group_block_group_id" onDelete="CASCADE" onUpdate="RESTRICT">
+          <reference foreign="id" local="block_group_id" />
+        </foreign-key>
+    </table>
 </database>

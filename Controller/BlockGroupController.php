@@ -13,6 +13,8 @@ use TheliaBlocks\Model\BlockGroup;
 use TheliaBlocks\Model\BlockGroupQuery;
 use TheliaBlocks\Model\BlockGroupI18n;
 use TheliaBlocks\Model\BlockGroupI18nQuery;
+use TheliaBlocks\Model\ItemBlockGroup;
+use TheliaBlocks\Model\ItemBlockGroupQuery;
 
 /**
  * @Route("/open_api/block_group", name="block_group")
@@ -32,6 +34,10 @@ class BlockGroupController extends BaseAdminOpenApiController
      *                  @OA\Property(
      *                      property="blockGroup",
      *                      ref="#/components/schemas/BlockGroup"
+     *                  ),
+     *                  @OA\Property(
+     *                      property="itemBlockGroup",
+     *                      ref="#/components/schemas/ItemBlockGroup"
      *                  ),
      *                 @OA\Property(
      *                     property="locale",
@@ -64,6 +70,10 @@ class BlockGroupController extends BaseAdminOpenApiController
         /** @var BlockGroup $blockGroup */
         $blockGroup = $openApiBlockGroup->toTheliaModel($data['locale']);
         $blockGroup->save();
+
+        if (isset($data['itemBlockGroup'])) {
+            $this->assignBlockGroupToItem($modelFactory, $data['itemBlockGroup'], $blockGroup->getId());
+        }
 
         return OpenApiService::jsonResponse($openApiBlockGroup->setId($blockGroup->getId()));
     }
@@ -169,6 +179,22 @@ class BlockGroupController extends BaseAdminOpenApiController
      *          )
      *     ),
      *     @OA\Parameter(
+     *          name="itemType",
+     *          description="the type of an item linked to the block group",
+     *          in="query",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *     ),
+     *     @OA\Parameter(
+     *          name="itemId",
+     *          description="the id of an item linked to the block group (itemType has too be defined too)",
+     *          in="query",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *     ),
+     *     @OA\Parameter(
      *          name="visible",
      *          in="query",
      *          @OA\Schema(
@@ -210,6 +236,17 @@ class BlockGroupController extends BaseAdminOpenApiController
             $blockGroupQuery->offset($offset);
         }
 
+        if (null !== $itemType = $request->get('itemType')) {
+            $itemBlockGroupQuery =$blockGroupQuery->useItemBlockGroupQuery()
+                ->filterByItemType($itemType);
+
+            if (null !== $itemId = $request->get('itemId')) {
+                $itemBlockGroupQuery->filterByItemId($itemId);
+            }
+
+            $itemBlockGroupQuery->endUse();
+        }
+
         if ($request->get('visible') !== null) {
             $visible = (boolean)json_decode(strtolower($request->get('visible')));
             $blockGroupQuery->filterByVisible($visible);
@@ -245,6 +282,10 @@ class BlockGroupController extends BaseAdminOpenApiController
      *                      property="blockGroup",
      *                      ref="#/components/schemas/BlockGroup"
      *                  ),
+     *                  @OA\Property(
+     *                      property="itemBlockGroup",
+     *                      ref="#/components/schemas/ItemBlockGroup"
+     *                  ),
      *                 @OA\Property(
      *                     property="locale",
      *                     type="string",
@@ -277,7 +318,11 @@ class BlockGroupController extends BaseAdminOpenApiController
         $blockGroup = $openApiBlockGroup->toTheliaModel($data['locale']);
         $blockGroup->save();
 
-        return OpenApiService::jsonResponse($openApiBlockGroup->setId($blockGroup->getId()));
+        if (isset($data['itemBlockGroup'])) {
+            $this->assignBlockGroupToItem($modelFactory, $data['itemBlockGroup'], $blockGroup->getId());
+        }
+
+        return OpenApiService::jsonResponse($modelFactory->buildModel('BlockGroup', $blockGroup));
     }
 
     /**
@@ -367,5 +412,24 @@ class BlockGroupController extends BaseAdminOpenApiController
         }, iterator_to_array($blockGroupI18ns));
 
         return OpenApiService::jsonResponse($newBlockGroup->getId());
+    }
+
+    protected function assignBlockGroupToItem(ModelFactory $modelFactory, $itemBlockGroup, $blockGroupId)
+    {
+        $openApiItemBlockGroup = $modelFactory->buildModel('ItemBlockGroup', $itemBlockGroup);
+        /** @var ItemBlockGroup $itemBlockGroup */
+        $itemBlockGroup = $openApiItemBlockGroup->toTheliaModel();
+        $itemBlockGroup->setBlockGroupId($blockGroupId);
+
+        // todo allow multiple block for an item
+        $oldItemBlockGroup = ItemBlockGroupQuery::create()
+            ->filterByItemType($itemBlockGroup->getItemType())
+            ->filterByItemId($itemBlockGroup->getItemId())
+            ->findOne();
+        if (null !== $oldItemBlockGroup) {
+            $oldItemBlockGroup->delete();
+        }
+
+        $itemBlockGroup->save();
     }
 }

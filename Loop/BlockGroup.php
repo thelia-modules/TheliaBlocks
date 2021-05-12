@@ -18,6 +18,8 @@ use TheliaBlocks\Model\BlockGroupQuery;
  *
  * @method int[]          getId()
  * @method string[]       getSlug()
+ * @method string       getItemType()
+ * @method integer      getItemId()
  * @method bool|string  getVisible()
  */
 class BlockGroup extends BaseI18nLoop implements PropelSearchLoopInterface
@@ -30,6 +32,8 @@ class BlockGroup extends BaseI18nLoop implements PropelSearchLoopInterface
         return new ArgumentCollection(
             Argument::createIntListTypeArgument('id'),
             Argument::createAlphaNumStringListTypeArgument('slug'),
+            Argument::createAlphaNumStringTypeArgument('item_type'),
+            Argument::createIntTypeArgument('item_id'),
             Argument::createBooleanOrBothTypeArgument('visible', 1)
         );
     }
@@ -57,6 +61,16 @@ class BlockGroup extends BaseI18nLoop implements PropelSearchLoopInterface
             $search->filterBySlug($slug, Criteria::IN);
         }
 
+        $itemType = $this->getItemType();
+        $itemId = $this->getItemId();
+
+        if (null !== $itemType && null !== $itemId) {
+            $search->useItemBlockGroupQuery()
+                ->filterByItemType($itemType)
+                ->filterByItemId($itemId)
+            ->endUse();
+        }
+
         $visible = $this->getVisible();
 
         if ($visible !== BooleanOrBothType::ANY) {
@@ -78,7 +92,7 @@ class BlockGroup extends BaseI18nLoop implements PropelSearchLoopInterface
             $htmlRender = implode(' ', $blockRenders);
 
             $content = json_decode($entry->getVirtualColumn('i18n_JSON_CONTENT'), true);
-            
+
             $row = new LoopResultRow($entry);
             $row
                 ->set('ID', $entry->getId())

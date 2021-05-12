@@ -5,6 +5,7 @@ namespace TheliaBlocks;
 use Propel\Runtime\Connection\ConnectionInterface;
 use ShortCode\ShortCode;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ServicesConfigurator;
+use Symfony\Component\Finder\Finder;
 use Thelia\Install\Database;
 use Thelia\Module\BaseModule;
 use Thelia\Core\Template\TemplateDefinition;
@@ -15,6 +16,24 @@ class TheliaBlocks extends BaseModule
     const DOMAIN_NAME = 'TheliaBlocks';
 
     const BLOCK_GROUP_SHORT_CODE = 'block_group';
+
+    public function update($currentVersion, $newVersion, ConnectionInterface $con = null): void
+    {
+        $finder = Finder::create()
+            ->name('*.sql')
+            ->depth(0)
+            ->sortByName()
+            ->in(__DIR__ . DS . 'Config' . DS . 'update');
+
+        $database = new Database($con);
+
+        /** @var \SplFileInfo $file */
+        foreach ($finder as $file) {
+            if (version_compare($currentVersion, $file->getBasename('.sql'), '<')) {
+                $database->insertSql(null, [$file->getPathname()]);
+            }
+        }
+    }
 
     public function preActivation(ConnectionInterface $con = null)
     {

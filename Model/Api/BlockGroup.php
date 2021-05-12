@@ -10,6 +10,8 @@ use OpenApi\Model\Api\Error;
 use OpenApi\OpenApi;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Thelia\Core\Translation\Translator;
+use Thelia\Model\Base\ProductCategory;
+use Thelia\Model\FeatureProduct;
 use TheliaBlocks\Model\BlockGroupQuery;
 
 /**
@@ -54,6 +56,17 @@ class BlockGroup extends BaseApiModel
      * )
      */
     protected $slug;
+
+    /**
+     * @var array
+     * @OA\Property(
+     *     type="array",
+     *     @OA\Items(
+     *          ref="#/components/schemas/ItemBlockGroup"
+     *     )
+     * )
+     */
+    protected $itemBlockGroups = [];
 
     /**
      * @var string
@@ -195,6 +208,24 @@ class BlockGroup extends BaseApiModel
     public function setJsonContent(?string $jsonContent): BlockGroup
     {
         $this->jsonContent = $jsonContent;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getItemBlockGroups(): array
+    {
+        return $this->itemBlockGroups;
+    }
+
+    /**
+     * @param array $itemBlockGroups
+     * @return BlockGroup
+     */
+    public function setItemBlockGroups(array $itemBlockGroups): BlockGroup
+    {
+        $this->itemBlockGroups = $itemBlockGroups;
         return $this;
     }
 
