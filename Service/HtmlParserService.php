@@ -51,7 +51,7 @@ class HtmlParserService
 
             if (is_string($tag)) {
                 $block = $tag;
-            } elseif (!in_array($tag['type'], ['img', 'br']) && !isset($tag['children'])) {
+            } elseif (!in_array($tag['type'], ['img', 'iframe', 'br', 'hr', 'embed']) && !isset($tag['children'])) {
                 continue;
             } elseif (in_array($tag['type'], ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])) {
                 $text = array_reduce($tag['children'], function ($carry, $item) { if (is_string($item)){$carry .= $item;} return $carry;}, "");
@@ -162,13 +162,23 @@ class HtmlParserService
                         ]
                     );
                 }
-            } elseif (in_array($tag['type'], ["strong", "br", "span", "a"])  && null !== $parentId) {
+            } elseif (in_array($tag['type'], ["strong", "br", "hr", "span", "a"])  && null !== $parentId) {
                 $block = $tag['raw'];
+            } elseif ($tag['type'] === "iframe")  {
+                $block = array_merge(
+                    $block,
+                    [
+                        "type"=>["id"=>"blockRaw"],
+                        "data"=> [
+                            "value" => $tag['raw'].'</iframe>'
+                        ]
+                    ]
+                );
             } else {
                 $block = array_merge(
                     $block,
                     [
-                        "type"=>["id"=>"blockText"],
+                        "type"=>["id"=>"blockRaw"],
                         "data"=> [
                             "value" => $tag['raw']
                         ]
