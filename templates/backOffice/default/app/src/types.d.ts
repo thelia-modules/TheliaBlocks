@@ -26,7 +26,7 @@ export type IBlock = {
 };
 
 export type GroupTypeStore = {
-  id?: string;
+  id?: number;
   visible: boolean;
   title: string;
   slug: string;
@@ -44,11 +44,11 @@ export type BlockPluginDefinition<
     data: TProp;
     id: string;
     onUpdate: (props: TProp) => any;
+    [key: string]: any;
   }) => JSX.Element;
   initialData: TProp;
 };
 
 export type uiStoreType = {
   isUnsaved: boolean;
-  hashSaved: string;
 };
