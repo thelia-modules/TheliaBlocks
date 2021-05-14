@@ -1,14 +1,3 @@
-{extends file="admin-layout.tpl"}
-
-{block name="no-return-functions"}
-    {$admin_current_location = 'TheliaBlocks'}
-{/block}
-
-{block name="page-title"}{intl l='Thelia blocks'}{/block}
-
-{block name="check-resource"}admin.content{/block}
-{block name="check-access"}view{/block}
-
 {block name="after-admin-css"}
     {stylesheets file='app/dist/style.css' template="default" source="TheliaBlocks"}
         <link rel="stylesheet" href="{$asset_url}" />
@@ -20,6 +9,9 @@
 
     <script>
         window.global = window;
+        window.groupId = {$groupId|default:'null'};
+        window.itemId = {$itemId};
+        window.itemType = "{$itemType}";
     </script>
 {/block}
 
@@ -33,7 +25,7 @@
             window.__vite_plugin_react_preamble_installed__ = true
         </script>
         <script type="module" src="http://localhost:3000/@vite/client"></script>
-        <script type="module" src="http://localhost:3000/src/dev/dashboard.js"></script>
+        <script type="module" src="http://localhost:3000/src/dev/editpage.js"></script>
     {else}
         <script type="text/javascript" crossorigin src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
         <script type="text/javascript" crossorigin src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
@@ -44,7 +36,7 @@
         {hook name="thelia.blocks.plugins"}
 
         <script>
-            ReactDOM.render(React.createElement(TheliaBlocks.Dashboard), document.getElementById('thelia-blocks-root'))
+            ReactDOM.render(React.createElement(TheliaBlocks.EditPage), document.getElementById('thelia-blocks-root'))
         </script>
     {/if}
 {/block}

@@ -1,46 +1,33 @@
 .Button {
   @apply p-2 bg-gray-500 text-white cursor-pointer;
-
-  &:hover {
-    @apply bg-gray-700;
-  }
-
-  &[disabled] {
-    @apply cursor-not-allowed;
-
-    &,
-    &:hover {
-      @apply bg-gray-300 text-white;
-    }
-  }
-
-  &--primary {
-    @apply bg-green-500;
-
-    &:hover {
-      @apply bg-green-700;
-    }
-  }
-
-  &--danger {
-    @apply bg-red-500;
-
-    &:hover {
-      @apply bg-red-700;
-    }
-  }
-
-  &--info {
-    @apply bg-blue-300;
-
-    &:hover {
-      @apply bg-blue-500;
-    }
-  }
-
-  &--sm {
-    @apply text-sm;
-  }
 }
-
-
+.Button:hover {
+  @apply bg-gray-700;
+}
+.Button[disabled] {
+  @apply cursor-not-allowed;
+}
+.Button[disabled], .Button[disabled]:hover {
+  @apply bg-gray-300 text-white;
+}
+.Button--primary {
+  @apply bg-green-500;
+}
+.Button--primary:hover {
+  @apply bg-green-700;
+}
+.Button--danger {
+  @apply bg-red-500;
+}
+.Button--danger:hover {
+  @apply bg-red-700;
+}
+.Button--info {
+  @apply bg-blue-300;
+}
+.Button--info:hover {
+  @apply bg-blue-500;
+}
+.Button--sm {
+  @apply text-sm;
+}

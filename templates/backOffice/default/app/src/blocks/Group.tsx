@@ -25,10 +25,12 @@ function EmptyBlock({
   id,
   onUpdate,
   onDelete,
+  excludeBlockType,
 }: {
   id: IBlock["id"];
   onUpdate: BlockModuleComponentProps<BlockGroupData>["onUpdate"];
   onDelete: Function | null;
+  excludeBlockType?: string[];
 }) {
   const blocksLibrary = usePlugins();
   const [isSettingBlock, setIsSettingBlock] = useState<boolean>(false);
@@ -36,7 +38,7 @@ function EmptyBlock({
     <div className="flex flex-col flex-grow p-2 mt-2 border border-dashed">
       {isSettingBlock ? (
         blocksLibrary
-          .filter((block) => block.type.id !== "multiColumns")
+          .filter((block) => !excludeBlockType?.includes(block.type.id))
           .map((block) => (
             <div
               key={block.id}
@@ -80,6 +82,7 @@ export function BlockGroupComponent({
   id,
   data,
   onUpdate,
+  excludeBlockType,
 }: BlockModuleComponentProps<BlockGroupData>) {
   const onUpdateEmpty = (newBlock: IBlock) => {
     onUpdate(
@@ -109,23 +112,20 @@ export function BlockGroupComponent({
     ]);
   };
 
-  const handleUpdateBlock = (currentBlock: IBlock) => (
-    newData: IBlock["data"]
-  ) => {
-    console.log({ currentBlock });
-
-    onUpdate(
-      data.map((block) => {
-        if (block.id === currentBlock.id) {
-          return {
-            ...block,
-            data: newData,
-          };
-        }
-        return block;
-      })
-    );
-  };
+  const handleUpdateBlock =
+    (currentBlock: IBlock) => (newData: IBlock["data"]) => {
+      onUpdate(
+        data.map((block) => {
+          if (block.id === currentBlock.id) {
+            return {
+              ...block,
+              data: newData,
+            };
+          }
+          return block;
+        })
+      );
+    };
 
   return (
     <div className="BlockGroup">
@@ -137,6 +137,7 @@ export function BlockGroupComponent({
               id={block.id}
               onUpdate={onUpdateEmpty}
               onDelete={data.length > 1 ? () => handleDeleteEmpty(block) : null}
+              excludeBlockType={excludeBlockType}
             />
           ) : (
             <div key={block.id} className="flex-1 mt-2">

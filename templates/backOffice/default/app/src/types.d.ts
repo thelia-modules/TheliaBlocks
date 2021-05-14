@@ -26,29 +26,30 @@ export type IBlock = {
 };
 
 export type GroupTypeStore = {
-  id?: string;
+  id?: number;
   visible: boolean;
   title: string;
   slug: string;
+  itemBlockGroups?: { id: number; itemType: string; itemId: number }[];
 };
 
 export type GroupTypeResponse = GroupTypeStore & {
   jsonContent?: string;
+  itemBlockGroups?: { id: number; itemType: string; itemId: number }[];
 };
 
-export type BlockPluginDefinition<
-  TProp = { [key: string]: any }
-> = BlockModuleI18n & {
-  readonly type: BlockModuleType;
-  readonly component: (props: {
-    data: TProp;
-    id: string;
-    onUpdate: (props: TProp) => any;
-  }) => JSX.Element;
-  initialData: TProp;
-};
+export type BlockPluginDefinition<TProp = { [key: string]: any }> =
+  BlockModuleI18n & {
+    readonly type: BlockModuleType;
+    readonly component: (props: {
+      data: TProp;
+      id: string;
+      onUpdate: (props: TProp) => any;
+      [key: string]: any;
+    }) => JSX.Element;
+    initialData: TProp;
+  };
 
 export type uiStoreType = {
   isUnsaved: boolean;
-  hashSaved: string;
 };

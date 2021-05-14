@@ -1,13 +1,16 @@
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import axios, { AxiosRequestConfig } from "axios";
 import { useMutation, useQuery } from "react-query";
-import { useDispatch } from "react-redux";
-import { useParams, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import { CURRENT_LOCAL } from "../constants";
 import { GroupTypeResponse, GroupTypeStore, IBlock } from "../types";
 import { setBlocks } from "../redux/blocks";
 import { setGroup } from "../redux/group";
-import { setHashSaved, setUnsaved } from "../redux/ui";
+import { setUnsaved } from "../redux/ui";
+import { initialState as initialGroupState } from "../redux/group";
+import { initialState as initialBlocksState } from "../redux/blocks";
 
 async function fetcher(url: string, config: AxiosRequestConfig = {}) {
   try {
@@ -28,9 +31,16 @@ export function useGroups() {
   );
 }
 
-export function useGroup() {
+export function useGroup({ id }: { id?: number }) {
   const dispatch = useDispatch();
-  const { id }: { id: string } = useParams();
+
+  useEffect(() => {
+    if (!id) {
+      dispatch(setGroup(initialGroupState));
+      dispatch(setBlocks(initialBlocksState));
+      dispatch(setUnsaved(false));
+    }
+  }, [id]);
 
   return useQuery<GroupTypeResponse>(
     ["block_group", id],
@@ -48,7 +58,6 @@ export function useGroup() {
 
         dispatch(setGroup(rest));
         dispatch(setUnsaved(false));
-        dispatch(setHashSaved(data));
 
         if (jsonContent) {
           dispatch(setBlocks(JSON.parse(jsonContent)));
@@ -58,37 +67,60 @@ export function useGroup() {
   );
 }
 
-export function useCreateOrUpdateGroup() {
+export function useCreateOrUpdateGroup({
+  id,
+  itemId,
+  itemType,
+}: {
+  id?: number;
+  itemId?: number;
+  itemType?: string;
+}) {
   const dispatch = useDispatch();
   let history = useHistory();
-  let { id }: { id: string } = useParams();
 
   return useMutation(
-    ({ group, blocks }: { group: GroupTypeStore; blocks: IBlock[] }) =>
-      fetcher(`/open_api/block_group`, {
-        method: id ? "PATCH" : "POST",
-        data: {
-          blockGroup: {
-            id,
-            ...group,
-            jsonContent: JSON.stringify(blocks),
-          },
-          locale: CURRENT_LOCAL,
+    ({ group, blocks }: { group: GroupTypeStore; blocks: IBlock[] }) => {
+      const {itemBlockGroups, ...groupOmitItemBlockGroups} = group;
+
+      let data: {
+        blockGroup: Omit<GroupTypeStore, "itemBlockGroups"> & { jsonContent: string };
+        locale: string;
+        itemBlockGroup?: { itemType: string; itemId: number };
+      } = {
+        blockGroup: {
+          ...groupOmitItemBlockGroups,
+          jsonContent: JSON.stringify(blocks),
         },
-      }),
+        locale: CURRENT_LOCAL,
+      };
+
+
+      if(id) {
+        data.blockGroup.id = id;
+      } else {
+        if (itemType && itemId) {
+          data.itemBlockGroup = {
+            itemType,
+            itemId,
+          };
+        }
+      }
+
+      return fetcher(`/open_api/block_group`, {
+        method: id ? "PATCH" : "POST",
+        data,
+      });
+    },
     {
-      onSuccess: (data: GroupTypeStore, variables) => {
+      onSuccess: (data: GroupTypeStore) => {
         dispatch(setUnsaved(false));
-        dispatch(
-          setHashSaved({
-            ...data,
-            jsonContent: JSON.stringify(variables.blocks),
-          })
-        );
 
         if (!id && data.id) {
           dispatch(setGroup(data));
-          history.push(`/edit/${data.id}`);
+          if(history) {
+            history.push(`/edit/${data.id}`);
+          }
         }
       },
     }

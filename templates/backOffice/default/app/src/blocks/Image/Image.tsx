@@ -7,6 +7,8 @@ import { BlockModuleComponentProps, BlockPluginDefinition } from "../../types";
 export type BlockImageData = {
   src: string;
   alt: string;
+  width?: string;
+  height?: string;
 };
 
 export type BlockImageComponentProps = BlockModuleComponentProps<BlockImageData>;
@@ -14,6 +16,8 @@ export type BlockImageComponentProps = BlockModuleComponentProps<BlockImageData>
 function BlockImageComponent(props: BlockImageComponentProps) {
   const [src, setSrc] = React.useState<string>("");
   const [alt, setAlt] = React.useState<string>("");
+  const [width, setWidth] = React.useState<string>("");
+  const [height, setHeight] = React.useState<string>("");
 
   const { data, onUpdate } = props;
 
@@ -23,6 +27,12 @@ function BlockImageComponent(props: BlockImageComponentProps) {
     }
     if (data.alt) {
       setAlt(data.alt);
+    }
+    if (data.width) {
+      setWidth(data.width);
+    }
+    if (data.height) {
+      setHeight(data.height);
     }
   }, [data]);
 
@@ -52,6 +62,24 @@ function BlockImageComponent(props: BlockImageComponentProps) {
           }}
           onBlur={(e) => onUpdate({ ...data, alt: e.target.value })}
         />
+        <input
+          type="text"
+          placeholder="width"
+          value={width}
+          onChange={(e) => {
+            setWidth(e.target.value);
+          }}
+          onBlur={(e) => onUpdate({ ...data, width: e.target.value })}
+        />
+        <input
+          type="text"
+          placeholder="height"
+          value={height}
+          onChange={(e) => {
+            setHeight(e.target.value);
+          }}
+          onBlur={(e) => onUpdate({ ...data, height: e.target.value })}
+        />
       </div>
     </div>
   );
@@ -60,6 +88,8 @@ function BlockImageComponent(props: BlockImageComponentProps) {
 const initialData = {
   src: "//placehold.it/1600x400",
   alt: "image d'example",
+  width: "",
+  height: "",
 };
 
 const moduleType = {
