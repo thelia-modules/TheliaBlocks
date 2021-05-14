@@ -10,6 +10,7 @@ import Video from "./blocks/Video";
 import Highlight from "./blocks/Highlight";
 import List from "./blocks/List";
 import Accordion from "./blocks/Accordion";
+import Raw from "./blocks/Raw";
 import { nanoid } from "nanoid";
 // const modules = import.meta.globEager("./blocks/*.tsx");
 
@@ -26,6 +27,7 @@ export const __PLUGINS = [
   { id: nanoid(), ...Highlight },
   { id: nanoid(), ...List },
   { id: nanoid(), ...Accordion },
+  { id: nanoid(), ...Raw },
 ];
 
 export function registerPlugin(plugin: any) {
