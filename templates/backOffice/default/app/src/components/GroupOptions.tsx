@@ -41,7 +41,7 @@ function GroupsDropdown({ search }: { search: string }) {
     <ul className="border border-gray-400 divide-y divide-gray-300 top-full">
       {autoCompleteResults.map((group: GroupTypeStore) => (
         <li key={group.id} className="px-4 py-1 cursor-pointer">
-          <Link to={`/edit/${group.id}`}>{group.title}</Link>
+          {group.title}
         </li>
       ))}
     </ul>

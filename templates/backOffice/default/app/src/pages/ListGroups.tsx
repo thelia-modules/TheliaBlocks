@@ -15,9 +15,11 @@ export default function ListGroups() {
   const res = useGroups();
   const [copyText, setCopyText] = useState<string>(TEXT_COPY_SHORTCODE);
   const [copied, copyToClipboard] = useCopyToClipboard();
-  const mutationDelete = useDeleteGroup({ onSuccess: () => {
-    res.refetch();
-  } });
+  const mutationDelete = useDeleteGroup({
+    onSuccess: () => {
+      res.refetch();
+    },
+  });
   const mutationDuplicate = useDuplicateGroup();
 
   useEffect(() => {
@@ -54,7 +56,17 @@ export default function ListGroups() {
       {res.data.map((group) => (
         <li className="flex bg-white border-b" key={group.id}>
           <Link className="flex-grow block p-5" to={`/edit/${group.id}`}>
-            {group.title} ({group.id})
+            #{group.id} - {group.title}
+            {!!group.itemBlockGroups?.length && (
+              <span className="ml-3 text-sm font-normal text-gray-400">
+                <i className="mr-1 fa fa-link"></i>
+                {group.itemBlockGroups.map(({ itemId, itemType }) => (
+                  <span key={`${itemType}-${itemId}`}>
+                    {itemType}-{itemId}
+                  </span>
+                ))}
+              </span>
+            )}
           </Link>
           <div>
             {/* {group.visible ? (
@@ -79,9 +91,7 @@ export default function ListGroups() {
             <Tippy content={"Dupliquer le groupe"} hideOnClick={false}>
               <button
                 className="px-6 py-5 border-l hover:bg-gray-200"
-                onClick={() =>
-                  duplicateGroup(group)
-                }
+                onClick={() => duplicateGroup(group)}
               >
                 <i className="fa fa-clone"></i>
               </button>
@@ -99,9 +109,7 @@ export default function ListGroups() {
             <Tippy content={"Supprimer le groupe"} hideOnClick={false}>
               <button
                 className="px-6 py-5 text-red-600 border-l hover:bg-gray-200"
-                onClick={() =>
-                  deleteGroup(group)
-                }
+                onClick={() => deleteGroup(group)}
               >
                 <i className="fa fa-trash"></i>
               </button>

@@ -1,32 +1,23 @@
 .BlockSeparator {
     @apply relative flex py-2 px-3 justify-center;
-
-    &:hover .BlockSeparator-field {
-        @apply opacity-100;
-    }
-
-    &[data-type='hr'] {
-        &:before {
-            content: '';
-            @apply absolute block border-gray-400 border-b top-2/4 left-0 right-0 transition;
-
-            height: 1px;
-        }
-
-        &:hover:before {
-            @apply opacity-0;
-        }
-    }
-
-    &-field { 
-        @apply flex flex-col transition opacity-0;
-
-        &:not(:first-child) {
-            @apply ml-6;
-        }
-
-        label {
-            @apply mb-0;
-        }
-    }
-}
+  }
+  .BlockSeparator:hover .BlockSeparator-field {
+    @apply opacity-100;
+  }
+  .BlockSeparator[data-type=hr]:before {
+    content: "";
+    @apply absolute block border-gray-400 border-b top-2/4 left-0 right-0 transition;
+    height: 1px;
+  }
+  .BlockSeparator[data-type=hr]:hover:before {
+    @apply opacity-0;
+  }
+  .BlockSeparator-field {
+    @apply flex flex-col transition opacity-0;
+  }
+  .BlockSeparator-field:not(:first-child) {
+    @apply ml-6;
+  }
+  .BlockSeparator-field label {
+    @apply mb-0;
+  }

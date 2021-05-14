@@ -1,7 +1,6 @@
 .BlockWrapper {
   position: relative;
-
-  &-title {
-    @apply font-bold mr-4;
-  }
+}
+.BlockWrapper-title {
+  @apply font-bold mr-4;
 }

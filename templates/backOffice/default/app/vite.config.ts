@@ -10,7 +10,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, "src/main.tsx"),
-      name: "TheliaBlocksBackOffice",
+      name: "TheliaBlocks",
     },
     target: "es2015",
     rollupOptions: {
