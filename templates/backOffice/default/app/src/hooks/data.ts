@@ -1,27 +1,25 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import axios, { AxiosRequestConfig } from "axios";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
+
+import { CURRENT_LOCAL } from "../constants";
 import {
   ErrorType,
   GroupTypeResponse,
   GroupTypeStore,
   IBlock,
+  itemBlockGroupsType,
   LibraryImage,
 } from "../types";
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "react-query";
-import axios, { AxiosRequestConfig } from "axios";
-
-import { CURRENT_LOCAL } from "../constants";
-import { initialState as initialBlocksState } from "../redux/blocks";
-import { initialState as initialGroupState } from "../redux/group";
 import { setBlocks } from "../redux/blocks";
 import { setGroup } from "../redux/group";
-import { setUnsaved } from "../redux/ui";
-import { useDispatch } from "react-redux";
-import { useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { initializeWindowConstantsGroupId, setUnsaved } from "../redux/ui";
+import { initialState as initialGroupState } from "../redux/group";
+import { initialState as initialBlocksState } from "../redux/blocks";
+import { RootState } from "../redux/store";
 
 async function fetcher(url: string, config: AxiosRequestConfig = {}) {
   try {
@@ -78,17 +76,12 @@ export function useGroup({ id }: { id?: number }) {
   );
 }
 
-export function useCreateOrUpdateGroup({
-  id,
-  itemId,
-  itemType,
-}: {
-  id?: number;
-  itemId?: number;
-  itemType?: string;
-}) {
+export function useCreateOrUpdateGroup({ id }: { id?: number }) {
   const dispatch = useDispatch();
   let history = useHistory();
+  const windowConstants = useSelector(
+    (state: RootState) => state.ui.windowConstants
+  );
 
   return useMutation(
     ({ group, blocks }: { group: GroupTypeStore; blocks: IBlock[] }) => {
@@ -99,7 +92,10 @@ export function useCreateOrUpdateGroup({
           jsonContent: string;
         };
         locale: string;
-        itemBlockGroup?: { itemType: string; itemId: number };
+        itemBlockGroup?: {
+          itemId?: itemBlockGroupsType["itemId"];
+          itemType?: itemBlockGroupsType["itemType"];
+        };
       } = {
         blockGroup: {
           ...groupOmitItemBlockGroups,
@@ -111,10 +107,10 @@ export function useCreateOrUpdateGroup({
       if (id) {
         data.blockGroup.id = id;
       } else {
-        if (itemType && itemId) {
+        if (windowConstants.itemType && windowConstants.itemId) {
           data.itemBlockGroup = {
-            itemType,
-            itemId,
+            itemType: windowConstants.itemType,
+            itemId: windowConstants.itemId,
           };
         }
       }
@@ -227,6 +223,60 @@ export function useDeleteImage() {
 
           return oldData;
         });
+      },
+    }
+  );
+}
+
+export function useLinkContentToGroup() {
+  const dispatch = useDispatch();
+  const windowConstants = useSelector(
+    (state: RootState) => state.ui.windowConstants
+  );
+
+  return useMutation(
+    ({ id }: { id: GroupTypeStore["id"] }) =>
+      fetcher(`/open_api/item_block_group`, {
+        method: "POST",
+        data: {
+          itemBlockGroup: {
+            blockGroupId: id,
+            itemId: windowConstants.itemId,
+            itemType: windowConstants.itemType,
+          },
+        },
+      }),
+    {
+      onSuccess: (data: GroupTypeResponse) => {
+        const { jsonContent, ...rest } = data;
+
+        dispatch(setGroup(rest));
+        dispatch(setUnsaved(false));
+
+        if (jsonContent) {
+          dispatch(setBlocks(JSON.parse(jsonContent)));
+        }
+      },
+    }
+  );
+}
+
+export function useUnlinkContentFromGroup() {
+  const dispatch = useDispatch();
+
+  return useMutation(
+    ({ id }: { id: GroupTypeStore["id"] }) =>
+      fetcher(`/open_api/item_block_group/${id}`, {
+        method: "DELETE",
+      }),
+    {
+      onSuccess: () => {
+        dispatch(setGroup(initialGroupState));
+        dispatch(setBlocks(initialBlocksState));
+        dispatch(initializeWindowConstantsGroupId());
+        dispatch(setUnsaved(false));
+
+        toast.success("Le groupe a bien été délié");
       },
     }
   );

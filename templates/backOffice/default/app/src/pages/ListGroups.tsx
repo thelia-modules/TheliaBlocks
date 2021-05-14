@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Tippy from "@tippyjs/react";
 import useCopyToClipboard from "react-use/lib/useCopyToClipboard";
+import { toast } from "react-toastify";
 
 // import { setGroupVisible } from "../redux/group";
 import { useDeleteGroup, useGroups, useDuplicateGroup } from "../hooks/data";
@@ -17,6 +18,7 @@ export default function ListGroups() {
   const [copied, copyToClipboard] = useCopyToClipboard();
   const mutationDelete = useDeleteGroup({
     onSuccess: () => {
+      toast.info("Le groupe a bien été supprimé");
       res.refetch();
     },
   });
@@ -59,9 +61,9 @@ export default function ListGroups() {
             #{group.id} - {group.title}
             {!!group.itemBlockGroups?.length && (
               <span className="ml-3 text-sm font-normal text-gray-400">
-                <i className="mr-1 fa fa-link"></i>
+                <i className="fa fa-link"></i>
                 {group.itemBlockGroups.map(({ itemId, itemType }) => (
-                  <span key={`${itemType}-${itemId}`}>
+                  <span key={`${itemType}-${itemId}`} className="ml-1">
                     {itemType}-{itemId}
                   </span>
                 ))}

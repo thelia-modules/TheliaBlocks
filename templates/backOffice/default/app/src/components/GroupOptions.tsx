@@ -1,52 +1,11 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import Tippy from "@tippyjs/react";
 
 import { RootState } from "../redux/store";
 import { setGroupTitle, setGroupSlug } from "../redux/group";
-import { useGroups } from "../hooks/data";
-import { GroupTypeStore } from "../types";
-import slugify from "../utils/slugify";
-
-function GroupsDropdown({ search }: { search: string }) {
-  const {
-    isLoading,
-    isError,
-    error,
-    data,
-  }: {
-    isLoading: boolean;
-    isError: boolean;
-    error: any;
-    data: any;
-  } = useGroups();
-
-  if (isLoading) {
-    return <span>Loading ...</span>;
-  }
-
-  if (isError) {
-    return <span>Error: {error.message}</span>;
-  }
-
-  const autoCompleteResults = data.filter(
-    ({ slug }: { slug: GroupTypeStore["slug"] }) =>
-      slug?.search(new RegExp(slugify(search), "i")) !== -1
-  );
-  if (!autoCompleteResults.length) {
-    return null;
-  }
-
-  return (
-    <ul className="border border-gray-400 divide-y divide-gray-300 top-full">
-      {autoCompleteResults.map((group: GroupTypeStore) => (
-        <li key={group.id} className="px-4 py-1 cursor-pointer">
-          {group.title}
-        </li>
-      ))}
-    </ul>
-  );
-}
+import { useUnlinkContentFromGroup } from "../hooks/data";
+import GroupsDropdown from './GroupsDropdown';
 
 function GroupTitle() {
   const dispatch = useDispatch();
@@ -58,7 +17,7 @@ function GroupTitle() {
   };
 
   return (
-    <div className="GroupTitle">
+    <div className="flex flex-1 GroupTitle">
       <input
         type="text"
         value={groupState.title || ""}
@@ -66,9 +25,6 @@ function GroupTitle() {
         className="w-full"
         onChange={onInputChange}
       />
-      {groupState.title && !groupState.id && (
-        <GroupsDropdown search={groupState.title} />
-      )}
     </div>
   );
 }
@@ -78,7 +34,7 @@ function GroupActions({ onSave }: { onSave: Function }) {
   const isUnsaved = useSelector((state: RootState) => state.ui.isUnsaved);
 
   return (
-    <div>
+    <div className="flex items-center">
       {/*
         <button className="px-8 font-bold uppercase Button">Validate</button>
       */}
@@ -86,22 +42,69 @@ function GroupActions({ onSave }: { onSave: Function }) {
         className="px-8 font-bold uppercase Button Button--primary"
         onClick={() => onSave()}
         disabled={!isUnsaved}
-      >
-        {groupId ? "Save" : "Create"}
+        >
+        {groupId ? "Enregistrer" : "Créer"}
       </button>
+      <GroupUnlink />
     </div>
   );
 }
 
+function GroupUnlink() {
+  const group = useSelector((state: RootState) => state.group);
+  const windowConstants = useSelector(
+    (state: RootState) => state.ui.windowConstants
+  );
+  const mutation = useUnlinkContentFromGroup();
+
+  const onUnlinkGroup = () => {
+    const itemBlockGroup = group?.itemBlockGroups?.find(itemBlockGroup => itemBlockGroup.itemId === windowConstants.itemId && itemBlockGroup.itemType === windowConstants.itemType);
+
+    if(itemBlockGroup?.id) {
+      mutation.mutate({ id: itemBlockGroup.id });
+    }
+  }
+
+  if(!windowConstants.itemId || !group.id) {
+    return null;
+  }
+
+  return (
+    <Tippy content={"Délier le groupe de ce contenu"}>
+      <button className="ml-6 font-bold text-red-600 uppercase" onClick={() => onUnlinkGroup()}>
+        <i className="fa fa-unlink"></i>
+      </button>
+    </Tippy>
+  )
+}
+
 function GroupOptions({ onSave }: { onSave: Function }) {
+  const group = useSelector((state: RootState) => state.group);
+  const windowConstants = useSelector(
+    (state: RootState) => state.ui.windowConstants
+  );
+
+  const showLinkExistingGroup = !group.id && windowConstants.itemId && windowConstants.itemType;
+
   return (
     <div className="flex">
       <div className="flex-1">
-        <GroupTitle />
+        <h3 className="mb-4 text-2xl font-bold">Créer un nouveau groupe</h3>
+        <div className="flex">
+          <div className="flex-grow">
+            <GroupTitle />
+          </div>
+          <div className="ml-6">
+            <GroupActions onSave={onSave} />
+          </div>
+        </div>
       </div>
-      <div className="ml-6">
-        <GroupActions onSave={onSave} />
-      </div>
+      {showLinkExistingGroup && (
+        <div className="flex-1 pl-10 ml-10 border-l">
+          <h3 className="mb-4 text-2xl font-bold">Lier un groupe existant</h3>
+          <GroupsDropdown />
+        </div>
+      )}
     </div>
   );
 }
