@@ -60,6 +60,7 @@ class BlockGroup extends BaseApiModel
     /**
      * @var array
      * @OA\Property(
+     *     readOnly=true,
      *     type="array",
      *     @OA\Items(
      *          ref="#/components/schemas/ItemBlockGroup"

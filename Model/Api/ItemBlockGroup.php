@@ -48,6 +48,15 @@ class ItemBlockGroup extends BaseApiModel
     protected $itemId;
 
     /**
+     * @var integer
+     * @OA\Property(
+     *    type="integer",
+     * )
+     * @Constraint\NotBlank(groups={"read"})
+     */
+    protected $blockGroupId;
+
+    /**
      * @return int
      */
     public function getId(): ?int
@@ -98,6 +107,24 @@ class ItemBlockGroup extends BaseApiModel
     public function setItemId(int $itemId): ItemBlockGroup
     {
         $this->itemId = $itemId;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBlockGroupId(): int
+    {
+        return $this->blockGroupId;
+    }
+
+    /**
+     * @param int $blockGroupId
+     * @return ItemBlockGroup
+     */
+    public function setBlockGroupId(int $blockGroupId): ItemBlockGroup
+    {
+        $this->blockGroupId = $blockGroupId;
         return $this;
     }
 

@@ -258,14 +258,14 @@ class BlockGroupController extends BaseAdminOpenApiController
             return OpenApiService::jsonResponse([], 404);
         }
 
-        $TheliaBlocks = array_map(
+        $theliaBlocks = array_map(
             function ($propelBlockGroup) use ($modelFactory, $request) {
                 return $modelFactory->buildModel('BlockGroup', $propelBlockGroup, $request->get('locale'));
             },
             iterator_to_array($propelTheliaBlocks)
         );
 
-        return OpenApiService::jsonResponse($TheliaBlocks);
+        return OpenApiService::jsonResponse($theliaBlocks);
     }
 
     /**

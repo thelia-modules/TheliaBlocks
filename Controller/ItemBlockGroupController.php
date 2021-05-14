@@ -22,7 +22,60 @@ use TheliaBlocks\Model\ItemBlockGroupQuery;
 class ItemBlockGroupController extends BaseAdminOpenApiController
 {
     /**
-     * @Route("/{itemBlockGroupId}", name="delete_item_block_group", methods="DELETE", requirements={"itemBlockGroupId"="\d+"})
+     * @Route("", name="_create", methods="POST")
+     *
+     * @OA\Post(
+     *     path="/item_block_group",
+     *     tags={"item block group", "block group"},
+     *     summary="Add a relation between an item and a block group",
+     *     @OA\RequestBody(
+     *          required=true,
+     *             @OA\JsonContent(
+     *                  @OA\Property(
+     *                      property="itemBlockGroup",
+     *                      ref="#/components/schemas/ItemBlockGroup"
+     *                  )
+     *             )
+     *     ),
+     *     @OA\Response(
+     *          response="200",
+     *          description="Success",
+     *          @OA\JsonContent(ref="#/components/schemas/BlockGroup")
+     *     ),
+     *     @OA\Response(
+     *          response="400",
+     *          description="Bad request",
+     *          @OA\JsonContent(ref="#/components/schemas/Error")
+     *     )
+     * )
+     */
+    public function createItemBlockGroup(
+        Request $request,
+        ModelFactory $modelFactory
+    ) {
+        $data = json_decode($request->getContent(), true);
+        $openApiItemBlockGroup = $modelFactory->buildModel('ItemBlockGroup', $data['itemBlockGroup']);
+        /** @var ItemBlockGroup $itemBlockGroup */
+        $itemBlockGroup = $openApiItemBlockGroup->toTheliaModel();
+
+        // todo allow multiple block for an item
+        $oldItemBlockGroup = ItemBlockGroupQuery::create()
+            ->filterByItemType($itemBlockGroup->getItemType())
+            ->filterByItemId($itemBlockGroup->getItemId())
+            ->findOne();
+        if (null !== $oldItemBlockGroup) {
+            $oldItemBlockGroup->delete();
+        }
+
+        $itemBlockGroup->save();
+
+        $theliaBlock = $modelFactory->buildModel('BlockGroup', $itemBlockGroup->getBlockGroup(), $request->get('locale'));
+
+        return OpenApiService::jsonResponse($theliaBlock, 200);
+    }
+
+    /**
+     * @Route("/{itemBlockGroupId}", name="_delete", methods="DELETE", requirements={"itemBlockGroupId"="\d+"})
      *
      * @OA\Delete(
      *     path="/item_block_group/{itemBlockGroupId}",
