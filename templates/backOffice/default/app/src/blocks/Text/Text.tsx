@@ -35,11 +35,17 @@ function BlockTextComponent({
                 "justifyLeft",
                 "justifyCenter",
                 "justifyRight",
+                "anchor",
               ],
               static: true,
               updateOnEmptySelection: true,
               align: "center",
             },
+            anchor: {
+              targetCheckbox: true,
+            },
+            autoLink: true,
+            anchorPreview: true,
           }}
           onChange={(text, medium) => {
             onUpdate({
