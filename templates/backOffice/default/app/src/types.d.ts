@@ -1,3 +1,9 @@
+export type ErrorType = {
+  message: string;
+  statusCode: number;
+  statusText: string;
+};
+
 type BlockModuleComponentProps<T> = {
   data: T;
   onUpdate: <T>(newData: any) => T | void;
@@ -52,4 +58,11 @@ export type BlockPluginDefinition<TProp = { [key: string]: any }> =
 
 export type uiStoreType = {
   isUnsaved: boolean;
+};
+
+export type LibraryImage = {
+  id: number | null;
+  url: string | null;
+  fileName: string;
+  title: string;
 };
