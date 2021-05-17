@@ -113,7 +113,7 @@ class ItemBlockGroup extends BaseApiModel
     /**
      * @return int
      */
-    public function getBlockGroupId(): int
+    public function getBlockGroupId(): ?int
     {
         return $this->blockGroupId;
     }

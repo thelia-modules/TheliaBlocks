@@ -75,7 +75,10 @@ class BlockGroupController extends BaseAdminOpenApiController
             $this->assignBlockGroupToItem($modelFactory, $data['itemBlockGroup'], $blockGroup->getId());
         }
 
-        return OpenApiService::jsonResponse($openApiBlockGroup->setId($blockGroup->getId()));
+        $blockGroup->clearItemBlockGroups();
+        return OpenApiService::jsonResponse(
+            $modelFactory->buildModel('BlockGroup', $blockGroup)
+        );
     }
 
     /**
@@ -321,6 +324,7 @@ class BlockGroupController extends BaseAdminOpenApiController
         if (isset($data['itemBlockGroup'])) {
             $this->assignBlockGroupToItem($modelFactory, $data['itemBlockGroup'], $blockGroup->getId());
         }
+        $blockGroup->clearItemBlockGroups();
 
         return OpenApiService::jsonResponse($modelFactory->buildModel('BlockGroup', $blockGroup));
     }
@@ -430,5 +434,7 @@ class BlockGroupController extends BaseAdminOpenApiController
         }
 
         $itemBlockGroup->save();
+
+        return $itemBlockGroup;
     }
 }
