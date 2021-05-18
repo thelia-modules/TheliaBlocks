@@ -1,48 +1,50 @@
 import "medium-editor/dist/css/medium-editor.css";
 import "medium-editor/dist/css/themes/beagle.css";
 
-import MediumEditor, { CoreOptions } from "medium-editor";
-import React, { useEffect, useRef, useState } from "react";
+import MediumEditor from "medium-editor";
+import React from "react";
 
-export default function Editor(prop: {
-  text: string;
-  onChange: (newText: string, editor: MediumEditor.MediumEditor) => void;
-  options?: CoreOptions;
-  className?: string;
-}) {
-  const ref = useRef<HTMLElement | null>(null);
-  const [text, setText] = useState(prop.text);
-  const [editor, setEditor] = useState<MediumEditor.MediumEditor | null>(null);
+export default class Editor extends React.Component {
+  constructor(props) {
+    super(props);
+    this.editorRef = React.createRef();
+  }
 
-  useEffect(() => {
-    if (ref.current) {
-      const medium = new MediumEditor(ref.current, prop.options);
-      setEditor(medium);
-
-      medium.subscribe("editableInput", () => {
-        if (prop.onChange && ref.current)
-          prop.onChange(ref.current.innerHTML, medium);
-      });
-    }
-  }, [ref]);
-
-  useEffect(() => {
-    setText(prop.text);
-  }, [text]);
-
-  useEffect(() => {
-    return () => {
-      if (editor) {
-        editor.destroy();
-      }
-    };
-  }, [editor]);
-
-  const editorProp = {
-    ...prop,
-    dangerouslySetInnerHTML: { __html: text },
-    ref,
+  static defaultProps = {
+    text: "",
+    onChange: () => {},
   };
 
-  return React.createElement("div", editorProp);
+  componentDidMount = () => {
+    if (this.editorRef?.current && !this.medium) {
+      this.editor = new MediumEditor(
+        this.editorRef.current,
+        this.props.options
+      );
+      this.editor.setContent(this.props.text);
+      this.editor.subscribe("editableInput", (e) => {
+        this.props.onChange(this.editorRef.current.innerHTML);
+      });
+    }
+  };
+
+  componentDidUpdate = () => {
+    if (this.editor) {
+      this.editor.restoreSelection();
+    }
+  };
+
+  componentWillUnmount = () => {
+    if (this.editor) {
+      this.editor.destroy();
+    }
+  };
+
+  render() {
+    if (this.editor) {
+      this.editor.saveSelection();
+    }
+
+    return <div ref={this.editorRef} {...this.props}></div>;
+  }
 }
