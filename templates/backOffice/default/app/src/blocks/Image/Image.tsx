@@ -60,7 +60,7 @@ function MediaLibrary({
       <div className="mt-12 mb-2 text-3xl font-bold">Images existantes: </div>
       <div className="grid grid-cols-5 gap-4">
         {images?.data?.map((image) => {
-          return (
+          return image?.id ? (
             <div key={image.id} className="flex flex-col p-2 border">
               <div
                 className="m-auto cursor-pointer hover:opacity-75"
@@ -75,7 +75,7 @@ function MediaLibrary({
                 effacer
               </button>
             </div>
-          );
+          ) : null;
         })}
       </div>
     </div>
@@ -98,7 +98,7 @@ function BlockImageComponent(props: BlockImageComponentProps) {
       className="relative overflow-y-auto BlockImage"
       style={{ minHeight: "30vh" }}
     >
-      {data.url ? (
+      {data?.url ? (
         <img src={data.url} alt={data.title} className="BlockImage-img" />
       ) : null}
       {isEditing ? (
@@ -120,7 +120,7 @@ function BlockImageComponent(props: BlockImageComponentProps) {
         </div>
       ) : (
         <button onClick={() => setIsEditing(true)}>
-          {data.url ? "Modifier l'image" : "Ajouter une image"}
+          {data?.url ? "Modifier l'image" : "Ajouter une image"}
         </button>
       )}
     </div>
