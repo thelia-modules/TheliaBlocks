@@ -47,7 +47,7 @@ function BlockTextComponent({
             autoLink: true,
             anchorPreview: true,
           }}
-          onChange={(text, medium) => {
+          onChange={(text) => {
             onUpdate({
               value: text,
             });

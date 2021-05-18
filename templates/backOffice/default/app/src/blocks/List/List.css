@@ -5,9 +5,10 @@
     @apply mr-4;
   }
   .BlockList-line {
-    @apply flex mb-4;
+    @apply flex mb-2 p-2 border-b;
   }
-  .BlockList-line input {
+  .BlockList-line input,
+  .BlockList-line .BlockText {
     @apply flex-grow;
   }
   .BlockList-line button {

@@ -1,9 +1,11 @@
 import "./List.css";
 
-import React, { ChangeEvent, FocusEvent } from "react";
+import React, { ChangeEvent, useCallback } from "react";
 import Tippy from "@tippyjs/react";
 
 import { BlockModuleComponentProps, BlockPluginDefinition } from "../../types";
+import BlockText, { BlockTextData } from "../Text";
+import { nanoid } from "nanoid";
 
 enum typeList {
   Unordered = "ul",
@@ -14,6 +16,8 @@ export type BlockListData = {
   type: typeList;
   values: string[];
 };
+
+type listItemType = { id: string; value: string };
 
 const types = [
   {
@@ -30,53 +34,45 @@ function BlockListComponent({
   data,
   onUpdate,
 }: BlockModuleComponentProps<BlockListData>) {
-  const [type, setType] = React.useState<string>(initialData.type);
-  const [values, setValues] = React.useState<string[]>([]);
+  const [listItems, setListItems] = React.useState<listItemType[]>([]);
 
   React.useEffect(() => {
-    if (data.type) {
-      setType(data.type);
-    }
     if (data.values) {
-      setValues(data.values);
+      setListItems(data.values.map((value) => ({ id: nanoid(), value })));
     }
-  }, [data]);
+  }, []);
 
   const onChangeType = (e: ChangeEvent<HTMLSelectElement>) => {
-    setType(e.target.value);
     onUpdate({ ...data, type: e.target.value });
   };
 
-  const onChangeValue = ({
-    value,
-    index,
-  }: {
-    value: string;
-    index: number;
-  }) => {
-    setValues(
-      values.map((currentValue, currentIndex) =>
-        currentIndex === index ? value : currentValue
-      )
-    );
-  };
-
-  const onBlurValue = () => {
-    onUpdate({ ...data, values });
-  };
-
   const addLine = () => {
-    const newValues = [...values, ""];
-    setValues(newValues);
-    onUpdate({ ...data, values: newValues });
+    const newListItems = [...listItems, { id: nanoid(), value: "" }];
+    setListItems(newListItems);
+    onUpdate({ ...data, values: newListItems.map(({ value }) => value) });
   };
 
-  const deleteLine = (index: number) => {
-    const newValues = values.filter(
-      (val, currentIndex: number) => currentIndex !== index
+  const deleteLine = (id: string) => {
+    const newListItems = listItems.filter(
+      ({ id: currentId }) => currentId !== id
     );
-    setValues(newValues);
-    onUpdate({ ...data, values: newValues });
+    setListItems(newListItems);
+    onUpdate({ ...data, values: newListItems.map(({ value }) => value) });
+  };
+
+  const handleUpdateText = (
+    listItem: listItemType,
+    textData: BlockTextData
+  ) => {
+    const newListItems = listItems.map(({ id, value }) => ({
+      id,
+      value: id === listItem.id ? textData.value : value,
+    }));
+    setListItems(newListItems);
+    onUpdate({
+      ...data,
+      values: newListItems.map(({ value }) => value),
+    });
   };
 
   return (
@@ -87,7 +83,7 @@ function BlockListComponent({
           name="title-level"
           id="title-level"
           onChange={onChangeType}
-          value={type}
+          value={data.type}
         >
           {types.map(({ label, value }) => (
             <option key={value} value={value}>
@@ -97,21 +93,19 @@ function BlockListComponent({
         </select>
       </div>
       <div className="BlockList-list">
-        {values.map((value, index) => (
-          <div className="BlockList-line" key={index}>
-            <input
-              type="text"
-              name="title-text"
-              id="title-text"
-              placeholder="Texte"
-              value={value}
-              onChange={(e) => onChangeValue({ value: e.target.value, index })}
-              onBlur={onBlurValue}
+        {listItems.map((listItem) => (
+          <div className="BlockList-line" key={listItem.id}>
+            <BlockText.component
+              id={`text-${listItem.id}`}
+              data={{ value: listItem.value }}
+              onUpdate={(textData: BlockTextData) => {
+                handleUpdateText(listItem, textData);
+              }}
             />
             <Tippy content={"Supprimer l'élément"}>
               <button
-                onClick={() => deleteLine(index)}
-                disabled={values.length < 2}
+                onClick={() => deleteLine(listItem.id)}
+                disabled={listItems.length < 2}
               >
                 <i className="fa fa-trash"></i>
               </button>
@@ -119,7 +113,9 @@ function BlockListComponent({
           </div>
         ))}
         <div className="text-center">
-          <button className="BlockList-add" onClick={addLine}>Ajouter un élément</button>
+          <button className="BlockList-add" onClick={addLine}>
+            Ajouter un élément
+          </button>
         </div>
       </div>
     </div>
