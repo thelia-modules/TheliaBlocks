@@ -1,102 +1,144 @@
+import "./Image.css";
+
+import {
+  BlockModuleComponentProps,
+  BlockPluginDefinition,
+  LibraryImage,
+} from "../../types";
+import {
+  useCreateImage,
+  useDeleteImage,
+  useLibraryImage,
+} from "../../hooks/data";
+
 import React from "react";
 
-import "./Image.css";
-import previewImg from "./preview.jpg";
-import { BlockModuleComponentProps, BlockPluginDefinition } from "../../types";
+export type BlockImageComponentProps = BlockModuleComponentProps<LibraryImage>;
 
-export type BlockImageData = {
-  src: string;
-  alt: string;
-  width?: string;
-  height?: string;
-};
-
-export type BlockImageComponentProps = BlockModuleComponentProps<BlockImageData>;
-
-function BlockImageComponent(props: BlockImageComponentProps) {
-  const [src, setSrc] = React.useState<string>("");
-  const [alt, setAlt] = React.useState<string>("");
-  const [width, setWidth] = React.useState<string>("");
-  const [height, setHeight] = React.useState<string>("");
-
-  const { data, onUpdate } = props;
-
-  React.useEffect(() => {
-    if (data.src) {
-      setSrc(data.src);
-    }
-    if (data.alt) {
-      setAlt(data.alt);
-    }
-    if (data.width) {
-      setWidth(data.width);
-    }
-    if (data.height) {
-      setHeight(data.height);
-    }
-  }, [data]);
+function MediaLibrary({
+  onSelect,
+}: {
+  onSelect: (image: LibraryImage) => void;
+}) {
+  const mutation = useCreateImage();
+  const deleteMutation = useDeleteImage();
+  const images = useLibraryImage();
 
   return (
-    <div className="BlockImage">
-      <img src={data.src} alt={data.alt} className="BlockImage-img" />
-      <div className="BlockImage-Inputs">
+    <div className="p-4 bg-white MediaLibrary">
+      <form
+        className=""
+        onSubmit={(e) => {
+          e.preventDefault();
+          const data = new FormData(e.currentTarget);
+          mutation.mutate(data, {
+            onSuccess: (data) => {
+              onSelect(data);
+            },
+          });
+        }}
+      >
+        <input type="file" name="image" />
         <input
+          className="mt-2"
           type="text"
-          placeholder="source"
-          value={src}
-          onChange={(e) => {
-            setSrc(e.target.value);
-          }}
-          onBlur={(e) => {
-            if (e.target.value) {
-              onUpdate({ ...data, src: e.target.value });
-            }
-          }}
+          name="title"
+          defaultValue=""
+          placeholder="Titre de l'image"
         />
-        <input
-          type="text"
-          placeholder="alt"
-          value={alt}
-          onChange={(e) => {
-            setAlt(e.target.value);
-          }}
-          onBlur={(e) => onUpdate({ ...data, alt: e.target.value })}
-        />
-        <input
-          type="text"
-          placeholder="width"
-          value={width}
-          onChange={(e) => {
-            setWidth(e.target.value);
-          }}
-          onBlur={(e) => onUpdate({ ...data, width: e.target.value })}
-        />
-        <input
-          type="text"
-          placeholder="height"
-          value={height}
-          onChange={(e) => {
-            setHeight(e.target.value);
-          }}
-          onBlur={(e) => onUpdate({ ...data, height: e.target.value })}
-        />
+        <div className="w-full mt-2">
+          <button type="submit" className="Button Button--primary">
+            Envoyer
+          </button>
+        </div>
+      </form>
+
+      {mutation.isError ? (
+        <div className="mt-4 alert alert-danger">{mutation.error?.message}</div>
+      ) : null}
+
+      <div className="mt-12 mb-2 text-3xl font-bold">Images existantes: </div>
+      <div className="grid grid-cols-5 gap-4">
+        {images?.data?.map((image) => {
+          return image?.id ? (
+            <div key={image.id} className="flex flex-col p-2 border">
+              <div
+                className="m-auto cursor-pointer hover:opacity-75"
+                onClick={() => onSelect(image)}
+              >
+                {image.url ? <img src={image.url} alt={image.title} /> : null}
+              </div>
+              <button
+                className="mt-auto text-sm uppercase Button Button--danger"
+                onClick={() => deleteMutation.mutate(image.id)}
+              >
+                effacer
+              </button>
+            </div>
+          ) : null;
+        })}
       </div>
     </div>
   );
 }
 
+function BlockImageComponent(props: BlockImageComponentProps) {
+  const [isEditing, setIsEditing] = React.useState<boolean>(false);
+
+  const { data, onUpdate } = props;
+
+  React.useEffect(() => {
+    if (!data) {
+      setIsEditing(true);
+    }
+  }, [data]);
+
+  return (
+    <div
+      className="relative overflow-y-auto BlockImage"
+      style={{ minHeight: "30vh" }}
+    >
+      {data?.url ? (
+        <img src={data.url} alt={data.title} className="BlockImage-img" />
+      ) : null}
+      {isEditing ? (
+        <div className="absolute bg-gray-800 bg-opacity-75 inset-4 ">
+          <button
+            className="absolute right-0 ml-auto Button Button--info"
+            onClick={() => setIsEditing(false)}
+          >
+            Fermer
+          </button>
+          <div className="p-8 bg-white">
+            <MediaLibrary
+              onSelect={(image) => {
+                onUpdate(image);
+                setIsEditing(false);
+              }}
+            />
+          </div>
+        </div>
+      ) : (
+        <button onClick={() => setIsEditing(true)}>
+          {data?.url ? "Modifier l'image" : "Ajouter une image"}
+        </button>
+      )}
+    </div>
+  );
+}
+
 const initialData = {
-  src: "//placehold.it/1600x400",
-  alt: "image d'example",
-  width: "",
-  height: "",
+  url: null,
+  id: null,
+  title: "",
+  fileName: "",
 };
 
 const moduleType = {
   id: "blockImage",
 };
 
-const blockImage: BlockPluginDefinition<BlockImageData> = {
+const blockImage: BlockPluginDefinition<LibraryImage> = {
   type: moduleType,
   component: BlockImageComponent,
   initialData,
@@ -109,7 +151,7 @@ const blockImage: BlockPluginDefinition<BlockImageData> = {
     fr_FR: "Affiche une image",
   },
   image: {
-    default: "http://localhost:3000" + previewImg,
+    default: "",
   },
 };
 

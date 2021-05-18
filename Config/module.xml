@@ -31,6 +31,7 @@
     <required>
         <module version=">=2.0.0">OpenApi</module>
         <module version=">=2.0.0">ShortCode</module>
+        <module version=">=2.0.0">TheliaLibrary</module>
     </required>
     <thelia>2.5.0</thelia>
     <stability>other</stability>
