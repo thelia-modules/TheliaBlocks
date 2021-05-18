@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Link, Route, HashRouter as Router, Switch } from "react-router-dom";
-import { Provider } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import { ToastContainer } from "react-toastify";
 
 import "./styles/index.css";
@@ -10,6 +10,7 @@ import "tippy.js/dist/tippy.css";
 import "tippy.js/themes/light.css";
 
 import store from "./redux/store";
+import { setWindowConstants } from "./redux/ui";
 import EditGroup from "./pages/EditGroup";
 import ListGroups from "./pages/ListGroups";
 
@@ -41,7 +42,10 @@ export const Dashboard = () => (
           <Link to="/" className="px-5 py-3 mr-4 font-bold bg-white">
             Liste des groupes de blocs
           </Link>
-          <Link to="/create" className="px-5 py-3 font-bold text-white bg-yellow-500">
+          <Link
+            to="/create"
+            className="px-5 py-3 font-bold text-white bg-yellow-500"
+          >
             Ajouter un groupe de blocs
           </Link>
         </div>
@@ -70,16 +74,28 @@ export const Dashboard = () => (
 
 declare const window: any;
 
-export const EditPage = () => {
-  const [groupId] = useState<number>(window?.groupId);
-  const [itemId] = useState<number>(window?.itemId);
-  const [itemType] = useState<string>(window?.itemType);
+const EditPageInner = () => {
+  const dispatch = useDispatch();
 
+  if (window.itemId && window.itemType) {
+    dispatch(
+      setWindowConstants({
+        groupId: window.groupId,
+        itemId: window.itemId,
+        itemType: window.itemType,
+      })
+    );
+  }
+
+  return <EditGroup />;
+};
+
+export const EditPage = () => {
   return (
     <Wrapper>
-      <EditGroup id={groupId} itemId={itemId} itemType={itemType} />
+      <EditPageInner />
     </Wrapper>
-  )
+  );
 };
 
 export default Wrapper;

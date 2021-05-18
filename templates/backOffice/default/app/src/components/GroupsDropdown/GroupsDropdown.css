@@ -1,0 +1,15 @@
+.GroupsDropdown {
+    @apply flex;
+}
+.GroupsDropdown-select {
+    @apply relative flex-grow;
+}
+.GroupsDropdown-dropdown {
+    @apply absolute left-0 right-0 z-50 overflow-y-scroll bg-white border border-gray-400 divide-y divide-gray-300 top-full max-h-60;
+}
+.GroupsDropdown-dropdownItem {
+}
+    .GroupsDropdown-dropdownItem button {
+        @apply block px-4 py-3 cursor-pointer w-full text-left hover:bg-gray-100;
+        transition: 0.2s ease-out;
+    }

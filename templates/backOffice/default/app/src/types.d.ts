@@ -31,17 +31,22 @@ export type IBlock = {
   data: any;
 };
 
+export type itemBlockGroupsType = {
+  id: number;
+  itemType: string;
+  itemId: number;
+};
+
 export type GroupTypeStore = {
   id?: number;
   visible: boolean;
   title: string;
   slug: string;
-  itemBlockGroups?: { id: number; itemType: string; itemId: number }[];
+  itemBlockGroups?: itemBlockGroupsType[];
 };
 
 export type GroupTypeResponse = GroupTypeStore & {
   jsonContent?: string;
-  itemBlockGroups?: { id: number; itemType: string; itemId: number }[];
 };
 
 export type BlockPluginDefinition<TProp = { [key: string]: any }> =
@@ -58,6 +63,11 @@ export type BlockPluginDefinition<TProp = { [key: string]: any }> =
 
 export type uiStoreType = {
   isUnsaved: boolean;
+  windowConstants: {
+    groupId?: GroupTypeStore["id"],
+    itemId?: itemBlockGroupsType["itemId"],
+    itemType?: itemBlockGroupsType["itemType"],
+  };
 };
 
 export type LibraryImage = {

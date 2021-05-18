@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // import { Prompt } from "react-router-dom";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 import { RootState } from "../redux/store";
 import { setUnsaved } from "../redux/ui";
@@ -10,13 +10,18 @@ import Menu from "../components/Menu";
 import Group from "../components/Group";
 import Loader from "../components/Loader";
 
-export default function EditGroup({ id, itemId, itemType }: { id?: number, itemId?: number, itemType?: string }) {
-  const { isLoading, isFetchedAfterMount, isIdle } = useGroup({ id });
+export default function EditGroup({ id }: { id?: number }) {
+  const windowConstants = useSelector((state: RootState) => state.ui.windowConstants);
+  const [initialGroupId] = useState(id || windowConstants.groupId);
+  const { isLoading, isFetchedAfterMount, isIdle } = useGroup({ id: initialGroupId });
   const dispatch = useDispatch();
   const group = useSelector((state: RootState) => state.group);
   const blocks = useSelector((state: RootState) => state.blocks);
-  const isUnsaved = useSelector((state: RootState) => state.ui.isUnsaved);
-  const mutation = useCreateOrUpdateGroup({ id, itemId, itemType });
+
+  const mutation = useCreateOrUpdateGroup({
+    id: group.id,
+  });
+  // const isUnsaved = useSelector((state: RootState) => state.ui.isUnsaved);
 
   useEffect(() => {
     dispatch(setUnsaved(true));
@@ -25,9 +30,9 @@ export default function EditGroup({ id, itemId, itemType }: { id?: number, itemI
   const onSave = () => {
     mutation.mutate({ group, blocks });
     toast.success("Le groupe a bien été sauvegardé");
-  }
+  };
 
-  if(!isIdle && (!isFetchedAfterMount || isLoading)) {
+  if (!isIdle && (!isFetchedAfterMount || isLoading)) {
     return <Loader width="80px" />;
   }
 
