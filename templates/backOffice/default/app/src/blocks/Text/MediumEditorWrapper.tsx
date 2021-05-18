@@ -1,11 +1,21 @@
 import "medium-editor/dist/css/medium-editor.css";
 import "medium-editor/dist/css/themes/beagle.css";
 
-import MediumEditor from "medium-editor";
+import MediumEditor, { CoreOptions } from "medium-editor";
 import React from "react";
 
-export default class Editor extends React.Component {
-  constructor(props) {
+interface IEditorProps {
+  text: string;
+  options?: CoreOptions;
+  onChange: (newText: string) => void;
+  className?: string;
+}
+
+export default class Editor extends React.Component<IEditorProps> {
+  editorRef: React.RefObject<HTMLDivElement>;
+  editor?: MediumEditor.MediumEditor;
+
+  constructor(props: IEditorProps) {
     super(props);
     this.editorRef = React.createRef();
   }
@@ -16,14 +26,14 @@ export default class Editor extends React.Component {
   };
 
   componentDidMount = () => {
-    if (this.editorRef?.current && !this.medium) {
+    if (this.editorRef?.current && !this.editor) {
       this.editor = new MediumEditor(
         this.editorRef.current,
         this.props.options
       );
       this.editor.setContent(this.props.text);
       this.editor.subscribe("editableInput", (e) => {
-        this.props.onChange(this.editorRef.current.innerHTML);
+        this.props.onChange(this.editorRef?.current?.innerHTML || "");
       });
     }
   };
@@ -45,6 +55,6 @@ export default class Editor extends React.Component {
       this.editor.saveSelection();
     }
 
-    return <div ref={this.editorRef} {...this.props}></div>;
+    return <div ref={this.editorRef} className={this.props.className}></div>;
   }
 }
