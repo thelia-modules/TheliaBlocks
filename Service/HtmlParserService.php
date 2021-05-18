@@ -1,17 +1,79 @@
 <?php
 
 namespace TheliaBlocks\Service;
+use OpenApi\Model\Api\ModelFactory;
+use Symfony\Component\HttpFoundation\RequestStack;
+use TheliaLibrary\Model\LibraryImage;
+use TheliaLibrary\TheliaLibrary;
 
 class HtmlParserService
 {
-    public function htmlToJsonBlocks($html)
+    /** @var ModelFactory */
+    protected $modelFactory;
+
+    protected $locale;
+
+    public function __construct(ModelFactory $modelFactory, RequestStack $requestStack)
+    {
+        $this->modelFactory = $modelFactory;
+        $this->locale = $requestStack->getCurrentRequest()->getSession()->getLang(true)->getLocale();
+    }
+
+
+    public function htmlToJsonBlocks($html, $mediaBaseUrl = null)
     {
         $domDocument = new \DOMDocument();
         libxml_use_internal_errors(true);
         $domDocument->loadHTML($html);
 
         $tags = $this->htmlToTags($domDocument->documentElement)['children'][0]['children'];
-        return json_encode($this->tagsToBlocks($tags));
+        $blocks = array_map(function ($tag) use ($mediaBaseUrl) {return $this->tagToBlocks($tag, null, $mediaBaseUrl);}, $tags);
+        $blocks = array_reduce(
+            $blocks,
+            [$this, 'reduceBlocks']
+            ,[]);
+        return json_encode($blocks);
+    }
+
+    protected function reduceBlocks($carry, $block)
+    {
+        $currentBlockType = $block['type']['id'] ?? null;
+
+        if ($currentBlockType === 'blockGroup') {
+            $block['data'] = array_reduce($block['data'], [$this, 'reduceBlocks'], []);
+            if (count($block['data']) > 1) {
+                $carry[] = $block;
+                return $carry;
+
+            }
+            $block = $block['data'][0];
+        }
+
+        $previousBlockType = $carry[array_key_last($carry)]['type']['id'] ?? null;
+        // If current and previous are block text merge it
+        if ("blockText" === $previousBlockType && "blockText" === $currentBlockType) {
+            $carry[array_key_last($carry)]['data']['value'] = $carry[array_key_last($carry)]['data']['value'].$block['data']['value'];
+            return $carry;
+        }
+        // If current is a "space" separator and previous is block text add a br to previous
+        if ("blockText" === $previousBlockType && "blockSeparator" === $currentBlockType && $block['data']['type'] === "space") {
+            $carry[array_key_last($carry)]['data']['value'] = $carry[array_key_last($carry)]['data']['value']."<br/>";
+            return $carry;
+        }
+        // If current is a block text and previous is a "space" separator, replace previous by current and add a br at start of it
+        if ("blockSeparator" === $previousBlockType && $carry[array_key_last($carry)]['data']['type'] === "space" && "blockText" === $currentBlockType ) {
+            $block['data']['value'] = "<br/>".$block['data']['value'];
+            $carry[array_key_last($carry)] = $block;
+            return $carry;
+        }
+        // If current and previous are "space" separator increase size of previous
+        if ("blockSeparator" === $previousBlockType &&  "blockSeparator" === $currentBlockType ) {
+            $carry[array_key_last($carry)]['data']['size'] = $carry[array_key_last($carry)]['data']['size']++;
+            return $carry;
+        }
+
+        $carry[] = $block;
+        return $carry;
     }
 
     protected function htmlToTags($element) {
@@ -41,155 +103,293 @@ class HtmlParserService
         return $obj;
     }
 
-    protected function tagsToBlocks($tags, $parentId = null) {
-        $blocks = [];
-        foreach ($tags as $tag) {
-            $block = [
-                'id' => $this->guidv4(),
-                'parent' => $parentId
-            ];
+    protected function tagToBlocks($tag, $parentId = null, $mediaBaseUrl = null)
+    {
+        $blockId = $this->guidv4();
+        $blockBaseData = [
+            'id' => $blockId,
+            'parent' => $parentId
+        ];
 
-            if (is_string($tag)) {
-                $block = $tag;
-            } elseif (!in_array($tag['type'], ['img', 'iframe', 'br', 'hr', 'embed']) && !isset($tag['children'])) {
-                continue;
-            } elseif (in_array($tag['type'], ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])) {
-                $text = array_reduce($tag['children'], function ($carry, $item) { if (is_string($item)){$carry .= $item;} return $carry;}, "");
-                $block = array_merge(
-                    $block,
+        // String without tags are text
+        if (is_string($tag)) {
+            return array_merge(
+                $blockBaseData,
+                [
+                    "type" => ["id" => "blockText"],
+                    "data" => [
+                        "value" => $tag
+                    ]
+                ]
+            );
+        }
+
+        // Orphan tag that are not implemented
+        if (!in_array($tag['type'], ['img', 'iframe', 'br', 'hr', 'embed']) && !isset($tag['children'])) {
+            return array_merge(
+                $blockBaseData,
+                [
+                    "type"=>["id"=>"blockRaw"],
+                    "data"=> [
+                        "value" => $tag['raw']
+                    ]
+                ]
+            );
+        }
+
+        $childrenBlocks = isset($tag['children'])
+            ? array_map(function ($tag) use ($blockId, $mediaBaseUrl) {return $this->tagToBlocks($tag, $blockId, $mediaBaseUrl);}, $tag['children'])
+            : [];
+
+        // Title tags
+        if (in_array($tag['type'], ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])) {
+            $text = array_reduce(
+                $tag['children'],
+                [$this, 'mergeChildText'],
+                ""
+            );
+            return array_merge(
+                $blockBaseData,
+                [
+                    "type"=>["id"=>"blockTitle"],
+                    "data"=>[
+                        "level" => substr($tag['type'], 1,1),
+                        "text" => strip_tags($text)
+                    ]
+                ]
+            );
+        }
+
+        if (in_array($tag['type'], ['ol', 'ul'])) {
+            // Get li as raw text
+            $values = array_filter(array_map(
+                function ($child) {
+                    return $child['data']['value']?? null;
+                },
+                $childrenBlocks
+            ), 'strlen');
+            return array_merge(
+                $blockBaseData,
+                [
+                    "type"=>["id"=>"blockList"],
+                    "data"=>[
+                        "type" => $tag['type'],
+                        "values" => $values
+                    ]
+                ]
+            );
+        }
+
+        if ($tag['type'] === "li") {
+            $text = array_reduce(
+                $tag['children'],
+                [$this, 'mergeChildText'],
+                ""
+            );
+            return array_merge(
+                $blockBaseData,
+                [
+                    "type"=>["id"=>"blockText"],
+                    "data"=>[
+                        "value" => $text
+                    ]
+                ]
+            );
+        }
+
+        if ($tag['type'] === "figure") {
+            return array_merge(
+                $blockBaseData,
+                [
+                    "type"=>["id"=>"blockGroup"],
+                    "data"=>$childrenBlocks
+                ]
+            );
+        }
+
+        if ($tag['type'] === "figcaption") {
+            $text = array_reduce(
+                $tag['children'],
+                [$this, 'mergeChildText'],
+                ""
+            );
+            return array_merge(
+                $blockBaseData,
+                [
+                    "type"=>["id"=>"blockText"],
+                    "data"=>[
+                        "value" => $text
+                    ]
+                ]
+            );
+        }
+
+        if ($tag['type'] === "img") {
+            $alt = $tag["alt"] ?? $tag["title"]?? "";
+            $imgData = [];
+
+            if (isset($tag['width'])) {
+                $imgData['width'] = $tag['width'];
+            }
+            if (isset($tag['height'])) {
+                $imgData['height'] = $tag['height'];
+            }
+
+            $imgDataFromUrl = null !== $mediaBaseUrl
+                ? $this->fileGetContentsCurl($mediaBaseUrl.$tag['src'])
+                : null;
+
+            // If we found img by his url upload it to library
+            if ($imgDataFromUrl)  {
+                $fileName = bin2hex(random_bytes(5)).'_'.basename($tag['src']);
+                file_put_contents(TheliaLibrary::DEFAULT_IMAGE_DIRECTORY.$fileName, $imgDataFromUrl);
+                $libraryImage = (new LibraryImage())
+                    ->setLocale($this->locale)
+                    ->setFileName($fileName)
+                    ->setTitle($alt?? $fileName);
+
+                $libraryImage->save();
+
+                $openApiImage = $this->modelFactory->buildModel('LibraryImage', $libraryImage);
+
+                return array_merge(
+                    $blockBaseData,
                     [
-                        "type"=>["id"=>"blockTitle"],
-                        "data"=>[
-                            "level" => substr($tag['type'], 1,1),
-                            "text" => $text
-                        ]
+                        "type"=>["id"=>"blockImage"],
+                        "data"=> array_merge($imgData, json_decode(json_encode($openApiImage), true))
                     ]
                 );
-            } elseif ($tag['type'] === "ol" || $tag['type'] === "ul") {
-                $childrenBlocks = array_filter($this->tagsToBlocks($tag['children'], $block['id']), function ($item){return is_string($item);});
-                $block = array_merge(
-                    $block,
-                    [
-                        "type"=>["id"=>"blockList"],
-                        "data"=>[
-                            "type"=>$tag['type'],
-                            "values"=>$childrenBlocks
-                        ]
-                    ]
-                );
-            } elseif ($tag['type'] === "li") {
-                $text = array_reduce($tag['children'], function ($carry, $item) { if (is_string($item)){$carry .= $item;} return $carry;}, "");
+            }
 
-                $block = $text;
-            } elseif ($tag['type'] === "figure") {
-                $childrenBlocks = $this->tagsToBlocks($tag['children'], $block['id']);
-                $block = array_merge(
-                    $block,
+            // Else set the src value
+            return array_merge(
+                $blockBaseData,
+                [
+                    "type"=>["id"=>"blockImage"],
+                    "data"=>
+                        array_merge(
+                            $imgData,
+                            [
+                                "src" => $tag["src"],
+                                "alt" => $alt
+                            ]
+                        )
+                ]
+            );
+        }
+
+        if ($tag['type'] === "p") {
+            if (isset($tag['children']) && !empty($tag['children'])) {
+                return array_merge(
+                    $blockBaseData,
                     [
                         "type"=>["id"=>"blockGroup"],
                         "data"=>$childrenBlocks
                     ]
                 );
-            } elseif ($tag['type'] === "img") {
-                $alt = $tag["alt"] ?? $tag["title"]?? "";
-                $data = [
-                    "src" => $tag["src"],
-                    "alt" => $alt
-                ];
+            }
+            return array_merge(
+                $blockBaseData,
+                [
+                    "type"=>["id"=>"blockText"],
+                    "data"=>[
+                        "value" => $tag['raw']
+                    ]
+                ]
+            );
+        }
 
-                if (isset($tag['width'])) {
-                    $data['width'] = $tag['width'];
+        if (in_array($tag['type'], ["strong", "span"])) {
+            $text = array_reduce(
+                $tag['children'],
+                [$this, 'mergeChildText'],
+                ""
+            );
+            return array_merge(
+                $blockBaseData,
+                [
+                    "type"=>["id"=>"blockText"],
+                    "data"=>[
+                        "value" => "<".$tag['type'].">".$text."</".$tag['type'].">"
+                    ]
+                ]
+            );
+        }
+
+        if ($tag['type'] === "a") {
+            $imgBlocks = array_filter($childrenBlocks, function ($block) {return $block['type']['id'] === "blockImage";});
+            // If a link has an img inside it's an image block with a link
+            if (isset($imgBlocks[0])) {
+                $linkData = ["url" => $tag['href']];
+                if (isset($tag['target'])) {
+                    $linkData['target'] = $tag['target'];
                 }
-                if (isset($tag['height'])) {
-                    $data['height'] = $tag['height'];
-                }
-                $block = array_merge(
-                    $block,
+                $blockData = array_merge(
+                    $imgBlocks[0]['data'],
+                    [
+                        "link" => $linkData
+                    ]
+                );
+                return array_merge(
+                    $blockBaseData,
                     [
                         "type"=>["id"=>"blockImage"],
-                        "data"=>$data
-                    ]
-                );
-            } elseif ($tag['type'] === "figcaption") {
-                if (!isset($tag['children'])) {
-                    continue;
-                }
-                $text = array_reduce($tag['children'], function ($carry, $item) { if (is_string($item)){$carry .= $item;} return $carry;}, "");
-                $block = array_merge(
-                    $block,
-                    [
-                        "type"=>["id"=>"blockText"],
-                        "data"=>[
-                            "value" => $text
-                        ]
-                    ]
-                );
-            } elseif ($tag['type'] === "p") {
-                $childrenBlocks = $this->tagsToBlocks($tag['children'], $block['id']);
-                // If a p contains only string it's a blockText else it's a blockGroup
-                $onlyString = array_reduce($childrenBlocks, function ($carry, $item){ return $carry && is_string($item);}, true);
-                if ($onlyString) {
-                    $block = array_merge(
-                        $block,
-                        [
-                            "type"=>["id"=>"blockText"],
-                            "data"=> [
-                                "value" => implode("", $childrenBlocks)
-                            ]
-                        ]
-                    );
-                } else {
-                    $realChildrenBlocks = array_map(function ($child) use ($parentId) {
-                        // If already transormed to block
-                        if (!is_string($child)) {
-                            return $child;
-                        }
-                        // Else create a textblock
-                        return [
-                            'id' => $this->guidv4(),
-                            'parent' => $parentId,
-                            "type"=>["id"=>"blockText"],
-                            "data"=> [
-                                "value" => $child
-                            ]
-                        ];
-                    },$childrenBlocks);
-                    $block = array_merge(
-                        $block,
-                        [
-                            "type"=>["id"=>"blockGroup"],
-                            "data"=>$realChildrenBlocks
-                        ]
-                    );
-                }
-            } elseif (in_array($tag['type'], ["strong", "br", "hr", "span", "a"])  && null !== $parentId) {
-                $block = $tag['raw'];
-            } elseif ($tag['type'] === "iframe")  {
-                $block = array_merge(
-                    $block,
-                    [
-                        "type"=>["id"=>"blockRaw"],
-                        "data"=> [
-                            "value" => $tag['raw'].'</iframe>'
-                        ]
-                    ]
-                );
-            } else {
-                $block = array_merge(
-                    $block,
-                    [
-                        "type"=>["id"=>"blockRaw"],
-                        "data"=> [
-                            "value" => $tag['raw']
-                        ]
+                        "data"=>$blockData
                     ]
                 );
             }
 
-            $blocks[] = $block;
+            return array_merge(
+                $blockBaseData,
+                [
+                    "type"=>["id"=>"blockText"],
+                    "data"=>[
+                        "value" => $tag['raw']
+                    ]
+                ]
+            );
         }
 
-        return $blocks;
+        if (in_array($tag['type'], ['hr', 'br']))  {
+            return array_merge(
+                $blockBaseData,
+                [
+                    "type"=>["id"=>"blockSeparator"],
+                    "data"=> [
+                        "type" => $tag['type'] === 'hr' ? "border" : "space",
+                        "size" => 1
+                    ]
+                ]
+            );
+        }
+
+        // Fix not closed iframes (remove closed tag if exist the add it to be sure all iframes has closing tags
+        if ($tag['type'] === "iframe")  {
+            return array_merge(
+                $blockBaseData,
+                [
+                    "type"=>["id"=>"blockRaw"],
+                    "data"=> [
+                        "value" => str_replace("</iframe>", "", $tag['raw']).'</iframe>'
+                    ]
+                ]
+            );
+        }
+
+        return array_merge(
+            $blockBaseData,
+            [
+                "type"=>["id"=>"blockRaw"],
+                "data"=> [
+                    "value" => $tag['raw']
+                ]
+            ]
+        );
+    }
+
+    protected function mergeChildText($carry, $child) {
+        $childText = is_string($child) ? $child : $child['raw'];
+        return $carry.$childText;
     }
 
     protected function guidv4($data = null) {
@@ -204,5 +404,18 @@ class HtmlParserService
 
         // Output the 36 character UUID.
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+    }
+
+    protected function fileGetContentsCurl($url) {
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, $url);
+
+        $data = curl_exec($ch);
+        curl_close($ch);
+
+        return $data;
     }
 }
