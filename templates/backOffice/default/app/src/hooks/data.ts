@@ -189,6 +189,22 @@ export function useLibraryImage(options: {
   );
 }
 
+export function useLibraryImageById(id: number | null) {
+  return useQuery(
+    ["LibraryImage", id],
+    () =>
+      fetcher(`/open_api/library/image`, {
+        method: "GET",
+        params: {
+          id: id || null,
+        },
+      }),
+    {
+      enabled: !!id,
+    }
+  );
+}
+
 export function useCreateImage() {
   const queryClient = useQueryClient();
   return useMutation<LibraryImage, ErrorType, FormData>(
