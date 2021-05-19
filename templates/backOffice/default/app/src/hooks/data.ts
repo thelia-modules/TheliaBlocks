@@ -164,7 +164,12 @@ export function useDuplicateGroup() {
   );
 }
 
-export function useLibraryImage(options = {}) {
+export function useLibraryImage(options: {
+  id?: number | null;
+  limit?: number | null;
+  offset?: number;
+  title?: string | null;
+}) {
   return useQuery(
     ["LibraryImage", options],
     () =>
