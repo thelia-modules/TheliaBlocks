@@ -11,6 +11,7 @@ import {
   useLibraryImage,
 } from "../../hooks/data";
 
+import Loader from "../../components/Loader";
 import React from "react";
 import { size } from "lodash";
 
@@ -72,7 +73,7 @@ function MediaLibrary({
         />
       </div>
       {images.isFetching ? (
-        <span>Chargement...</span>
+        <Loader width="80px" />
       ) : (
         <div className="grid grid-cols-5 gap-4">
           {images?.data?.map((image) => {
