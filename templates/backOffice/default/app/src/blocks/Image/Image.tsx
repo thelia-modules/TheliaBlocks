@@ -5,15 +5,16 @@ import {
   BlockPluginDefinition,
   LibraryImage,
 } from "../../types";
+import { head, size } from "lodash";
 import {
   useCreateImage,
   useDeleteImage,
   useLibraryImage,
+  useLibraryImageById,
 } from "../../hooks/data";
 
 import Loader from "../../components/Loader";
 import React from "react";
-import { size } from "lodash";
 
 export type BlockImageComponentProps = BlockModuleComponentProps<LibraryImage>;
 
@@ -130,7 +131,7 @@ function MediaLibrary({
 
 function BlockImageComponent(props: BlockImageComponentProps) {
   const [isEditing, setIsEditing] = React.useState<boolean>(false);
-
+  const image = useLibraryImageById(props.data.id);
   const { data, onUpdate } = props;
 
   React.useEffect(() => {
@@ -144,8 +145,12 @@ function BlockImageComponent(props: BlockImageComponentProps) {
       className="relative flex flex-col overflow-y-auto bg-gray-300 BlockImage"
       style={{ minHeight: "30vh" }}
     >
-      {data?.url ? (
-        <img src={data.url} alt={data.title} className="BlockImage-img" />
+      {image?.data ? (
+        <img
+          src={image.data[0]?.url}
+          alt={data.title}
+          className="BlockImage-img"
+        />
       ) : null}
       {isEditing ? (
         <div className="absolute bg-gray-800 bg-opacity-75 inset-4 ">
