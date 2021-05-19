@@ -1,1 +1,7 @@
-<img class="tb-{$type['id']}" src="{$data['url']}" alt="{$data['title']}" width="{$data['width']}" height="{$data['height']}" />
+{if isset($data['id'])}
+    {loop type="library_image" name="library_image" id=$data['id'] width=$data['width'] height=$data['height']}
+        <img class="tb-{$type['id']}" src="{$URL}" alt="{$TITLE}"/>
+    {/loop}
+{else}
+    <img class="tb-{$type['id']}" src="{$data['url']}" alt="{$data['alt']}" width="{$data['width']}" height="{$data['height']}" />
+{/if}
