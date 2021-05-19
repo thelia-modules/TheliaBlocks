@@ -11,18 +11,24 @@ import {
   useLibraryImage,
 } from "../../hooks/data";
 
+import Loader from "../../components/Loader";
 import React from "react";
+import { size } from "lodash";
 
 export type BlockImageComponentProps = BlockModuleComponentProps<LibraryImage>;
 
 function MediaLibrary({
   onSelect,
+  limit = 20,
 }: {
   onSelect: (image: LibraryImage) => void;
+  limit?: number;
 }) {
+  const [offset, setOffset] = React.useState<number>(0);
+  const [title, setTitle] = React.useState<string | null>(null);
   const mutation = useCreateImage();
   const deleteMutation = useDeleteImage();
-  const images = useLibraryImage();
+  const images = useLibraryImage({ offset, limit, title });
 
   return (
     <div className="p-4 bg-white MediaLibrary">
@@ -43,8 +49,8 @@ function MediaLibrary({
           className="mt-2"
           type="text"
           name="title"
-          defaultValue=""
           placeholder="Titre de l'image"
+          defaultValue=""
         />
         <div className="w-full mt-2">
           <button type="submit" className="Button Button--primary">
@@ -52,32 +58,72 @@ function MediaLibrary({
           </button>
         </div>
       </form>
-
       {mutation.isError ? (
         <div className="mt-4 alert alert-danger">{mutation.error?.message}</div>
       ) : null}
-
-      <div className="mt-12 mb-2 text-3xl font-bold">Images existantes: </div>
-      <div className="grid grid-cols-5 gap-4">
-        {images?.data?.map((image) => {
-          return image?.id ? (
-            <div key={image.id} className="flex flex-col p-2 border">
-              <div
-                className="m-auto cursor-pointer hover:opacity-75"
-                onClick={() => onSelect(image)}
-              >
-                {image.url ? <img src={image.url} alt={image.title} /> : null}
-              </div>
-              <button
-                className="mt-auto text-sm uppercase Button Button--danger"
-                onClick={() => deleteMutation.mutate(image.id)}
-              >
-                effacer
-              </button>
-            </div>
-          ) : null;
-        })}
+      <div className="flex mt-12 mb-2">
+        <div className="text-3xl font-bold ">Images existantes</div>
+        <input
+          className="ml-4"
+          type="search"
+          value={title || ""}
+          onChange={(e) => setTitle(e.target.value)}
+          name="title-search"
+          placeholder="Chercher une image par son titre"
+        />
       </div>
+      {images.isFetching ? (
+        <Loader width="80px" />
+      ) : (
+        <div className="grid grid-cols-5 gap-4">
+          {images?.data?.map((image) => {
+            return image?.id ? (
+              <div key={image.id} className="flex flex-col p-2 border">
+                <div
+                  className="m-auto cursor-pointer hover:opacity-75"
+                  onClick={() => onSelect(image)}
+                >
+                  {image.url ? <img src={image.url} alt={image.title} /> : null}
+                </div>
+                <button
+                  className="mt-auto text-sm uppercase Button Button--danger"
+                  onClick={() => deleteMutation.mutate(image.id)}
+                >
+                  effacer
+                </button>
+              </div>
+            ) : null;
+          })}
+        </div>
+      )}
+
+      {!images.isFetching && images.isFetched && size(images.data) <= 0 ? (
+        <div className="alert alert-warning">Aucun Résultat</div>
+      ) : null}
+
+      {!images.isFetching && images.isFetched && size(images.data) > 0 ? (
+        <div className="flex items-center justify-center gap-8 mt-4">
+          <button
+            className="Button"
+            onClick={() => setOffset((old) => Math.max(old - limit, 0))}
+            disabled={offset === 0}
+          >
+            page précédente
+          </button>
+          <div className="px-4 Button">{offset / limit + 1}</div>
+          <button
+            className="Button"
+            onClick={() => {
+              if (!images.isPreviousData && size(images?.data) >= limit) {
+                setOffset((old) => old + limit);
+              }
+            }}
+            disabled={images.isPreviousData || size(images?.data) < limit}
+          >
+            page suivante
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -95,7 +141,7 @@ function BlockImageComponent(props: BlockImageComponentProps) {
 
   return (
     <div
-      className="relative overflow-y-auto BlockImage"
+      className="relative flex flex-col overflow-y-auto bg-gray-300 BlockImage"
       style={{ minHeight: "30vh" }}
     >
       {data?.url ? (
@@ -109,7 +155,7 @@ function BlockImageComponent(props: BlockImageComponentProps) {
           >
             Fermer
           </button>
-          <div className="p-8 bg-white">
+          <div className="min-h-full p-8 bg-white">
             <MediaLibrary
               onSelect={(image) => {
                 onUpdate(image);
@@ -119,8 +165,17 @@ function BlockImageComponent(props: BlockImageComponentProps) {
           </div>
         </div>
       ) : (
-        <button onClick={() => setIsEditing(true)}>
-          {data?.url ? "Modifier l'image" : "Ajouter une image"}
+        <button
+          onClick={() => setIsEditing(true)}
+          className={`p-4 m-auto font-bold uppercase Button Button--primary ${
+            data.url ? "absolute right-0" : ""
+          }`}
+        >
+          {data?.url ? (
+            "Modifier l'image"
+          ) : (
+            <span className="">Ajouter une image</span>
+          )}
         </button>
       )}
     </div>

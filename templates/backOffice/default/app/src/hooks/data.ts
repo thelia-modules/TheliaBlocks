@@ -1,25 +1,26 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import axios, { AxiosRequestConfig } from "axios";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useHistory } from "react-router-dom";
-import { toast } from "react-toastify";
-
-import { CURRENT_LOCAL } from "../constants";
 import {
   ErrorType,
   GroupTypeResponse,
   GroupTypeStore,
   IBlock,
-  itemBlockGroupsType,
   LibraryImage,
+  itemBlockGroupsType,
 } from "../types";
+import axios, { AxiosRequestConfig } from "axios";
+import { initializeWindowConstantsGroupId, setUnsaved } from "../redux/ui";
+import { useDispatch, useSelector } from "react-redux";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+
+import { CURRENT_LOCAL } from "../constants";
+import GroupOptions from "../components/GroupOptions";
+import { RootState } from "../redux/store";
+import { initialState as initialBlocksState } from "../redux/blocks";
+import { initialState as initialGroupState } from "../redux/group";
 import { setBlocks } from "../redux/blocks";
 import { setGroup } from "../redux/group";
-import { initializeWindowConstantsGroupId, setUnsaved } from "../redux/ui";
-import { initialState as initialGroupState } from "../redux/group";
-import { initialState as initialBlocksState } from "../redux/blocks";
-import { RootState } from "../redux/store";
+import { toast } from "react-toastify";
+import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 
 async function fetcher(url: string, config: AxiosRequestConfig = {}) {
   try {
@@ -163,14 +164,26 @@ export function useDuplicateGroup() {
   );
 }
 
-export function useLibraryImage() {
+export function useLibraryImage(options: {
+  id?: number | null;
+  limit?: number | null;
+  offset?: number;
+  title?: string | null;
+}) {
   return useQuery(
-    ["LibraryImage"],
+    ["LibraryImage", options],
     () =>
       fetcher(`/open_api/library/image`, {
         method: "GET",
+        params: {
+          id: options.id || null,
+          limit: options.limit || 5,
+          offset: options.offset || 0,
+          title: options.title || null,
+        },
       }),
     {
+      keepPreviousData: true,
       onSuccess: (data: Array<LibraryImage>) => {},
     }
   );
@@ -196,7 +209,7 @@ export function useCreateImage() {
       onSuccess: (data) => {
         queryClient.setQueryData(["LibraryImage"], (oldData) => {
           if (oldData && Array.isArray(oldData)) {
-            return [data, ...oldData];
+            return [...oldData, data];
           }
 
           return oldData;
@@ -219,6 +232,27 @@ export function useDeleteImage() {
         queryClient.setQueryData(["LibraryImage"], (oldData) => {
           if (oldData && Array.isArray(oldData)) {
             return oldData.filter((i) => i.id !== id);
+          }
+
+          return oldData;
+        });
+      },
+    }
+  );
+}
+export function useUpdateImage() {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (id: LibraryImage["id"]) => {
+      return fetcher(`/open_api/library/image/${id}`, {
+        method: "POST",
+      });
+    },
+    {
+      onSuccess: (data, id) => {
+        queryClient.setQueryData(["LibraryImage"], (oldData) => {
+          if (oldData && Array.isArray(oldData)) {
+            return oldData.map((i) => (i.id === id ? data : i));
           }
 
           return oldData;
