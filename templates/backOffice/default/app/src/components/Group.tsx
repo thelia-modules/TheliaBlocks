@@ -1,12 +1,13 @@
-import React from "react";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { deleteBlock, reorderBlocks } from "../redux/blocks";
 import { useDispatch, useSelector } from "react-redux";
 
 import Block from "./Block";
 import BlockWrapper from "./BlockWrapper";
 import GroupOptions from "./GroupOptions";
+import React from "react";
 import { RootState } from "../redux/store";
-import { deleteBlock } from "../redux/blocks";
-import { itemBlockGroupsType } from "../types";
+import { reorder } from "../utils/array";
 
 function Group({ onSave }: { onSave: Function }) {
   const dispatch = useDispatch();
@@ -18,7 +19,8 @@ function Group({ onSave }: { onSave: Function }) {
 
   const otherLinkedContents = group.itemBlockGroups?.filter(
     (group) =>
-      windowConstants.itemType !== group.itemType || windowConstants.itemId !== group.itemId
+      windowConstants.itemType !== group.itemType ||
+      windowConstants.itemId !== group.itemId
   );
 
   return (
@@ -26,31 +28,68 @@ function Group({ onSave }: { onSave: Function }) {
       <GroupOptions onSave={onSave} />
       {!!otherLinkedContents?.length && (
         <div className="p-4 mt-4 text-base text-blue-900 bg-blue-100">
-          <strong>Contenus liés :</strong>{' '}
+          <strong>Contenus liés :</strong>{" "}
           {otherLinkedContents.map((content) => (
             <span key={`${content.itemType}-${content.itemId}`}>
-              {content.itemType}-{content.itemId}{' '}
+              {content.itemType}-{content.itemId}{" "}
             </span>
           ))}
         </div>
       )}
-      {blocks.length > 0 && (
-        <div className="flex flex-col gap-6 mt-6">
-          {blocks.map((block) => {
-            return (
-              <BlockWrapper
-                key={block.id}
-                block={block}
-                handleDelete={(block) => {
-                  dispatch(deleteBlock(block.id));
-                }}
-              >
-                <Block block={block} />
-              </BlockWrapper>
+      <DragDropContext
+        onDragEnd={(e) => {
+          if (e.destination) {
+            dispatch(
+              reorderBlocks({
+                source: e.source.index,
+                destination: e.destination.index,
+              })
             );
-          })}
-        </div>
-      )}
+          }
+        }}
+      >
+        {blocks.length > 0 && (
+          <Droppable droppableId="droppable">
+            {(provided, snapshot) => (
+              <div
+                className={`flex flex-col gap-6 mt-6 ${
+                  snapshot.isDraggingOver ? "bg-green-400" : ""
+                }`}
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                {blocks.map((block, index) => {
+                  return (
+                    <Draggable
+                      key={block.id}
+                      draggableId={block.id}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                        >
+                          <BlockWrapper
+                            block={block}
+                            handleDelete={(block) => {
+                              dispatch(deleteBlock(block.id));
+                            }}
+                            dragHandleProps={provided.dragHandleProps}
+                          >
+                            <Block block={block} />
+                          </BlockWrapper>
+                        </div>
+                      )}
+                    </Draggable>
+                  );
+                })}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        )}
+      </DragDropContext>
     </div>
   );
 }
