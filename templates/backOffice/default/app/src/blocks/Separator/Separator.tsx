@@ -42,12 +42,12 @@ function BlockSeparatorComponent({
   };
 
   const onChangeSize = (e: ChangeEvent<HTMLInputElement>) => {
-    setSize(parseFloat(e.target.value));
+    setSize(parseInt(e.target.value));
   };
 
   const onBlurSize = (e: FocusEvent<HTMLInputElement>) => {
     if (e.target.value) {
-      onUpdate({ ...data, size: parseFloat(e.target.value) });
+      onUpdate({ ...data, size: parseInt(e.target.value) });
     }
   };
 
@@ -74,7 +74,6 @@ function BlockSeparatorComponent({
           type="number"
           name="separator-size"
           id="separator-size"
-          step="0.01"
           value={size.toString()}
           onChange={onChangeSize}
           onBlur={onBlurSize}
