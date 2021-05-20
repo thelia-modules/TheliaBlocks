@@ -1,5 +1,5 @@
-<div class="tb-{$type['id']} md:flex md:gap-8">
-  {foreach $data as $column}
+<div class="tb-{$type['id']} md:flex">
+  {foreach $data as $column name="colloop"}
     {$columnContain = []}
     {$renderTemplates = []}
     {foreach $column["group"]["data"] as $block}
@@ -13,7 +13,7 @@
         {/if}
     {/foreach}
 
-    <div class="md:flex-1" data-tb-contain="{$columnContain|implode:' '}">
+    <div class="md:flex-1 {if !$smarty.foreach.colloop.first}md:ml-8{/if}" data-tb-contain="{$columnContain|implode:' '}">
         {$renderTemplates|implode:' ' nofilter}
     </div>
   {/foreach}
