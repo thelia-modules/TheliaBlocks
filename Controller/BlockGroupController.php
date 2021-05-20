@@ -2,17 +2,18 @@
 
 namespace TheliaBlocks\Controller;
 
+use OpenApi\Annotations as OA;
 use OpenApi\Controller\Admin\BaseAdminOpenApiController;
 use OpenApi\Model\Api\ModelFactory;
-use OpenApi\Annotations as OA;
 use OpenApi\Service\OpenApiService;
+use Propel\Runtime\ActiveQuery\Criteria;
 use Symfony\Component\Routing\Annotation\Route;
 use Thelia\Core\HttpFoundation\JsonResponse;
 use Thelia\Core\HttpFoundation\Request;
 use TheliaBlocks\Model\BlockGroup;
-use TheliaBlocks\Model\BlockGroupQuery;
 use TheliaBlocks\Model\BlockGroupI18n;
 use TheliaBlocks\Model\BlockGroupI18nQuery;
+use TheliaBlocks\Model\BlockGroupQuery;
 use TheliaBlocks\Model\ItemBlockGroup;
 use TheliaBlocks\Model\ItemBlockGroupQuery;
 
@@ -76,6 +77,7 @@ class BlockGroupController extends BaseAdminOpenApiController
         }
 
         $blockGroup->clearItemBlockGroups();
+
         return OpenApiService::jsonResponse(
             $modelFactory->buildModel('BlockGroup', $blockGroup)
         );
@@ -145,7 +147,7 @@ class BlockGroupController extends BaseAdminOpenApiController
         }
 
         if ($request->get('visible') !== null) {
-            $visible = (boolean)json_decode(strtolower($request->get('visible')));
+            $visible = (bool) json_decode(strtolower($request->get('visible')));
             $blockGroupQuery->filterByVisible($visible);
         }
 
@@ -240,7 +242,7 @@ class BlockGroupController extends BaseAdminOpenApiController
         }
 
         if (null !== $itemType = $request->get('itemType')) {
-            $itemBlockGroupQuery =$blockGroupQuery->useItemBlockGroupQuery()
+            $itemBlockGroupQuery = $blockGroupQuery->useItemBlockGroupQuery()
                 ->filterByItemType($itemType);
 
             if (null !== $itemId = $request->get('itemId')) {
@@ -251,8 +253,21 @@ class BlockGroupController extends BaseAdminOpenApiController
         }
 
         if ($request->get('visible') !== null) {
-            $visible = (boolean)json_decode(strtolower($request->get('visible')));
+            $visible = (bool) json_decode(strtolower($request->get('visible')));
             $blockGroupQuery->filterByVisible($visible);
+        }
+
+        $order = $request->get('order');
+
+        switch ($order) {
+            case 'id':
+                $blockGroupQuery->orderById(Criteria::ASC);
+                break;
+            case 'id_reverse':
+                $blockGroupQuery->orderById(Criteria::DESC);
+                break;
+            default:
+                $blockGroupQuery->orderById(Criteria::DESC);
         }
 
         $propelTheliaBlocks = $blockGroupQuery->find();
@@ -262,9 +277,7 @@ class BlockGroupController extends BaseAdminOpenApiController
         }
 
         $theliaBlocks = array_map(
-            function ($propelBlockGroup) use ($modelFactory, $request) {
-                return $modelFactory->buildModel('BlockGroup', $propelBlockGroup, $request->get('locale'));
-            },
+            fn ($propelBlockGroup) => $modelFactory->buildModel('BlockGroup', $propelBlockGroup, $request->get('locale')),
             iterator_to_array($propelTheliaBlocks)
         );
 
@@ -364,7 +377,7 @@ class BlockGroupController extends BaseAdminOpenApiController
 
         $blockGroup->delete();
 
-        return new JsonResponse("Success", 204);
+        return new JsonResponse('Success', 204);
     }
 
     /**
@@ -409,7 +422,7 @@ class BlockGroupController extends BaseAdminOpenApiController
 
         $blockGroupI18ns = BlockGroupI18nQuery::create()->filterById($blockGroupId)->find();
 
-        array_map(function (BlockGroupI18n $blockI18n) use ($newBlockId) {
+        array_map(function (BlockGroupI18n $blockI18n) use ($newBlockId): void {
             $newBlockI18n = $blockI18n->copy();
             $newBlockI18n->setId($newBlockId)->save();
         }, iterator_to_array($blockGroupI18ns));
