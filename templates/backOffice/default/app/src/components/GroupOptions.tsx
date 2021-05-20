@@ -89,7 +89,7 @@ function GroupOptions({ onSave }: { onSave: Function }) {
   return (
     <div className="flex">
       <div className="flex-1">
-        <h3 className="mb-4 text-2xl font-bold">Créer un nouveau groupe</h3>
+        <h3 className="mb-4 text-2xl font-bold">{group.id ? "Edition du groupe" : "Créer un nouveau groupe"}</h3>
         <div className="flex">
           <div className="flex-grow">
             <GroupTitle />
