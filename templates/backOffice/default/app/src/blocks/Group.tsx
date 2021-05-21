@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FocusEvent, useState } from "react";
+import React, { useState } from "react";
 import { nanoid } from "nanoid";
 import Tippy from "@tippyjs/react";
 
@@ -11,6 +11,8 @@ import Block from "../components/Block";
 import { usePlugins, __PLUGINS } from "../pluginManager";
 import BlockWrapper from "../components/BlockWrapper";
 import { getI18nText } from "../utils/i18n";
+import { reorder } from "../utils/array";
+import useDragAndDrop from "../hooks/dragAndDrop";
 
 export type BlockGroupData = IBlock[];
 
@@ -26,11 +28,13 @@ function EmptyBlock({
   onUpdate,
   onDelete,
   excludeBlockType,
+  DndDragHandle,
 }: {
   id: IBlock["id"];
   onUpdate: BlockModuleComponentProps<BlockGroupData>["onUpdate"];
   onDelete: Function | null;
   excludeBlockType?: string[];
+  DndDragHandle: () => JSX.Element;
 }) {
   const blocksLibrary = usePlugins();
   const [isSettingBlock, setIsSettingBlock] = useState<boolean>(false);
@@ -56,6 +60,7 @@ function EmptyBlock({
           ))
       ) : (
         <div className="flex">
+          {DndDragHandle && <DndDragHandle />}
           <button
             className="flex-1 p-4 text-xl bg-yellow-50 hover:bg-yellow-100"
             onClick={() => setIsSettingBlock(true)}
@@ -84,6 +89,8 @@ export function BlockGroupComponent({
   onUpdate,
   excludeBlockType,
 }: BlockModuleComponentProps<BlockGroupData>) {
+  const { DndWrapper, DndWrapElement } = useDragAndDrop();
+
   const onUpdateEmpty = (newBlock: IBlock) => {
     onUpdate(
       data.map((block) =>
@@ -127,40 +134,68 @@ export function BlockGroupComponent({
       );
     };
 
+  const onDragEnd = (e: any) => {
+    if (
+      e.destination &&
+      typeof e.source.index === "number" &&
+      typeof e.destination.index === "number"
+    ) {
+      onUpdate(reorder(data, e.source.index, e.destination.index));
+    }
+  };
+
   return (
     <div className="BlockGroup">
-      {data.map((block, indexBlock) => (
-        <div className="flex flex-col" key={`${block.id}-wrapper`}>
-          {block.type.id === "" ? (
-            <EmptyBlock
-              key={block.id}
-              id={block.id}
-              onUpdate={onUpdateEmpty}
-              onDelete={data.length > 1 ? () => handleDeleteEmpty(block) : null}
-              excludeBlockType={excludeBlockType}
-            />
-          ) : (
-            <div key={block.id} className="flex-1 mt-2">
-              <BlockWrapper
-                block={block}
-                canMove={false}
-                handleDelete={handleDeleteBlock}
-              >
-                <Block block={block} handleUpdate={handleUpdateBlock(block)} />
-              </BlockWrapper>
-            </div>
-          )}
-          <Tippy content={"Ajouter un bloc"}>
-            <button
-              key={`${block.id}-add-col`}
-              className="p-2 mt-2 border border-dashed bg-gray-50 focus:outline-none hover:bg-gray-100"
-              onClick={() => addBlock(indexBlock)}
-            >
-              <i className="fa fa-plus"></i>
-            </button>
-          </Tippy>
-        </div>
-      ))}
+      <DndWrapper onDragEnd={onDragEnd} wrapperClass="flex flex-col">
+        {data.map((block, indexBlock) => (
+          <DndWrapElement
+            key={block.id}
+            id={block.id}
+            index={indexBlock}
+            wrapperClass="flex flex-col"
+          >
+            {({ DndDragHandle }: { DndDragHandle: () => JSX.Element }) => (
+              <>
+                {block.type.id === "" ? (
+                  <EmptyBlock
+                    key={block.id}
+                    id={block.id}
+                    onUpdate={onUpdateEmpty}
+                    onDelete={
+                      data.length > 1 ? () => handleDeleteEmpty(block) : null
+                    }
+                    excludeBlockType={excludeBlockType}
+                    DndDragHandle={DndDragHandle}
+                  />
+                ) : (
+                  <div key={block.id} className="flex-1 mt-2">
+                    <BlockWrapper
+                      block={block}
+                      canMove={false}
+                      handleDelete={handleDeleteBlock}
+                      DndDragHandle={DndDragHandle}
+                    >
+                      <Block
+                        block={block}
+                        handleUpdate={handleUpdateBlock(block)}
+                      />
+                    </BlockWrapper>
+                  </div>
+                )}
+                <Tippy content={"Ajouter un bloc"}>
+                  <button
+                    key={`${block.id}-add-col`}
+                    className="p-2 mt-2 border border-dashed bg-gray-50 focus:outline-none hover:bg-gray-100"
+                    onClick={() => addBlock(indexBlock)}
+                  >
+                    <i className="fa fa-plus"></i>
+                  </button>
+                </Tippy>
+              </>
+            )}
+          </DndWrapElement>
+        ))}
+      </DndWrapper>
     </div>
   );
 }

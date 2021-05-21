@@ -1,10 +1,12 @@
 import "./BlockWrapper.css";
+
 import React, { useState } from "react";
+import { moveBlockDown, moveBlockUp } from "../../redux/blocks";
+
 import { IBlock } from "../../types";
-import { useDispatch } from "react-redux";
-import { moveBlockUp, moveBlockDown } from "../../redux/blocks";
-import { getI18nText } from "../../utils/i18n";
 import { __PLUGINS } from "../../pluginManager";
+import { getI18nText } from "../../utils/i18n";
+import { useDispatch } from "react-redux";
 
 function BlockWrapper({
   children,
@@ -12,12 +14,14 @@ function BlockWrapper({
   canMove = true,
   canDelete = true,
   handleDelete,
+  DndDragHandle,
 }: {
   children: React.ReactNode;
   block: IBlock;
   canMove?: boolean;
   canDelete?: boolean;
   handleDelete: (block: IBlock) => any;
+  DndDragHandle: () => JSX.Element
 }) {
   const dispatch = useDispatch();
   const [hilight, setHilight] = useState<boolean>(false);
@@ -31,6 +35,7 @@ function BlockWrapper({
   return (
     <div className={`BlockWrapper`}>
       <div className="flex items-center mb-1">
+        {DndDragHandle && <DndDragHandle />}
         <h3 className="BlockWrapper-title">{blockTitle}</h3>
         <div className="flex gap-6">
           {canMove ? (

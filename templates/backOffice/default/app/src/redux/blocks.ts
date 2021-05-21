@@ -1,6 +1,6 @@
-import { IBlock } from "../types";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
+import { IBlock } from "../types";
 import { reorder } from "../utils/array";
 
 export let initialState: IBlock[] = [];
@@ -42,7 +42,10 @@ const blocksSlice = createSlice({
       state,
       action: PayloadAction<{ source: number; destination: number }>
     ) {
-      if (action.payload.source && action.payload.destination) {
+      if (
+        typeof action.payload.source === "number" &&
+        typeof action.payload.destination === "number"
+      ) {
         return reorder(
           state,
           action.payload.source,
