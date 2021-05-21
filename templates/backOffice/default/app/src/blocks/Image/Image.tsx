@@ -33,6 +33,7 @@ function MediaLibrary({
 
   return (
     <div className="p-4 bg-white MediaLibrary">
+      <div className="mb-4 text-3xl font-bold">Ajouter une nouvelle image</div>
       <form
         className=""
         onSubmit={(e) => {
@@ -130,9 +131,13 @@ function MediaLibrary({
 }
 
 function BlockImageComponent(props: BlockImageComponentProps) {
+  const { data, onUpdate } = props;
   const [isEditing, setIsEditing] = React.useState<boolean>(false);
   const image = useLibraryImageById(props.data.id);
-  const { data, onUpdate } = props;
+  const [linkUrl, setLinkUrl] = React.useState<string>(data?.link?.url || "");
+  const [linkTarget, setLinkTarget] = React.useState<string>(
+    data?.link?.target || ""
+  );
 
   React.useEffect(() => {
     if (!data) {
@@ -140,17 +145,57 @@ function BlockImageComponent(props: BlockImageComponentProps) {
     }
   }, [data]);
 
+  React.useEffect(() => {
+    if(data.id) {
+      const newData = {...data};
+
+      if(linkUrl) {
+        newData.link = {
+          url: linkUrl,
+          target: linkTarget,
+        }
+      }
+
+      onUpdate(newData);
+    }
+  }, [linkUrl, linkTarget]);
+
   return (
     <div
       className="relative flex flex-col overflow-y-auto bg-gray-300 BlockImage"
       style={{ minHeight: "30vh" }}
     >
       {image?.data ? (
-        <img
-          src={image.data[0]?.url}
-          alt={data.title}
-          className="BlockImage-img"
-        />
+        <>
+          <img
+            src={image.data[0]?.url}
+            alt={data.title}
+            className="BlockImage-img"
+          />
+
+          <div className="BlockImage-editLink">
+            <label htmlFor="id">Lien au clic sur l'image</label>
+            <input
+              type="text"
+              name="link[url]"
+              id="image-link"
+              placeholder="Lien de l'image"
+              className="w-full"
+              value={linkUrl}
+              onChange={(e) => setLinkUrl(e.target.value)}
+            />
+            <label className="block mt-2">
+              Ouvrir dans une nouvelle fenêtre :
+              <input
+                className="ml-2"
+                type="checkbox"
+                name="link[target]"
+                checked={linkTarget === "_blank"}
+                onChange={(e) => setLinkTarget(e.target.checked ? "_blank" : '')}
+              />
+            </label>
+          </div>
+        </>
       ) : null}
       {isEditing ? (
         <div className="absolute bg-gray-800 bg-opacity-75 inset-4 ">
