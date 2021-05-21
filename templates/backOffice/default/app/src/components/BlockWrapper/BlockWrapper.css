@@ -1,6 +1,11 @@
 .BlockWrapper {
-  position: relative;
+  @apply relative bg-white rounded;
 }
 .BlockWrapper-title {
   @apply font-bold mr-4;
+}
+.BlockWrapper-dragHandle {
+  @apply mr-4;
+
+  cursor: ns-resize;
 }

@@ -14,14 +14,14 @@ function BlockWrapper({
   canMove = true,
   canDelete = true,
   handleDelete,
-  dragHandleProps,
+  DndDragHandle,
 }: {
   children: React.ReactNode;
   block: IBlock;
   canMove?: boolean;
   canDelete?: boolean;
   handleDelete: (block: IBlock) => any;
-  dragHandleProps: any;
+  DndDragHandle: () => JSX.Element
 }) {
   const dispatch = useDispatch();
   const [hilight, setHilight] = useState<boolean>(false);
@@ -35,11 +35,7 @@ function BlockWrapper({
   return (
     <div className={`BlockWrapper`}>
       <div className="flex items-center mb-1">
-        {dragHandleProps ? (
-          <div className="mr-4" {...dragHandleProps}>
-            <i className="fas fa-bars"></i>
-          </div>
-        ) : null}
+        {DndDragHandle && <DndDragHandle />}
         <h3 className="BlockWrapper-title">{blockTitle}</h3>
         <div className="flex gap-6">
           {canMove ? (
