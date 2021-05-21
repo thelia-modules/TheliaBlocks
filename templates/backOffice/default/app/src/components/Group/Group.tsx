@@ -51,6 +51,7 @@ function Group({ onSave }: { onSave: Function }) {
       )}
       {blocks.length > 0 && (
         <DndWrapper
+          id="main"
           onDragEnd={onDragEnd}
           wrapperClass="flex flex-col gap-6 mt-6"
         >

@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 // import { setGroupVisible } from "../redux/group";
 import { useDeleteGroup, useGroups, useDuplicateGroup } from "../hooks/data";
 import { GroupTypeStore } from "../types";
+import Loader from "../components/Loader";
 
 const TEXT_COPY_SHORTCODE = "Copier le shortcode";
 const TEXT_COPIED = "Copié !";
@@ -43,6 +44,10 @@ export default function ListGroups() {
   const duplicateGroup = (group: GroupTypeStore) => {
     mutationDuplicate.mutate({ id: group.id });
   };
+
+  if(res.isLoading) {
+    return <Loader width="80px" />;
+  }
 
   if (!res.data) {
     return (

@@ -20,17 +20,19 @@ const DndDragHandle = ({
 };
 
 const DndWrapper = ({
+  id,
   children,
   onDragEnd,
   wrapperClass = "",
 }: {
+  id: string,
   children: React.ReactNode;
   onDragEnd: (e: DropResult) => void;
   wrapperClass?: string;
 }) => {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="droppable">
+      <Droppable droppableId={id}>
         {(provided, snapshot) => (
           <div
             className={`${wrapperClass} relative`}
