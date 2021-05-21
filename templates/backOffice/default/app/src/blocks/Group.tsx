@@ -146,7 +146,7 @@ export function BlockGroupComponent({
 
   return (
     <div className="BlockGroup">
-      <DndWrapper onDragEnd={onDragEnd} wrapperClass="flex flex-col">
+      <DndWrapper id={id} onDragEnd={onDragEnd} wrapperClass="flex flex-col">
         {data.map((block, indexBlock) => (
           <DndWrapElement
             key={block.id}
