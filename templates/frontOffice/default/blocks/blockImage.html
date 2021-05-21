@@ -1,3 +1,7 @@
+{$hasLink = isset($data['link']) && isset($data['link']['url']) && $data['link']['url']}
+{if $hasLink}
+    <a href="{$data['link']['url']}" {if isset($data['link']['target']) && $data['link']['target']}target="{$data['link']['target']}"{/if}>
+{/if}
 {if isset($data['id'])}
     {loop type="library_image" name="library_image" id=$data['id'] width=$data['width'] height=$data['height']}
         <img class="tb-{$type['id']}" src="{$URL}" alt="{$TITLE}"/>
@@ -5,3 +9,7 @@
 {else}
     <img class="tb-{$type['id']}" src="{$data['url']}" alt="{$data['alt']}" width="{$data['width']}" height="{$data['height']}" />
 {/if}
+{if $hasLink}
+    </a>
+{/if}
+

@@ -9,6 +9,14 @@
   @apply opacity-0 absolute inset-0 flex flex-col items-center justify-center bg-gray-900 bg-opacity-25;
 }
 
+.BlockImage:hover .BlockImage-editLink,
 .BlockImage:hover .BlockImage-Inputs {
   @apply opacity-100;
+}
+.BlockImage-editLink {
+  @apply absolute py-4 px-6 bg-white border border-gray-200 opacity-0;
+
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
 }
