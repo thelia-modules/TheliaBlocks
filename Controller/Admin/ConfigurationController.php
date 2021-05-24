@@ -1,6 +1,6 @@
 <?php
 
-namespace TheliaBlocks\Controller;
+namespace TheliaBlocks\Controller\Admin;
 
 use TheliaBlocks\TheliaBlocks;
 use Thelia\Controller\Admin\BaseAdminController;

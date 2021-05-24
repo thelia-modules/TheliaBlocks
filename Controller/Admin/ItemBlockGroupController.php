@@ -1,6 +1,6 @@
 <?php
 
-namespace TheliaBlocks\Controller;
+namespace TheliaBlocks\Controller\Admin;
 
 use OpenApi\Controller\Admin\BaseAdminOpenApiController;
 use OpenApi\Model\Api\ModelFactory;
