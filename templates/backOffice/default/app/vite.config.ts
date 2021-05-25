@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [reactRefresh(), svgr()],
   build: {
     lib: {
-      entry: path.resolve(__dirname, "src/main.tsx"),
+      entry: path.resolve(__dirname, "src/main.ts"),
       name: "TheliaBlocks",
     },
     target: "es2015",

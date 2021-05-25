@@ -8,9 +8,6 @@
         <hook id="theliablocks.hook.menu" class="TheliaBlocks\Hook\TheliaBlocksMenuHook" scope="request">
             <tag name="hook.event_listener" event="main.top-menu-tools" type="back" method="onMainTopMenuTools"/>
         </hook>
-        <hook id="theliablocks.hook.plugin" class="TheliaBlocks\Hook\TheliaBlocksPluginHook" scope="request">
-            <tag name="hook.event_listener" event="thelia.blocks.plugins" type="back" method="onPlugins" />
-        </hook>
         <hook id="theliablocks.hook" class="TheliaBlocks\Hook\TheliaBlocksBackHook">
             <tag name="hook.event_listener" event="product.tab" type="backoffice" method="onProductTab"/>
             <tag name="hook.event_listener" event="category.tab" type="backoffice" method="onCategoryTab"/>

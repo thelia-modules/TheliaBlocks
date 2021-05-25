@@ -4,7 +4,7 @@ export type ErrorType = {
   statusText: string;
 };
 
-type BlockModuleComponentProps<T> = {
+export type BlockModuleComponentProps<T> = {
   data: T;
   onUpdate: <T>(newData: any) => T | void;
   [key: string]: any;

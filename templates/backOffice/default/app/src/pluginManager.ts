@@ -13,6 +13,7 @@ import Accordion from "./blocks/Accordion";
 import Raw from "./blocks/Raw";
 import FullWidthImage from "./blocks/FullWidthImage";
 import { nanoid } from "nanoid";
+import { useState } from "react";
 // const modules = import.meta.globEager("./blocks/*.tsx");
 
 export const __PLUGINS = [
@@ -32,10 +33,34 @@ export const __PLUGINS = [
   { id: nanoid(), ...Raw },
 ];
 
+declare const window: any;
+window.eventTBPlugins = new CustomEvent("update-tb-plugins", {
+  detail: {
+    hazcheeseburger: true
+  }
+});
+
+
 export function registerPlugin(plugin: any) {
-  __PLUGINS.push({ ...plugin, id: nanoid() } as any);
+  if(!window.__PLUGINS) window.__PLUGINS = [];
+
+  window.__PLUGINS.push({ ...plugin, id: nanoid() } as any);
+
+  document.dispatchEvent(window.eventTBPlugins);
 }
 
 export function usePlugins() {
-  return __PLUGINS;
+  const [plugins, setPlugins] = useState({
+    ...__PLUGINS,
+    ...window.__PLUGINS,
+  });
+
+  document.addEventListener("update-tb-plugins", () => {
+    setPlugins({
+      ...__PLUGINS,
+      ...window.__PLUGINS,
+    });
+  });
+
+  return plugins;
 }

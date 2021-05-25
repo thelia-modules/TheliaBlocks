@@ -97,5 +97,3 @@ export const EditPage = () => {
     </Wrapper>
   );
 };
-
-export default Wrapper;
