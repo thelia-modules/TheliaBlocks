@@ -33,16 +33,11 @@ export const __PLUGINS = [
   { id: nanoid(), ...Raw },
 ];
 
-declare const window: any;
-window.eventTBPlugins = new CustomEvent("update-tb-plugins", {
-  detail: {
-    hazcheeseburger: true
-  }
-});
-
+declare const window: { eventTBPlugins: any, __PLUGINS: any[] };
+window.eventTBPlugins = new CustomEvent("update-tb-plugins");
 
 export function registerPlugin(plugin: any) {
-  if(!window.__PLUGINS) window.__PLUGINS = [];
+  if (!window.__PLUGINS) window.__PLUGINS = [];
 
   window.__PLUGINS.push({ ...plugin, id: nanoid() } as any);
 
@@ -50,16 +45,16 @@ export function registerPlugin(plugin: any) {
 }
 
 export function usePlugins() {
-  const [plugins, setPlugins] = useState({
+  const [plugins, setPlugins] = useState([
     ...__PLUGINS,
-    ...window.__PLUGINS,
-  });
+    ...window.__PLUGINS || [],
+  ]);
 
   document.addEventListener("update-tb-plugins", () => {
-    setPlugins({
+    setPlugins([
       ...__PLUGINS,
       ...window.__PLUGINS,
-    });
+    ]);
   });
 
   return plugins;

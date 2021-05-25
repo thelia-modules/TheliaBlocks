@@ -1,6 +1,6 @@
 import { IBlock } from "../types";
 import React from "react";
-import { keyBy } from "lodash";
+import { keyBy } from "lodash-es";
 import { updateBlock } from "../redux/blocks";
 import { useDispatch } from "react-redux";
 import { usePlugins } from "../pluginManager";
