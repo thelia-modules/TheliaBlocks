@@ -1,5 +1,5 @@
 {
-  "name": "thelia-blocks",
+  "name": "@openstudio/thelia-blocks",
   "files": [
     "dist"
   ],
@@ -12,6 +12,20 @@
     }
   },
   "version": "0.1.0",
+  "description": "App to manage TheliaBlocks",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thelia-modules/TheliaBlocks.git"
+  },
+  "keywords": [
+    "thelia"
+  ],
+  "author": "OpenStudio",
+  "license": "LGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/thelia-modules/TheliaBlocks/issues"
+  },
+  "homepage": "https://github.com/thelia-modules/TheliaBlocks#readme",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
