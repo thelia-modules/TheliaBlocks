@@ -118,7 +118,7 @@ function AccordionComponent({
             <BlockGroup.component
               data={item.group.data}
               onUpdate={handleUpdateGroup(item)}
-              excludeBlockType={[moduleType.id]}
+              excludeBlockType={[moduleType.id, 'blockFullWidthImage']}
               id={item.id}
             />
           </div>
