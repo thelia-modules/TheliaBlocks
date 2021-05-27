@@ -7,5 +7,5 @@
 .BlockWrapper-dragHandle {
   @apply mr-4;
 
-  cursor: ns-resize;
+  cursor: grab;
 }

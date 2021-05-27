@@ -85,7 +85,7 @@ function MultiColumnsComponent({
               data={column.group.data}
               onUpdate={handleUpdateGroup(column)}
               id={column.id}
-              excludeBlockType={[moduleType.id]}
+              excludeBlockType={[moduleType.id, 'blockFullWidthImage']}
             />
             {data.length > MIN_COLUMNS && (
               <Tippy content={"Supprimer la colonne"}>

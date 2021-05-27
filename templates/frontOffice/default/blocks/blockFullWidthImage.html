@@ -1,0 +1,16 @@
+<div class="tb-{$type['id']}" style="width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; max-width: initial;">
+    {$hasLink = isset($data['link']) && isset($data['link']['url']) && $data['link']['url']}
+    {if $hasLink}
+        <a href="{$data['link']['url']}" {if isset($data['link']['target']) && $data['link']['target']}target="{$data['link']['target']}"{/if}>
+    {/if}
+    {if isset($data['id'])}
+        {loop type="library_image" name="library_image" id=$data['id'] width=$data['width'] height=$data['height']}
+            <img src="{$URL}" alt="{$TITLE}" style="width: 100%;"/>
+        {/loop}
+    {else}
+        <img src="{$data['url']}" alt="{$data['alt']}" width="{$data['width']}" height="{$data['height']}" style="width: 100%;"/>
+    {/if}
+    {if $hasLink}
+        </a>
+    {/if}
+</div>
