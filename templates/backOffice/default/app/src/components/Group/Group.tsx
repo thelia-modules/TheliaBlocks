@@ -6,9 +6,10 @@ import BlockWrapper from "../BlockWrapper";
 import GroupOptions from "../GroupOptions";
 import React from "react";
 import { RootState } from "../../redux/store";
+import useDragAndDrop from "../../hooks/dragAndDrop";
+import { getContentUrl } from "../../utils/content-url";
 
 import "./Group.css";
-import useDragAndDrop from "../../hooks/dragAndDrop";
 
 function Group({ onSave }: { onSave: Function }) {
   const dispatch = useDispatch();
@@ -42,10 +43,16 @@ function Group({ onSave }: { onSave: Function }) {
       {!!otherLinkedContents?.length && (
         <div className="p-4 mt-4 text-base text-blue-900 bg-blue-100">
           <strong>Contenus liés :</strong>{" "}
-          {otherLinkedContents.map((content) => (
-            <span key={`${content.itemType}-${content.itemId}`}>
-              {content.itemType}-{content.itemId}{" "}
-            </span>
+          {otherLinkedContents.map((content, i) => (
+            <React.Fragment key={`${content.itemType}-${content.itemId}`}>
+              <a
+                href={getContentUrl(content.itemType, content.itemId)}
+
+              >
+                {content.itemType}-{content.itemId}
+              </a>
+              {i !== otherLinkedContents.length - 1 && ", "}
+            </React.Fragment>
           ))}
         </div>
       )}
