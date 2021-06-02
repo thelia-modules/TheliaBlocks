@@ -6,7 +6,7 @@
 
     <hooks>
         <hook id="theliablocks.hook.menu" class="TheliaBlocks\Hook\TheliaBlocksMenuHook" scope="request">
-            <tag name="hook.event_listener" event="main.in-top-menu-items" type="back" method="onMainInTopMenuItems" />
+            <tag name="hook.event_listener" event="main.top-menu-tools" type="back" method="onMainTopMenuTools"/>
         </hook>
         <hook id="theliablocks.hook.plugin" class="TheliaBlocks\Hook\TheliaBlocksPluginHook" scope="request">
             <tag name="hook.event_listener" event="thelia.blocks.plugins" type="back" method="onPlugins" />
