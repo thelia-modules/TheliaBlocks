@@ -4,10 +4,10 @@
 {/if}
 {if isset($data['id'])}
     {loop type="library_image" name="library_image" id=$data['id'] width=$data['width'] height=$data['height']}
-        <img class="tb-{$type['id']}" src="{$URL}" alt="{$TITLE}"/>
+        <img class="tb-{$type['id']}" src="{$URL}" alt="{$TITLE}" loading="lazy" width="{$data['width']}" height="{$data['height']}" />
     {/loop}
 {else}
-    <img class="tb-{$type['id']}" src="{$data['url']}" alt="{$data['alt']}" width="{$data['width']}" height="{$data['height']}" />
+    <img class="tb-{$type['id']}" src="{$data['url']}" alt="{$data['alt']}" loading="lazy" width="{$data['width']}" height="{$data['height']}" />
 {/if}
 {if $hasLink}
     </a>
