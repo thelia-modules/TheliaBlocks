@@ -1,2 +1,2 @@
-export { default } from "./Accordion";
+export { default } from './Accordion';
 //# sourceMappingURL=index.d.ts.map

@@ -1,7 +1,5 @@
-import React from "react";
+/// <reference types="react" />
 export default function EditGroup({ id }: {
-    id: any;
-}): React.FunctionComponentElement<{
-    width: string;
-}> | React.FunctionComponentElement<{}>;
+    id?: number;
+}): JSX.Element;
 //# sourceMappingURL=EditGroup.d.ts.map

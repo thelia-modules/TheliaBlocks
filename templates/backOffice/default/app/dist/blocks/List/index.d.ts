@@ -1,2 +1,2 @@
-export { default } from "./List";
+export { default } from './List';
 //# sourceMappingURL=index.d.ts.map

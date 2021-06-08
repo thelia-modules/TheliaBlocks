@@ -11,5 +11,6 @@ declare const store: import("@reduxjs/toolkit").EnhancedStore<{
     group: import("../types").GroupTypeStore;
     blocks: import("../types").IBlock[];
 }, import("redux").AnyAction, undefined>]>;
+export declare type RootState = ReturnType<typeof store.getState>;
 export default store;
 //# sourceMappingURL=store.d.ts.map

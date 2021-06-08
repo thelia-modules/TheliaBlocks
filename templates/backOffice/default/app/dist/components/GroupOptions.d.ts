@@ -1,8 +1,6 @@
-import React from "react";
+/// <reference types="react" />
 declare function GroupOptions({ onSave }: {
-    onSave: any;
-}): React.DetailedReactHTMLElement<{
-    className: string;
-}, HTMLElement>;
+    onSave: Function;
+}): JSX.Element;
 export default GroupOptions;
 //# sourceMappingURL=GroupOptions.d.ts.map

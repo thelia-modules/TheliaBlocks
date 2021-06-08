@@ -1,2 +1,2 @@
-export { default } from "./GroupsDropdown";
+export { default } from './GroupsDropdown';
 //# sourceMappingURL=index.d.ts.map

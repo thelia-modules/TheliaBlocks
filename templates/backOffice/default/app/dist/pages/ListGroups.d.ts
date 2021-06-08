@@ -1,7 +1,3 @@
-import React from "react";
-export default function ListGroups(): React.FunctionComponentElement<{
-    width: string;
-}> | React.DetailedReactHTMLElement<{
-    className: string;
-}, HTMLElement> | React.DetailedReactHTMLElement<React.HTMLAttributes<HTMLElement>, HTMLElement>;
+/// <reference types="react" />
+export default function ListGroups(): JSX.Element;
 //# sourceMappingURL=ListGroups.d.ts.map

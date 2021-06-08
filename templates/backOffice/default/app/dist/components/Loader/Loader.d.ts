@@ -1,8 +1,6 @@
-import React from "react";
+/// <reference types="react" />
 declare function Loader({ width }: {
-    width: any;
-}): React.DetailedReactHTMLElement<{
-    className: string;
-}, HTMLElement>;
+    width: string;
+}): JSX.Element;
 export default Loader;
 //# sourceMappingURL=Loader.d.ts.map

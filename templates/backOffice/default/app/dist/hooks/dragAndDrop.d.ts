@@ -1,16 +1,19 @@
 import React from "react";
+import { DropResult } from "react-beautiful-dnd";
 export default function useDragAndDrop(): {
-    DndWrapper: ({ id, children, onDragEnd, wrapperClass }: {
-        id: any;
-        children: any;
-        onDragEnd: any;
+    DndWrapper: ({ id, children, onDragEnd, wrapperClass, }: {
+        id: string;
+        children: React.ReactNode;
+        onDragEnd: (e: DropResult) => void;
         wrapperClass?: string | undefined;
-    }) => React.DetailedReactHTMLElement<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
-    DndWrapElement: ({ children, id, index, wrapperClass }: {
-        children: any;
-        id: any;
-        index: any;
+    }) => JSX.Element;
+    DndWrapElement: ({ children, id, index, wrapperClass, }: {
+        children: ({ DndDragHandle }: {
+            DndDragHandle: () => JSX.Element;
+        }) => React.ReactNode;
+        id: string;
+        index: number;
         wrapperClass?: string | undefined;
-    }) => React.DetailedReactHTMLElement<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
+    }) => JSX.Element;
 };
 //# sourceMappingURL=dragAndDrop.d.ts.map

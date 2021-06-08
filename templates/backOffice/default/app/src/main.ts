@@ -7,5 +7,5 @@ export {
     registerPlugin,
     blocks,
     EditPage,
-    Dashboard,
+    Dashboard
 }

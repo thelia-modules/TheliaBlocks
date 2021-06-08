@@ -12,7 +12,7 @@
       "require": "./dist/thelia-blocks.umd.js"
     }
   },
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "App to manage TheliaBlocks",
   "repository": {
     "type": "git",
@@ -53,6 +53,7 @@
     "use-query-params": "^1.2.0"
   },
   "devDependencies": {
+    "@rollup/plugin-typescript": "^8.2.1",
     "@types/lodash": "^4.14.168",
     "@types/lodash-es": "^4.17.4",
     "@types/medium-editor": "^5.0.3",
@@ -67,7 +68,6 @@
     "postcss": "^8.2.6",
     "postcss-import": "^14.0.0",
     "postcss-prefix-selector": "^1.9.0",
-    "rollup-plugin-typescript2": "^0.30.0",
     "tailwindcss": "^2.0.3",
     "typescript": "^4.1.2",
     "vite": "^2.0.1",

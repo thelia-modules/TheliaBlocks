@@ -1,11 +1,9 @@
-import React from "react";
+/// <reference types="react" />
 import "./BlockTooltip.css";
-declare function BlockTooltip({ title, image, description }: {
-    title: any;
-    image: any;
-    description: any;
-}): React.DetailedReactHTMLElement<{
-    className: string;
-}, HTMLElement>;
+declare function BlockTooltip({ title, image, description, }: {
+    title: string;
+    image?: string;
+    description?: string;
+}): JSX.Element;
 export default BlockTooltip;
 //# sourceMappingURL=BlockTooltip.d.ts.map

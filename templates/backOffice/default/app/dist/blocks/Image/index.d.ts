@@ -1,2 +1,2 @@
-export { default } from "./Image";
+export { default } from './Image';
 //# sourceMappingURL=index.d.ts.map

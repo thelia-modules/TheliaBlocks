@@ -1,7 +1,5 @@
+/// <reference types="react" />
 import "./Menu.css";
-import React from "react";
-declare function Menu(): React.DetailedReactHTMLElement<{
-    className: string;
-}, HTMLElement>;
+declare function Menu(): JSX.Element;
 export default Menu;
 //# sourceMappingURL=Menu.d.ts.map

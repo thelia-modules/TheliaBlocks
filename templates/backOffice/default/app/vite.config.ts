@@ -3,7 +3,7 @@ const path = require("path");
 import { defineConfig } from "vite";
 import reactRefresh from "@vitejs/plugin-react-refresh";
 import svgr from "vite-plugin-svgr";
-import typescript2 from "rollup-plugin-typescript2";
+import typescript from "@rollup/plugin-typescript";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -11,9 +11,7 @@ export default defineConfig({
     reactRefresh(),
     svgr(),
     {
-      ...typescript2({
-        check: false,
-      }),
+      ...typescript({ sourceMap: false }),
       apply: "build",
     },
   ],

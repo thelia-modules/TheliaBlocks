@@ -1,2 +1,2 @@
-export declare const reorder: (list: any, startIndex: any, endIndex: any) => unknown[];
+export declare const reorder: <T>(list: T[], startIndex: number, endIndex: number) => T[];
 //# sourceMappingURL=array.d.ts.map

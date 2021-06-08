@@ -1,32 +1,9 @@
 import "./Separator.css";
-import React from "react";
-declare function BlockSeparatorComponent({ data, onUpdate }: {
-    data: any;
-    onUpdate: any;
-}): React.DetailedReactHTMLElement<{
-    className: string;
-    "data-type": string;
-}, HTMLElement>;
-declare const BlockSeparator: {
-    type: {
-        id: string;
-    };
-    component: typeof BlockSeparatorComponent;
-    initialData: {
-        type: string;
-        size: number;
-    };
-    title: {
-        default: string;
-        fr_FR: string;
-    };
-    description: {
-        default: string;
-        fr_FR: string;
-    };
-    image: {
-        default: string;
-    };
+import { BlockPluginDefinition } from "../../types";
+export declare type BlockSeparatorData = {
+    type: string;
+    size: Number;
 };
+declare const BlockSeparator: BlockPluginDefinition<BlockSeparatorData>;
 export default BlockSeparator;
 //# sourceMappingURL=Separator.d.ts.map

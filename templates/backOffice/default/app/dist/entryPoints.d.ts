@@ -1,12 +1,8 @@
-import React from "react";
+/// <reference types="react" />
 import "./styles/index.css";
 import "react-toastify/dist/ReactToastify.css";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/themes/light.css";
-export declare const Dashboard: () => React.FunctionComponentElement<{
-    children: any;
-}>;
-export declare const EditPage: () => React.FunctionComponentElement<{
-    children: any;
-}>;
+export declare const Dashboard: () => JSX.Element;
+export declare const EditPage: () => JSX.Element;
 //# sourceMappingURL=entryPoints.d.ts.map

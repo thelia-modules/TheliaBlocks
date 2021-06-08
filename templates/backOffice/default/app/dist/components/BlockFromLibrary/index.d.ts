@@ -1,2 +1,2 @@
-export { default } from "./BlockFromLibrary";
+export { default } from './BlockFromLibrary';
 //# sourceMappingURL=index.d.ts.map

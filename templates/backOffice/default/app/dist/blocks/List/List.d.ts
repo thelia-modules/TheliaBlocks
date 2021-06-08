@@ -1,31 +1,13 @@
 import "./List.css";
-import React from "react";
-declare function BlockListComponent({ data, onUpdate }: {
-    data: any;
-    onUpdate: any;
-}): React.DetailedReactHTMLElement<{
-    className: string;
-}, HTMLElement>;
-declare const BlockList: {
-    type: {
-        id: string;
-    };
-    component: typeof BlockListComponent;
-    initialData: {
-        type: any;
-        values: string[];
-    };
-    title: {
-        default: string;
-        fr_FR: string;
-    };
-    description: {
-        default: string;
-        fr_FR: string;
-    };
-    image: {
-        default: string;
-    };
+import { BlockPluginDefinition } from "../../types";
+declare enum typeList {
+    Unordered = "ul",
+    Ordered = "ol"
+}
+export declare type BlockListData = {
+    type: typeList;
+    values: string[];
 };
+declare const BlockList: BlockPluginDefinition<BlockListData>;
 export default BlockList;
 //# sourceMappingURL=List.d.ts.map
