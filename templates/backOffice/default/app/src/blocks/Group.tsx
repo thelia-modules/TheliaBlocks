@@ -6,7 +6,7 @@ import {
   BlockModuleComponentProps,
   BlockPluginDefinition,
   IBlock,
-} from "../types";
+} from "TheliaBlocksTypes";
 import Block from "../components/Block";
 import { usePlugins, __PLUGINS } from "../pluginManager";
 import BlockWrapper from "../components/BlockWrapper";

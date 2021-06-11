@@ -2,7 +2,10 @@ import "./Title.css";
 
 import React, { ChangeEvent, FocusEvent } from "react";
 
-import { BlockModuleComponentProps, BlockPluginDefinition } from "../../types";
+import {
+  BlockModuleComponentProps,
+  BlockPluginDefinition,
+} from "TheliaBlocksTypes";
 
 export type BlockTitleData = {
   level: Number;

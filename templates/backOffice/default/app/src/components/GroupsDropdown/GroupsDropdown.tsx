@@ -1,9 +1,9 @@
 import React, { ChangeEvent, useRef, useState } from "react";
-import useClickAway from 'react-use/lib/useClickAway';
+import useClickAway from "react-use/lib/useClickAway";
 
-import './GroupsDropdown.css'
+import "./GroupsDropdown.css";
 
-import { GroupTypeStore } from "../../types";
+import { GroupTypeStore } from "TheliaBlocksTypes";
 import slugify from "../../utils/slugify";
 import { useGroups, useLinkContentToGroup } from "../../hooks/data";
 import Loader from "../Loader";
@@ -31,7 +31,11 @@ function GroupsDropdown() {
   });
 
   if (isLoading) {
-    return <div><Loader width="40px" /></div>;
+    return (
+      <div>
+        <Loader width="40px" />
+      </div>
+    );
   }
 
   if (isError) {
@@ -53,12 +57,12 @@ function GroupsDropdown() {
     setSearch(group.title);
     setSelectedGroup(group);
     setOpen(false);
-  }
+  };
 
   const onChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
     setSelectedGroup(undefined);
-  }
+  };
 
   if (!results.length) {
     return null;
@@ -74,11 +78,15 @@ function GroupsDropdown() {
           onChange={onChangeInput}
           className="w-full"
         />
-        {open &&
+        {open && (
           <ul className="GroupsDropdown-dropdown">
             {results.map((group: GroupTypeStore) => (
               <li key={group.id} className="GroupsDropdown-dropdownItem">
-                <button onClick={() => { onClickGroup(group) }}>
+                <button
+                  onClick={() => {
+                    onClickGroup(group);
+                  }}
+                >
                   #{group.id} - {group.title}
                   {!!group.itemBlockGroups?.length && (
                     <span className="ml-3 text-sm font-normal text-gray-400">
@@ -94,15 +102,15 @@ function GroupsDropdown() {
               </li>
             ))}
           </ul>
-        }
+        )}
       </div>
       <div className="ml-6">
         <button
           className="px-8 font-bold uppercase Button Button--primary"
           onClick={() => selectedGroup && linkGroupToContent(selectedGroup)}
           disabled={!selectedGroup}
-          >
-            Lier
+        >
+          Lier
         </button>
       </div>
     </div>

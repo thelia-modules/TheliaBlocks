@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 
 // import { setGroupVisible } from "../redux/group";
 import { useDeleteGroup, useGroups, useDuplicateGroup } from "../hooks/data";
-import { GroupTypeStore } from "../types";
+import { GroupTypeStore } from "TheliaBlocksTypes";
 import Loader from "../components/Loader";
 
 const TEXT_COPY_SHORTCODE = "Copier le shortcode";
@@ -45,7 +45,7 @@ export default function ListGroups() {
     mutationDuplicate.mutate({ id: group.id });
   };
 
-  if(res.isLoading) {
+  if (res.isLoading) {
     return <Loader width="80px" />;
   }
 

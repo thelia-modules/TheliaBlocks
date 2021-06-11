@@ -3,7 +3,7 @@ import "./BlockWrapper.css";
 import React, { useState } from "react";
 import { moveBlockDown, moveBlockUp } from "../../redux/blocks";
 
-import { IBlock } from "../../types";
+import { IBlock } from "TheliaBlocksTypes";
 import { __PLUGINS } from "../../pluginManager";
 import { getI18nText } from "../../utils/i18n";
 import { useDispatch } from "react-redux";
@@ -21,7 +21,7 @@ function BlockWrapper({
   canMove?: boolean;
   canDelete?: boolean;
   handleDelete: (block: IBlock) => any;
-  DndDragHandle: () => JSX.Element
+  DndDragHandle: () => JSX.Element;
 }) {
   const dispatch = useDispatch();
   const [hilight, setHilight] = useState<boolean>(false);

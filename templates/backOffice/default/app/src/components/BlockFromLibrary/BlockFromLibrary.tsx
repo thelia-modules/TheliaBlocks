@@ -7,7 +7,7 @@ import { nanoid } from "nanoid";
 
 import { addBlock } from "../../redux/blocks";
 import { __PLUGINS } from "../../pluginManager";
-import { BlockPluginDefinition, BlockModuleI18n } from "../../types";
+import { BlockPluginDefinition, BlockModuleI18n } from "TheliaBlocksTypes";
 import { getI18nText } from "../../utils/i18n";
 import BlockTooltip from "../BlockTooltip";
 
@@ -52,10 +52,7 @@ function BlockFromLibrary({
           />
         }
       >
-        <button
-          className="BlockFromLibrary-title"
-          onClick={onClick}
-        >
+        <button className="BlockFromLibrary-title" onClick={onClick}>
           {displayedTitle}
         </button>
       </Tippy>

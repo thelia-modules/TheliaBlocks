@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-import { uiStoreType } from "../types";
+import { uiStoreType } from "TheliaBlocksTypes";
 
 export let initialState: uiStoreType = {
   isUnsaved: false,
@@ -26,10 +26,14 @@ const uiSlice = createSlice({
         ...state.windowConstants,
         groupId: initialState.windowConstants.groupId,
       };
-    }
+    },
   },
 });
 
-export const { setUnsaved, setWindowConstants, initializeWindowConstantsGroupId } = uiSlice.actions;
+export const {
+  setUnsaved,
+  setWindowConstants,
+  initializeWindowConstantsGroupId,
+} = uiSlice.actions;
 
 export default uiSlice.reducer;

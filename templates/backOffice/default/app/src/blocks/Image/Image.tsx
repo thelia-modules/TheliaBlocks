@@ -4,7 +4,7 @@ import {
   BlockModuleComponentProps,
   BlockPluginDefinition,
   LibraryImage,
-} from "../../types";
+} from "TheliaBlocksTypes";
 import { head, size } from "lodash";
 import {
   useCreateImage,
@@ -146,14 +146,14 @@ function BlockImageComponent(props: BlockImageComponentProps) {
   }, [data]);
 
   React.useEffect(() => {
-    if(data.id) {
-      const newData = {...data};
+    if (data.id) {
+      const newData = { ...data };
 
-      if(linkUrl) {
+      if (linkUrl) {
         newData.link = {
           url: linkUrl,
           target: linkTarget,
-        }
+        };
       }
 
       onUpdate(newData);
@@ -191,7 +191,9 @@ function BlockImageComponent(props: BlockImageComponentProps) {
                 type="checkbox"
                 name="link[target]"
                 checked={linkTarget === "_blank"}
-                onChange={(e) => setLinkTarget(e.target.checked ? "_blank" : '')}
+                onChange={(e) =>
+                  setLinkTarget(e.target.checked ? "_blank" : "")
+                }
               />
             </label>
           </div>

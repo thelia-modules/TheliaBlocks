@@ -1,4 +1,7 @@
-import { BlockModuleComponentProps, BlockPluginDefinition } from "../types";
+import {
+  BlockModuleComponentProps,
+  BlockPluginDefinition,
+} from "TheliaBlocksTypes";
 
 import React from "react";
 

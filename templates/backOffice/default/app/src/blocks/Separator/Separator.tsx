@@ -2,7 +2,10 @@ import "./Separator.css";
 
 import React, { ChangeEvent, FocusEvent } from "react";
 
-import { BlockModuleComponentProps, BlockPluginDefinition } from "../../types";
+import {
+  BlockModuleComponentProps,
+  BlockPluginDefinition,
+} from "TheliaBlocksTypes";
 
 export type BlockSeparatorData = {
   type: string;

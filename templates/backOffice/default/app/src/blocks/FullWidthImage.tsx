@@ -5,8 +5,8 @@ import {
   BlockModuleComponentProps,
   BlockPluginDefinition,
   LibraryImage,
-} from "../types";
-import { IBlock } from "../types";
+} from "TheliaBlocksTypes";
+import { IBlock } from "TheliaBlocksTypes";
 import BlockImage from "./Image";
 
 function BlockFullWidthImageComponent({
@@ -39,8 +39,7 @@ const BlockFullWidthImage: BlockPluginDefinition<LibraryImage> = {
   description: {
     default:
       "Display a full width image that extend outside the current container",
-    fr_FR:
-      "Affiche une image en pleine largeur sortant du conteneur courant",
+    fr_FR: "Affiche une image en pleine largeur sortant du conteneur courant",
   },
   image: {
     default:

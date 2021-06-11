@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-import { GroupTypeStore } from "../types";
+import { GroupTypeStore } from "TheliaBlocksTypes";
 import slugify from "../utils/slugify";
 
 export let initialState: GroupTypeStore = {
@@ -28,6 +28,7 @@ const groupSlice = createSlice({
   },
 });
 
-export const { setGroup, setGroupTitle, setGroupSlug, setGroupVisible } = groupSlice.actions;
+export const { setGroup, setGroupTitle, setGroupSlug, setGroupVisible } =
+  groupSlice.actions;
 
 export default groupSlice.reducer;

@@ -6,7 +6,7 @@ import {
   IBlock,
   BlockPluginDefinition,
   BlockModuleComponentProps,
-} from "../types";
+} from "TheliaBlocksTypes";
 import BlockGroup from "./Group";
 
 type MultiColumnsData = Array<ColumnData>;
@@ -58,23 +58,22 @@ function MultiColumnsComponent({
     ]);
   };
 
-  const handleUpdateGroup = (currentColumn: ColumnData) => (
-    newData: IBlock["data"]
-  ) => {
-    onUpdate(
-      data.map((column) =>
-        column.id === currentColumn.id
-          ? {
-              ...column,
-              group: {
-                ...column.group,
-                data: newData,
-              },
-            }
-          : column
-      )
-    );
-  };
+  const handleUpdateGroup =
+    (currentColumn: ColumnData) => (newData: IBlock["data"]) => {
+      onUpdate(
+        data.map((column) =>
+          column.id === currentColumn.id
+            ? {
+                ...column,
+                group: {
+                  ...column.group,
+                  data: newData,
+                },
+              }
+            : column
+        )
+      );
+    };
 
   return (
     <div className="flex w-full gap-2 MultiColumns">
@@ -85,7 +84,7 @@ function MultiColumnsComponent({
               data={column.group.data}
               onUpdate={handleUpdateGroup(column)}
               id={column.id}
-              excludeBlockType={[moduleType.id, 'blockFullWidthImage']}
+              excludeBlockType={[moduleType.id, "blockFullWidthImage"]}
             />
             {data.length > MIN_COLUMNS && (
               <Tippy content={"Supprimer la colonne"}>

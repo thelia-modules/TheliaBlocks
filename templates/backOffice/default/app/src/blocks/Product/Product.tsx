@@ -1,4 +1,7 @@
-import { BlockModuleComponentProps, BlockPluginDefinition } from "../../types";
+import {
+  BlockModuleComponentProps,
+  BlockPluginDefinition,
+} from "TheliaBlocksTypes";
 
 import React, { useState } from "react";
 
@@ -6,7 +9,8 @@ export type BlockProductData = {
   productId: string | null;
 };
 
-export type BlockProductComponentProps = BlockModuleComponentProps<BlockProductData>;
+export type BlockProductComponentProps =
+  BlockModuleComponentProps<BlockProductData>;
 
 function BlockProductComponent({ data }: BlockProductComponentProps) {
   const [query, setQuery] = useState<string>("");
