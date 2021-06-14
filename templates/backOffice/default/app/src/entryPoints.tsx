@@ -72,7 +72,11 @@ export const Dashboard = () => (
   </Wrapper>
 );
 
-declare const window: any;
+declare const window: {
+    itemId: number,
+    itemType: string,
+    groupId: number|null,
+};
 
 const EditPageInner = () => {
   const dispatch = useDispatch();
@@ -97,5 +101,3 @@ export const EditPage = () => {
     </Wrapper>
   );
 };
-
-export default Wrapper;

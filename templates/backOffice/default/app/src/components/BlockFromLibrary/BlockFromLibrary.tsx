@@ -52,10 +52,7 @@ function BlockFromLibrary({
           />
         }
       >
-        <button
-          className="BlockFromLibrary-title"
-          onClick={onClick}
-        >
+        <button className="BlockFromLibrary-title" onClick={onClick}>
           {displayedTitle}
         </button>
       </Tippy>

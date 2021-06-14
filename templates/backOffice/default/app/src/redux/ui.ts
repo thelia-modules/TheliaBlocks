@@ -26,10 +26,14 @@ const uiSlice = createSlice({
         ...state.windowConstants,
         groupId: initialState.windowConstants.groupId,
       };
-    }
+    },
   },
 });
 
-export const { setUnsaved, setWindowConstants, initializeWindowConstantsGroupId } = uiSlice.actions;
+export const {
+  setUnsaved,
+  setWindowConstants,
+  initializeWindowConstantsGroupId,
+} = uiSlice.actions;
 
 export default uiSlice.reducer;

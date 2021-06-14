@@ -4,7 +4,7 @@ export type ErrorType = {
   statusText: string;
 };
 
-type BlockModuleComponentProps<T> = {
+export type BlockModuleComponentProps<T> = {
   data: T;
   onUpdate: <T>(newData: any) => T | void;
   [key: string]: any;
@@ -64,9 +64,9 @@ export type BlockPluginDefinition<TProp = { [key: string]: any }> =
 export type uiStoreType = {
   isUnsaved: boolean;
   windowConstants: {
-    groupId?: GroupTypeStore["id"],
-    itemId?: itemBlockGroupsType["itemId"],
-    itemType?: itemBlockGroupsType["itemType"],
+    groupId?: GroupTypeStore["id"];
+    itemId?: itemBlockGroupsType["itemId"];
+    itemType?: itemBlockGroupsType["itemType"];
   };
 };
 
@@ -78,5 +78,5 @@ export type LibraryImage = {
   link?: {
     url: string;
     target?: string;
-  }
+  };
 };

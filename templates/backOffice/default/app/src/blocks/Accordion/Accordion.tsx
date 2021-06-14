@@ -57,25 +57,27 @@ function AccordionComponent({
     ]);
   };
 
-  const handleUpdateGroup = (currentItem: ItemData) => (
-    newData: IBlock["data"]
-  ) => {
-    onUpdate(
-      data.map((item) =>
-        item.id === currentItem.id
-          ? {
-              ...item,
-              group: {
-                ...item.group,
-                data: newData,
-              },
-            }
-          : item
-      )
-    );
-  };
+  const handleUpdateGroup =
+    (currentItem: ItemData) => (newData: IBlock["data"]) => {
+      onUpdate(
+        data.map((item) =>
+          item.id === currentItem.id
+            ? {
+                ...item,
+                group: {
+                  ...item.group,
+                  data: newData,
+                },
+              }
+            : item
+        )
+      );
+    };
 
-  const onChangeTitle = (e: ChangeEvent<HTMLInputElement>, currentItem: ItemData) => {
+  const onChangeTitle = (
+    e: ChangeEvent<HTMLInputElement>,
+    currentItem: ItemData
+  ) => {
     onUpdate(
       data.map((item) =>
         item.id === currentItem.id
@@ -101,7 +103,7 @@ function AccordionComponent({
                   name={`title-text-${item.id}`}
                   id={`title-text-${item.id}`}
                   value={item.title}
-                  onChange={e => onChangeTitle(e, item)}
+                  onChange={(e) => onChangeTitle(e, item)}
                 />
               </div>
               {data.length > MIN_ITEMS && (
@@ -118,7 +120,7 @@ function AccordionComponent({
             <BlockGroup.component
               data={item.group.data}
               onUpdate={handleUpdateGroup(item)}
-              excludeBlockType={[moduleType.id, 'blockFullWidthImage']}
+              excludeBlockType={[moduleType.id, "blockFullWidthImage"]}
               id={item.id}
             />
           </div>

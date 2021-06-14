@@ -1,17 +1,32 @@
 {
-  "name": "thelia-blocks",
+  "name": "@openstudio/thelia-blocks",
   "files": [
     "dist"
   ],
   "main": "./dist/thelia-blocks.umd.js",
   "module": "./dist/thelia-blocks.es.js",
+  "types": "./dist/main.d.ts",
   "exports": {
     ".": {
       "import": "./dist/thelia-blocks.es.js",
       "require": "./dist/thelia-blocks.umd.js"
     }
   },
-  "version": "0.1.0",
+  "version": "0.1.7",
+  "description": "App to manage TheliaBlocks",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thelia-modules/TheliaBlocks.git"
+  },
+  "keywords": [
+    "thelia"
+  ],
+  "author": "OpenStudio",
+  "license": "LGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/thelia-modules/TheliaBlocks/issues"
+  },
+  "homepage": "https://github.com/thelia-modules/TheliaBlocks#readme",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -38,6 +53,7 @@
     "use-query-params": "^1.2.0"
   },
   "devDependencies": {
+    "@rollup/plugin-typescript": "^8.2.1",
     "@types/lodash": "^4.14.168",
     "@types/lodash-es": "^4.17.4",
     "@types/medium-editor": "^5.0.3",

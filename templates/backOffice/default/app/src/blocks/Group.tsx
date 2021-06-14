@@ -42,8 +42,8 @@ function EmptyBlock({
     <div className="flex flex-col flex-grow p-2 mt-2 border border-dashed">
       {isSettingBlock ? (
         blocksLibrary
-          .filter((block) => !excludeBlockType?.includes(block.type.id))
-          .map((block) => (
+          .filter((block: any) => !excludeBlockType?.includes(block.type.id))
+          .map((block: any) => (
             <div
               key={block.id}
               className="px-4 py-2 border-b border-white cursor-pointer hover:bg-yellow-100 bg-yellow-50"

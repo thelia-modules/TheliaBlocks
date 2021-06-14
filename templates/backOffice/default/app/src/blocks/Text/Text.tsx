@@ -48,7 +48,7 @@ function BlockTextComponent({
             anchorPreview: true,
             paste: {
               cleanPastedHTML: true,
-            }
+            },
           }}
           onChange={(text) => {
             onUpdate({

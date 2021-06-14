@@ -45,7 +45,7 @@ export default function ListGroups() {
     mutationDuplicate.mutate({ id: group.id });
   };
 
-  if(res.isLoading) {
+  if (res.isLoading) {
     return <Loader width="80px" />;
   }
 

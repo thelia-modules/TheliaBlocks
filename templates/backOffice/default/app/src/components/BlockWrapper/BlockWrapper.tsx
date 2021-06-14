@@ -21,7 +21,7 @@ function BlockWrapper({
   canMove?: boolean;
   canDelete?: boolean;
   handleDelete: (block: IBlock) => any;
-  DndDragHandle: () => JSX.Element
+  DndDragHandle: () => JSX.Element;
 }) {
   const dispatch = useDispatch();
   const [hilight, setHilight] = useState<boolean>(false);

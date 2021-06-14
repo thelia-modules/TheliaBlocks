@@ -56,6 +56,7 @@ class TheliaBlocks extends BaseModule
                 'code' => 'thelia.blocks.plugins',
                 'title' => 'Hook blocks plugins',
                 'description' => 'Hook to add thelia blocks plugins',
+                'active' => true,
             ],
         ];
     }

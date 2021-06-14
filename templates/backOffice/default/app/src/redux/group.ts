@@ -28,6 +28,7 @@ const groupSlice = createSlice({
   },
 });
 
-export const { setGroup, setGroupTitle, setGroupSlug, setGroupVisible } = groupSlice.actions;
+export const { setGroup, setGroupTitle, setGroupSlug, setGroupVisible } =
+  groupSlice.actions;
 
 export default groupSlice.reducer;

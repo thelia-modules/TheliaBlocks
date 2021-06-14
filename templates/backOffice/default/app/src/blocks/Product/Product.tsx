@@ -6,7 +6,8 @@ export type BlockProductData = {
   productId: string | null;
 };
 
-export type BlockProductComponentProps = BlockModuleComponentProps<BlockProductData>;
+export type BlockProductComponentProps =
+  BlockModuleComponentProps<BlockProductData>;
 
 function BlockProductComponent({ data }: BlockProductComponentProps) {
   const [query, setQuery] = useState<string>("");

@@ -1,8 +1,12 @@
 import React from "react";
 import { nanoid } from "nanoid";
 
-import { BlockModuleComponentProps, BlockPluginDefinition } from "../types";
-import { IBlock } from "../types";
+import {
+  BlockModuleComponentProps,
+  BlockPluginDefinition,
+  IBlock,
+} from "../types";
+
 import BlockText from "./Text";
 
 export type BlockHighlightData = {
@@ -15,15 +19,11 @@ function BlockHighlightComponent({
 }: BlockModuleComponentProps<BlockHighlightData>) {
   const handleUpdate = (newData: IBlock["data"]) => {
     onUpdate(newData);
-  }
+  };
 
   return (
     <div className="BlockHighlight">
-      <BlockText.component
-        data={data}
-        onUpdate={handleUpdate}
-        id={nanoid()}
-      />
+      <BlockText.component data={data} onUpdate={handleUpdate} id={nanoid()} />
     </div>
   );
 }

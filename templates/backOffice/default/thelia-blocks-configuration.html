@@ -33,6 +33,9 @@
             window.__vite_plugin_react_preamble_installed__ = true
         </script>
         <script type="module" src="http://localhost:3000/@vite/client"></script>
+
+        {hook name="thelia.blocks.plugins"}
+
         <script type="module" src="http://localhost:3000/src/dev/dashboard.js"></script>
     {else}
         <script type="text/javascript" crossorigin src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
