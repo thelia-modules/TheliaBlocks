@@ -19,7 +19,7 @@
       "require": "./dist/thelia-blocks.umd.js"
     }
   },
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "App to manage TheliaBlocks",
   "repository": {
     "type": "git",
