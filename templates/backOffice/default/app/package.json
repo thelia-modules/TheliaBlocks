@@ -1,7 +1,14 @@
 {
   "name": "@openstudio/thelia-blocks",
   "files": [
-    "dist"
+    "dist",
+    "src",
+    "package.json",
+    "package-lock.json",
+    "postcss.config.js",
+    "tailwind.config.js",
+    "tsconfig.json",
+    "vite.config.ts"
   ],
   "main": "./dist/thelia-blocks.umd.js",
   "module": "./dist/thelia-blocks.es.js",

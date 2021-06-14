@@ -60,7 +60,7 @@ export default function ListGroups() {
 
   return (
     <ul>
-      {res.data.map((group) => (
+      {res?.data.map((group) => (
         <li className="flex bg-white border-b" key={group.id}>
           <Link className="flex-grow block p-5" to={`/edit/${group.id}`}>
             #{group.id} - {group.title}
