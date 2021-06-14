@@ -3,7 +3,7 @@ import useClickAway from "react-use/lib/useClickAway";
 
 import "./GroupsDropdown.css";
 
-import { GroupTypeStore } from "TheliaBlocksTypes";
+import { GroupTypeStore } from "../../types";
 import slugify from "../../utils/slugify";
 import { useGroups, useLinkContentToGroup } from "../../hooks/data";
 import Loader from "../Loader";

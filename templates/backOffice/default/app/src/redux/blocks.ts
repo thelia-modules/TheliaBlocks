@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-import { IBlock } from "TheliaBlocksTypes";
+import { IBlock } from "../types";
 import { reorder } from "../utils/array";
 
 export let initialState: IBlock[] = [];

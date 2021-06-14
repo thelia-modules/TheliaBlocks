@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-import { uiStoreType } from "TheliaBlocksTypes";
+import { uiStoreType } from "../types";
 
 export let initialState: uiStoreType = {
   isUnsaved: false,

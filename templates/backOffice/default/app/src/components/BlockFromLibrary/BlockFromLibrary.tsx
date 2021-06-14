@@ -7,7 +7,7 @@ import { nanoid } from "nanoid";
 
 import { addBlock } from "../../redux/blocks";
 import { __PLUGINS } from "../../pluginManager";
-import { BlockPluginDefinition, BlockModuleI18n } from "TheliaBlocksTypes";
+import { BlockPluginDefinition, BlockModuleI18n } from "../../types";
 import { getI18nText } from "../../utils/i18n";
 import BlockTooltip from "../BlockTooltip";
 

@@ -4,7 +4,7 @@ import {
   BlockModuleComponentProps,
   BlockPluginDefinition,
   LibraryImage,
-} from "TheliaBlocksTypes";
+} from "../../types";
 import { head, size } from "lodash";
 import {
   useCreateImage,

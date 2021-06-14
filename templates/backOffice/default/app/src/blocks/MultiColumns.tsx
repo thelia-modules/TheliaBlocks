@@ -6,7 +6,7 @@ import {
   IBlock,
   BlockPluginDefinition,
   BlockModuleComponentProps,
-} from "TheliaBlocksTypes";
+} from "../types";
 import BlockGroup from "./Group";
 
 type MultiColumnsData = Array<ColumnData>;

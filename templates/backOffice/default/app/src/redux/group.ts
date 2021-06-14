@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-import { GroupTypeStore } from "TheliaBlocksTypes";
+import { GroupTypeStore } from "../types";
 import slugify from "../utils/slugify";
 
 export let initialState: GroupTypeStore = {

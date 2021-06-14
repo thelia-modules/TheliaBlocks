@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 
 // import { setGroupVisible } from "../redux/group";
 import { useDeleteGroup, useGroups, useDuplicateGroup } from "../hooks/data";
-import { GroupTypeStore } from "TheliaBlocksTypes";
+import { GroupTypeStore } from "../types";
 import Loader from "../components/Loader";
 
 const TEXT_COPY_SHORTCODE = "Copier le shortcode";

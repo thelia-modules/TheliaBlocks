@@ -5,8 +5,9 @@ import {
   BlockModuleComponentProps,
   BlockPluginDefinition,
   LibraryImage,
-} from "TheliaBlocksTypes";
-import { IBlock } from "TheliaBlocksTypes";
+  IBlock,
+} from "../types";
+
 import BlockImage from "./Image";
 
 function BlockFullWidthImageComponent({

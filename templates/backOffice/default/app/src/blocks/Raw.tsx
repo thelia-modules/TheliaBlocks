@@ -1,7 +1,4 @@
-import {
-  BlockModuleComponentProps,
-  BlockPluginDefinition,
-} from "TheliaBlocksTypes";
+import { BlockModuleComponentProps, BlockPluginDefinition } from "../types";
 
 import React, { ChangeEvent, FocusEvent } from "react";
 

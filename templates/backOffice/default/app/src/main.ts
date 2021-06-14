@@ -1,8 +1,7 @@
-/// <reference types="./types" />
+import { Dashboard, EditPage } from "./entryPoints";
 
-import { EditPage, Dashboard } from "./entryPoints";
-import { registerPlugin } from "./pluginManager";
 import blocks from "./blocks";
+import { registerPlugin } from "./pluginManager";
 
 export {
   registerPlugin as default,

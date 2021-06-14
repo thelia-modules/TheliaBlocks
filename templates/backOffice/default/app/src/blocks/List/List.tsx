@@ -3,10 +3,7 @@ import "./List.css";
 import React, { ChangeEvent, useCallback } from "react";
 import Tippy from "@tippyjs/react";
 
-import {
-  BlockModuleComponentProps,
-  BlockPluginDefinition,
-} from "TheliaBlocksTypes";
+import { BlockModuleComponentProps, BlockPluginDefinition } from "../../types";
 import BlockText, { BlockTextData } from "../Text";
 import { nanoid } from "nanoid";
 

@@ -5,7 +5,7 @@ import {
   IBlock,
   LibraryImage,
   itemBlockGroupsType,
-} from "TheliaBlocksTypes";
+} from "../types";
 import axios, { AxiosRequestConfig } from "axios";
 import { initializeWindowConstantsGroupId, setUnsaved } from "../redux/ui";
 import { useDispatch, useSelector } from "react-redux";

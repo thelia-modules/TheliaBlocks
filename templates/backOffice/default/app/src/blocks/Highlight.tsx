@@ -4,8 +4,9 @@ import { nanoid } from "nanoid";
 import {
   BlockModuleComponentProps,
   BlockPluginDefinition,
-} from "TheliaBlocksTypes";
-import { IBlock } from "TheliaBlocksTypes";
+  IBlock,
+} from "../types";
+
 import BlockText from "./Text";
 
 export type BlockHighlightData = {

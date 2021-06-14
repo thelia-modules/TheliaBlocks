@@ -1,8 +1,5 @@
 import "./Text.css";
-import {
-  BlockModuleComponentProps,
-  BlockPluginDefinition,
-} from "TheliaBlocksTypes";
+import { BlockModuleComponentProps, BlockPluginDefinition } from "../../types";
 
 import React, { useEffect, useState } from "react";
 import Editor from "./MediumEditorWrapper";

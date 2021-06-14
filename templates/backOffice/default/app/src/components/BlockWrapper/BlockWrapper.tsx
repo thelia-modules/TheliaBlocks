@@ -3,7 +3,7 @@ import "./BlockWrapper.css";
 import React, { useState } from "react";
 import { moveBlockDown, moveBlockUp } from "../../redux/blocks";
 
-import { IBlock } from "TheliaBlocksTypes";
+import { IBlock } from "../../types";
 import { __PLUGINS } from "../../pluginManager";
 import { getI18nText } from "../../utils/i18n";
 import { useDispatch } from "react-redux";
