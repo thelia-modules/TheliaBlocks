@@ -6,9 +6,9 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use ShortCode\ShortCode;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ServicesConfigurator;
 use Symfony\Component\Finder\Finder;
+use Thelia\Core\Template\TemplateDefinition;
 use Thelia\Install\Database;
 use Thelia\Module\BaseModule;
-use Thelia\Core\Template\TemplateDefinition;
 
 class TheliaBlocks extends BaseModule
 {
@@ -23,7 +23,7 @@ class TheliaBlocks extends BaseModule
             ->name('*.sql')
             ->depth(0)
             ->sortByName()
-            ->in(__DIR__ . DS . 'Config' . DS . 'update');
+            ->in(__DIR__.DS.'Config'.DS.'update');
 
         $database = new Database($con);
 
@@ -40,7 +40,7 @@ class TheliaBlocks extends BaseModule
         if (!$this->getConfigValue('is_initialized', false)) {
             $database = new Database($con);
 
-            $database->insertSql(null, array(__DIR__ . '/Config/TheliaMain.sql'));
+            $database->insertSql(null, [__DIR__.'/Config/TheliaMain.sql']);
 
             $this->setConfigValue('is_initialized', true);
         }
@@ -53,6 +53,13 @@ class TheliaBlocks extends BaseModule
         return [
             [
                 'type' => TemplateDefinition::BACK_OFFICE,
+                'code' => 'thelia.blocks.plugincss',
+                'title' => 'Hook blocks css plugins',
+                'description' => 'Hook to add css to thelia blocks plugins',
+                'active' => true,
+            ],
+            [
+                'type' => TemplateDefinition::BACK_OFFICE,
                 'code' => 'thelia.blocks.plugins',
                 'title' => 'Hook blocks plugins',
                 'description' => 'Hook to add thelia blocks plugins',
@@ -62,14 +69,12 @@ class TheliaBlocks extends BaseModule
     }
 
     /**
-     * Defines how services are loaded in your modules
-     *
-     * @param ServicesConfigurator $servicesConfigurator
+     * Defines how services are loaded in your modules.
      */
     public static function configureServices(ServicesConfigurator $servicesConfigurator): void
     {
         $servicesConfigurator->load(self::getModuleCode().'\\', __DIR__)
-            ->exclude([THELIA_MODULE_DIR . ucfirst(self::getModuleCode()). "/I18n/*"])
+            ->exclude([THELIA_MODULE_DIR.ucfirst(self::getModuleCode()).'/I18n/*'])
             ->autowire(true)
             ->autoconfigure(true);
     }
