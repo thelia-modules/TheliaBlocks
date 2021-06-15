@@ -53,7 +53,7 @@ class TheliaBlocks extends BaseModule
         return [
             [
                 'type' => TemplateDefinition::BACK_OFFICE,
-                'code' => 'thelia.blocks.pluginscss',
+                'code' => 'thelia.blocks.plugincss',
                 'title' => 'Hook blocks css plugins',
                 'description' => 'Hook to add css to thelia blocks plugins',
                 'active' => true,
