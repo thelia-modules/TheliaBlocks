@@ -13,6 +13,7 @@
     {stylesheets file='app/dist/style.css' template="default" source="TheliaBlocks"}
         <link rel="stylesheet" href="{$asset_url}" />
     {/stylesheets}
+    {hook name="thelia.blocks.pluginscss"}
 {/block}
 
 {block name="main-content"}
