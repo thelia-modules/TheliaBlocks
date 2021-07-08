@@ -15,11 +15,13 @@ function Block({
   const dispatch = useDispatch();
   const blocksLibrary = usePlugins();
   const blocksObj = keyBy(blocksLibrary, "type.id");
-  const Component = blocksObj[block.type.id].component;
+  const Component = blocksObj[block.type.id]?.component;
 
   const defaultOnUpdate = (newData: typeof block.data) => {
     dispatch(updateBlock({ id: block.id, data: newData }));
   };
+
+  if (!Component) return null;
 
   return (
     <Component
