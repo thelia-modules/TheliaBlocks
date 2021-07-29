@@ -32,12 +32,10 @@ function BlockImageComponent(props: BlockImageComponentProps) {
     if (data.id) {
       const newData = { ...data };
 
-      if (linkUrl) {
-        newData.link = {
-          url: linkUrl,
-          target: linkTarget,
-        };
-      }
+      newData.link = linkUrl ? {
+        url: linkUrl,
+        target: linkTarget,
+      } : undefined;
 
       onUpdate(newData);
     }
