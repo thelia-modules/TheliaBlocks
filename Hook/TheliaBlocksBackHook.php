@@ -2,6 +2,7 @@
 
 namespace TheliaBlocks\Hook;
 
+use Thelia\Core\Event\Hook\HookRenderEvent;
 use TheliaBlocks\TheliaBlocks;
 use Thelia\Core\Hook\BaseHook;
 use Thelia\Core\Event\Hook\HookRenderBlockEvent;
@@ -63,11 +64,29 @@ class TheliaBlocksBackHook extends BaseHook
         $this->addTheliaBlocksConfigurationTab($event, 'folder', $formRedirectUrl);
     }
 
+    public function onBlockItemConfiguration(HookRenderEvent $event)
+    {
+        $itemId = $event->getArgument('itemId');
+        $itemType = $event->getArgument('itemType');
+
+        $event->add($this->getConfigurationRender($itemType, $itemId));
+    }
 
     protected function addTheliaBlocksConfigurationTab(HookRenderBlockEvent $event, $itemType, $formRedirectUrl): void
     {
         $itemId = $event->getArgument('id');
 
+        $event->add(
+            [
+                'id' => 'theliablocks_item_details',
+                'title' => $this->trans('Thelia Blocks', [], TheliaBlocks::DOMAIN_NAME),
+                'content' => $this->getConfigurationRender($itemType, $itemId)
+            ]
+        );
+    }
+
+    private function getConfigurationRender($itemType, $itemId)
+    {
         $search = BlockGroupQuery::create();
         $search->useItemBlockGroupQuery()
             ->filterByItemType($itemType)
@@ -76,18 +95,12 @@ class TheliaBlocksBackHook extends BaseHook
 
         $group = $search->findOne();
 
-        $event->add(
+        return $this->render(
+            'thelia-blocks-item-configuration.html',
             [
-                'id' => 'theliablocks_item_details',
-                'title' => $this->trans('Thelia Blocks', [], TheliaBlocks::DOMAIN_NAME),
-                'content' => $this->render(
-                    'thelia-blocks-item-configuration.html',
-                    [
-                        'itemId' => $itemId,
-                        'itemType' => $itemType,
-                        'groupId' => $group ? $group->getId() : null
-                    ]
-                ),
+                'itemId' => $itemId,
+                'itemType' => $itemType,
+                'groupId' => $group ? $group->getId() : null
             ]
         );
     }

@@ -9,6 +9,7 @@
             <tag name="hook.event_listener" event="main.top-menu-tools" type="back" method="onMainTopMenuTools"/>
         </hook>
         <hook id="theliablocks.hook" class="TheliaBlocks\Hook\TheliaBlocksBackHook">
+            <tag name="hook.event_listener" event="thelia.blocks.item.configuration" type="backoffice" method="onBlockItemConfiguration"/>
             <tag name="hook.event_listener" event="product.tab" type="backoffice" method="onProductTab"/>
             <tag name="hook.event_listener" event="category.tab" type="backoffice" method="onCategoryTab"/>
             <tag name="hook.event_listener" event="content.tab" type="backoffice" method="onContentTab"/>

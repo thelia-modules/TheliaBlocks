@@ -65,6 +65,13 @@ class TheliaBlocks extends BaseModule
                 'description' => 'Hook to add thelia blocks plugins',
                 'active' => true,
             ],
+            [
+                'type' => TemplateDefinition::BACK_OFFICE,
+                'code' => 'thelia.blocks.item.configuration',
+                'title' => 'Hook blocks item configuration',
+                'description' => 'Hook to add a configuration page for any items',
+                'active' => true,
+            ],
         ];
     }
 
