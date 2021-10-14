@@ -2,14 +2,13 @@
 {if $hasLink}
     <a href="{$data['link']['url']}" {if isset($data['link']['target']) && $data['link']['target']}target="{$data['link']['target']}"{/if}>
 {/if}
-{if isset($data['id'])}
-    {loop type="library_image" name="library_image" id=$data['id'] width=$data['width'] height=$data['height']}
-        <img class="tb-{$type['id']}" src="{$URL}" alt="{$TITLE}" loading="lazy" width="{$data['width']}" height="{$data['height']}" />
+{if isset($data['id']|default:null) && isset($data['width']|default:null) && isset($data['height']|default:null)}
+    {loop type="library_image" name="library_image" id=$data['id']|default:null width=$data['width']|default:null height=$data['height']|default:null}
+        <img class="tb-{$type['id']|default:null}" src="{$URL}" alt="{$TITLE}" loading="lazy" width="{$data['width']|default:null}" height="{$data['height']|default:null}" />
     {/loop}
 {else}
-    <img class="tb-{$type['id']}" src="{$data['url']}" alt="{$data['alt']}" loading="lazy" width="{$data['width']}" height="{$data['height']}" />
+    <img class="tb-{$type['id']|default:null}" src="{$data['url']|default:null}" alt="{$data['alt']|default:null}" loading="lazy" width="{$data['width']|default:null}" height="{$data['height']|default:null}" />
 {/if}
 {if $hasLink}
     </a>
 {/if}
-
