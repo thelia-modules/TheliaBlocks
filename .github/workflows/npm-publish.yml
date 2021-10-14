@@ -17,6 +17,7 @@ jobs:
           node-version: 14
           registry-url: https://registry.npmjs.org/
       - run: cd templates/backOffice/default/app && npm ci
+      - run: cd templates/backOffice/default/app && npm run build
       - run: cd templates/backOffice/default/app && npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
