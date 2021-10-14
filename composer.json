@@ -4,11 +4,14 @@
   "license": "LGPL-3.0-or-later",
   "type": "thelia-module",
   "require": {
-      "thelia/installer": "~1.1",
-      "thelia/short-code-module": "dev-main",
-      "thelia/open-api-module": "dev-main"
+    "thelia/installer": "~1.1",
+    "thelia/short-code-module": "dev-main",
+    "thelia/open-api-module": "dev-main"
   },
   "extra": {
     "installer-name": "TheliaBlocks"
+  },
+  "scripts": {
+    "post-update-cmd": "rm -rf web/assets/backOffice/default/TheliaBlocks"
   }
 }

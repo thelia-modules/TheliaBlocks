@@ -1,12 +1,12 @@
-import React, { ChangeEvent, useRef, useState } from "react";
-import useClickAway from "react-use/lib/useClickAway";
-
 import "./GroupsDropdown.css";
 
-import { GroupTypeStore } from "../../types";
-import slugify from "../../utils/slugify";
+import React, { ChangeEvent, useRef, useState } from "react";
 import { useGroups, useLinkContentToGroup } from "../../hooks/data";
+
+import { GroupTypeStore } from "../../types";
 import Loader from "../Loader";
+import slugify from "../../utils/slugify";
+import useClickAway from "react-use/lib/useClickAway";
 
 function GroupsDropdown() {
   const [search, setSearch] = useState<string>("");
@@ -63,10 +63,6 @@ function GroupsDropdown() {
     setSearch(event.target.value);
     setSelectedGroup(undefined);
   };
-
-  if (!results.length) {
-    return null;
-  }
 
   return (
     <div className="GroupsDropdown">
