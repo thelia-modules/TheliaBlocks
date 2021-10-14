@@ -1,11 +1,11 @@
 import React, { ChangeEvent } from "react";
+import { setGroupSlug, setGroupTitle } from "../redux/group";
 import { useDispatch, useSelector } from "react-redux";
-import Tippy from "@tippyjs/react";
 
+import GroupsDropdown from "./GroupsDropdown";
 import { RootState } from "../redux/store";
-import { setGroupTitle, setGroupSlug } from "../redux/group";
+import Tippy from "@tippyjs/react";
 import { useUnlinkContentFromGroup } from "../hooks/data";
-import GroupsDropdown from './GroupsDropdown';
 
 function GroupTitle() {
   const dispatch = useDispatch();
@@ -42,7 +42,7 @@ function GroupActions({ onSave }: { onSave: Function }) {
         className="px-8 font-bold uppercase Button Button--primary"
         onClick={() => onSave()}
         disabled={!isUnsaved}
-        >
+      >
         {groupId ? "Enregistrer" : "Créer"}
       </button>
       <GroupUnlink />
@@ -58,24 +58,31 @@ function GroupUnlink() {
   const mutation = useUnlinkContentFromGroup();
 
   const onUnlinkGroup = () => {
-    const itemBlockGroup = group?.itemBlockGroups?.find(itemBlockGroup => itemBlockGroup.itemId === windowConstants.itemId && itemBlockGroup.itemType === windowConstants.itemType);
+    const itemBlockGroup = group?.itemBlockGroups?.find(
+      (itemBlockGroup) =>
+        itemBlockGroup.itemId === windowConstants.itemId &&
+        itemBlockGroup.itemType === windowConstants.itemType
+    );
 
-    if(itemBlockGroup?.id) {
+    if (itemBlockGroup?.id) {
       mutation.mutate({ id: itemBlockGroup.id });
     }
-  }
+  };
 
-  if(!windowConstants.itemId || !group.id) {
+  if (!windowConstants.itemId || !group.id) {
     return null;
   }
 
   return (
     <Tippy content={"Délier le groupe de ce contenu"}>
-      <button className="ml-6 font-bold text-red-600 uppercase" onClick={() => onUnlinkGroup()}>
+      <button
+        className="ml-6 font-bold text-red-600 uppercase"
+        onClick={() => onUnlinkGroup()}
+      >
         <i className="fa fa-unlink"></i>
       </button>
     </Tippy>
-  )
+  );
 }
 
 function GroupOptions({ onSave }: { onSave: Function }) {
@@ -84,12 +91,15 @@ function GroupOptions({ onSave }: { onSave: Function }) {
     (state: RootState) => state.ui.windowConstants
   );
 
-  const showLinkExistingGroup = !group.id && windowConstants.itemId && windowConstants.itemType;
+  const showLinkExistingGroup =
+    !group.id && !!windowConstants.itemId && !!windowConstants.itemType;
 
   return (
     <div className="flex">
       <div className="flex-1">
-        <h3 className="mb-4 text-2xl font-bold">{group.id ? "Edition du groupe" : "Créer un nouveau groupe"}</h3>
+        <h3 className="mb-4 text-2xl font-bold">
+          {group.id ? "Edition du groupe" : "Créer un nouveau groupe"}
+        </h3>
         <div className="flex">
           <div className="flex-grow">
             <GroupTitle />
