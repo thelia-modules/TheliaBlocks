@@ -4,6 +4,7 @@ import {
   GroupTypeStore,
   IBlock,
   LibraryImage,
+  Product,
   itemBlockGroupsType,
 } from "../types";
 import axios, { AxiosRequestConfig } from "axios";
@@ -12,7 +13,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import { CURRENT_LOCAL } from "../constants";
-import GroupOptions from "../components/GroupOptions";
 import { RootState } from "../redux/store";
 import { initialState as initialBlocksState } from "../redux/blocks";
 import { initialState as initialGroupState } from "../redux/group";
@@ -333,33 +333,35 @@ export function useUnlinkContentFromGroup() {
 }
 
 export function useProductByTitle(title: string | null) {
-    return useQuery(
-        ["Product", title],
-        () =>
-            fetcher(`/open_api/product/search`, {
-                method: "GET",
-                params: {
-                    title: title || null,
-                },
-            }),
-        {
-            enabled: !!title,
-        }
-    );
+  return useQuery(
+    ["Product", title],
+    () =>
+      fetcher(`/open_api/product/search`, {
+        method: "GET",
+        params: {
+          title: title || null,
+        },
+      }),
+    {
+      enabled: !!title,
+      onSuccess(data: Array<Product>) {},
+    }
+  );
 }
 
-export function useProductsByIds(ids: string | null) {
+export function useProductsByIds(ids: string[] | null) {
   return useQuery(
-      ["Product", ids],
-      () =>
-          fetcher(`/open_api/product/search`, {
-              method: "GET",
-              params: {
-                  ids: ids || null,
-              },
-          }),
-      {
-          enabled: !!ids,
-      }
+    ["Product", ids],
+    () =>
+      fetcher(`/open_api/product/search`, {
+        method: "GET",
+        params: {
+          ids: ids || null,
+        },
+      }),
+    {
+      enabled: !!ids,
+      onSuccess(data: Array<Product>) {},
+    }
   );
 }
