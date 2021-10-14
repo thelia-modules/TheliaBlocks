@@ -12,6 +12,6 @@
     "installer-name": "TheliaBlocks"
   },
   "scripts": {
-    "post-update-cmd": "rm -rf web/assets/backOffice/default/TheliaBlocks"
+    "post-update-cmd": "cd ../../.. && rm -rf web/assets/backOffice/default/TheliaBlocks"
   }
 }

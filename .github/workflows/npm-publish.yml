@@ -21,4 +21,3 @@ jobs:
       - run: cd templates/backOffice/default/app && npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-
