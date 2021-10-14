@@ -2,7 +2,7 @@ import Button from "./blocks/Button";
 import ImageBlock from "./blocks/Image";
 import Group from "./blocks/Group";
 import MultiColumns from "./blocks/MultiColumns";
-// import Product from "./blocks/Product";
+import Product from "./blocks/Product";
 import Separator from "./blocks/Separator";
 import Text from "./blocks/Text";
 import Title from "./blocks/Title";
@@ -28,7 +28,7 @@ export const __PLUGINS = [
   { id: nanoid(), ...Accordion },
   { id: nanoid(), ...Highlight },
   { id: nanoid(), ...Video },
-  // { id: nanoid(), ...Product },
+  { id: nanoid(), ...Product },
   { id: nanoid(), ...Group },
   { id: nanoid(), ...Raw },
 ];

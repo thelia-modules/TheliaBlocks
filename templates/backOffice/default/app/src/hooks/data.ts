@@ -331,3 +331,35 @@ export function useUnlinkContentFromGroup() {
     }
   );
 }
+
+export function useProductByTitle(title: string | null) {
+    return useQuery(
+        ["Product", title],
+        () =>
+            fetcher(`/open_api/product/search`, {
+                method: "GET",
+                params: {
+                    title: title || null,
+                },
+            }),
+        {
+            enabled: !!title,
+        }
+    );
+}
+
+export function useProductsByIds(ids: string | null) {
+  return useQuery(
+      ["Product", ids],
+      () =>
+          fetcher(`/open_api/product/search`, {
+              method: "GET",
+              params: {
+                  ids: ids || null,
+              },
+          }),
+      {
+          enabled: !!ids,
+      }
+  );
+}
