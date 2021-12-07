@@ -7,7 +7,7 @@
 {/block}
 
 {block name="main-content"}
-    <div id="thelia-blocks-root" class="thelia-blocks-ui"></div>
+    <div id="thelia-blocks-root-{$itemId}-{$itemType}" class="thelia-blocks-ui"></div>
 
     <script>
         window.global = window;
@@ -41,7 +41,7 @@
         {hook name="thelia.blocks.plugins"}
 
         <script>
-            ReactDOM.render(React.createElement(TheliaBlocks.EditPage), document.getElementById('thelia-blocks-root'))
+            ReactDOM.render(React.createElement(TheliaBlocks.EditPage), document.getElementById('thelia-blocks-root-{$itemId}-{$itemType}'))
         </script>
     {/if}
 {/block}
