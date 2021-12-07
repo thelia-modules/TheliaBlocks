@@ -47,7 +47,7 @@ function BlockFromLibrary({
         content={
           <BlockTooltip
             title={displayedTitle}
-            image={block.image && getI18nText(block.image)}
+            //image={block.image && getI18nText(block.image)}
             description={block.description && getI18nText(block.description)}
           />
         }

@@ -144,6 +144,19 @@ export declare const __PLUGINS: ({
     type: import("./types").BlockModuleType;
     component: (props: {
         [key: string]: any;
+        data: import("./blocks/Product/Product").BlockProductData;
+        id: string;
+        onUpdate: (props: import("./blocks/Product/Product").BlockProductData) => any;
+    }) => JSX.Element;
+    initialData: import("./blocks/Product/Product").BlockProductData;
+    id: string;
+} | {
+    title: import("./types").i18nString;
+    description?: import("./types").i18nString | undefined;
+    image?: import("./types").i18nString | undefined;
+    type: import("./types").BlockModuleType;
+    component: (props: {
+        [key: string]: any;
         data: import("./blocks/Group").BlockGroupData;
         id: string;
         onUpdate: (props: import("./blocks/Group").BlockGroupData) => any;
