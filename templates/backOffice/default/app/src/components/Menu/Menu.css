@@ -7,11 +7,11 @@
 }
 
 .Menu-blocks {
-  @apply divide-x divide-gray-100 flex overflow-x-auto -mx-6 pb-6;
+  @apply divide-x divide-gray-100 flex overflow-x-auto flex-wrap gap-3 pb-6;
 }
 
 .Menu-blocks-item {
-  @apply flex-shrink-0 px-6;
+  @apply flex-shrink-0;
 }
 .Menu-blocks-item:first-child {
   padding-left: 0;

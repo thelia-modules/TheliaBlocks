@@ -33,4 +33,6 @@ export declare function useLinkContentToGroup(): import("react-query").UseMutati
 export declare function useUnlinkContentFromGroup(): import("react-query").UseMutationResult<any, unknown, {
     id: GroupTypeStore["id"];
 }, unknown>;
+export declare function useProductByTitle(title: string | null): import("react-query").UseQueryResult<any, unknown>;
+export declare function useProductsByIds(ids: string | null): import("react-query").UseQueryResult<any, unknown>;
 //# sourceMappingURL=data.d.ts.map
