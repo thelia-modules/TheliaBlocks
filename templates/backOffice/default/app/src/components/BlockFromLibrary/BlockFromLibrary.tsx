@@ -1,23 +1,23 @@
-import "./BlockFromLibrary.css";
+import './BlockFromLibrary.css';
 
-import React from "react";
-import { useDispatch } from "react-redux";
-import Tippy from "@tippyjs/react";
-import { nanoid } from "nanoid";
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import Tippy from '@tippyjs/react';
+import { nanoid } from 'nanoid';
 
-import { addBlock } from "../../redux/blocks";
-import { __PLUGINS } from "../../pluginManager";
-import { BlockPluginDefinition, BlockModuleI18n } from "../../types";
-import { getI18nText } from "../../utils/i18n";
-import BlockTooltip from "../BlockTooltip";
+import { addBlock } from '../../redux/blocks';
+import { __PLUGINS } from '../../pluginManager';
+import { BlockPluginDefinition, BlockModuleI18n } from '../../types';
+import { getI18nText } from '../../utils/i18n';
+import BlockTooltip from '../BlockTooltip';
 
 function BlockFromLibrary({
   block,
 }: {
   block: BlockModuleI18n & {
     id: string;
-    initialData: BlockPluginDefinition["initialData"];
-    type: BlockPluginDefinition["type"];
+    initialData: BlockPluginDefinition['initialData'];
+    type: BlockPluginDefinition['type'];
   };
 }) {
   const dispatch = useDispatch();
@@ -33,7 +33,7 @@ function BlockFromLibrary({
     setTimeout(() => {
       window.scrollTo({
         top: document.body.scrollHeight,
-        behavior: "smooth",
+        behavior: 'smooth',
       });
     }, 250);
   };
@@ -41,9 +41,9 @@ function BlockFromLibrary({
   const displayedTitle = block.title ? getI18nText(block.title) : block.type.id;
 
   return (
-    <div className="BlockFromLibrary">
+    <div className='BlockFromLibrary'>
       <Tippy
-        theme="light"
+        theme='light'
         content={
           <BlockTooltip
             title={displayedTitle}
@@ -52,7 +52,11 @@ function BlockFromLibrary({
           />
         }
       >
-        <button className="BlockFromLibrary-title" onClick={onClick}>
+        <button
+          type='button'
+          className='BlockFromLibrary-title'
+          onClick={onClick}
+        >
           {displayedTitle}
         </button>
       </Tippy>

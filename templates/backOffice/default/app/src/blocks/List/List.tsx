@@ -1,15 +1,15 @@
-import "./List.css";
+import './List.css';
 
-import React, { ChangeEvent, useCallback } from "react";
-import Tippy from "@tippyjs/react";
+import React, { ChangeEvent, useCallback } from 'react';
+import Tippy from '@tippyjs/react';
 
-import { BlockModuleComponentProps, BlockPluginDefinition } from "../../types";
-import BlockText, { BlockTextData } from "../Text";
-import { nanoid } from "nanoid";
+import { BlockModuleComponentProps, BlockPluginDefinition } from '../../types';
+import BlockText, { BlockTextData } from '../Text';
+import { nanoid } from 'nanoid';
 
 enum typeList {
-  Unordered = "ul",
-  Ordered = "ol",
+  Unordered = 'ul',
+  Ordered = 'ol',
 }
 
 export type BlockListData = {
@@ -21,11 +21,11 @@ type listItemType = { id: string; value: string };
 
 const types = [
   {
-    label: "Ordered",
+    label: 'Ordered',
     value: typeList.Ordered,
   },
   {
-    label: "Unordered",
+    label: 'Unordered',
     value: typeList.Unordered,
   },
 ];
@@ -47,7 +47,7 @@ function BlockListComponent({
   };
 
   const addLine = () => {
-    const newListItems = [...listItems, { id: nanoid(), value: "" }];
+    const newListItems = [...listItems, { id: nanoid(), value: '' }];
     setListItems(newListItems);
     onUpdate({ ...data, values: newListItems.map(({ value }) => value) });
   };
@@ -76,12 +76,12 @@ function BlockListComponent({
   };
 
   return (
-    <div className="BlockList">
-      <div className="BlockList-config">
-        <label htmlFor="title-level">Type</label>
+    <div className='BlockList'>
+      <div className='BlockList-config'>
+        <label htmlFor='title-level'>Type</label>
         <select
-          name="title-level"
-          id="title-level"
+          name='title-level'
+          id='title-level'
           onChange={onChangeType}
           value={data.type}
         >
@@ -92,9 +92,9 @@ function BlockListComponent({
           ))}
         </select>
       </div>
-      <div className="BlockList-list">
+      <div className='BlockList-list'>
         {listItems.map((listItem) => (
-          <div className="BlockList-line" key={listItem.id}>
+          <div className='BlockList-line' key={listItem.id}>
             <BlockText.component
               id={`text-${listItem.id}`}
               data={{ value: listItem.value }}
@@ -104,16 +104,17 @@ function BlockListComponent({
             />
             <Tippy content={"Supprimer l'élément"}>
               <button
+                type='button'
                 onClick={() => deleteLine(listItem.id)}
                 disabled={listItems.length < 2}
               >
-                <i className="fa fa-trash"></i>
+                <i className='fa fa-trash'></i>
               </button>
             </Tippy>
           </div>
         ))}
-        <div className="text-center">
-          <button className="BlockList-add" onClick={addLine}>
+        <div className='text-center'>
+          <button type='button' className='BlockList-add' onClick={addLine}>
             Ajouter un élément
           </button>
         </div>
@@ -124,11 +125,11 @@ function BlockListComponent({
 
 const initialData = {
   type: typeList.Unordered,
-  values: [""],
+  values: [''],
 };
 
 const moduleType = {
-  id: "blockList",
+  id: 'blockList',
 };
 
 const BlockList: BlockPluginDefinition<BlockListData> = {
@@ -136,15 +137,15 @@ const BlockList: BlockPluginDefinition<BlockListData> = {
   component: BlockListComponent,
   initialData,
   title: {
-    default: "List",
-    fr_FR: "Liste",
+    default: 'List',
+    fr_FR: 'Liste',
   },
   description: {
-    default: "Display a list",
-    fr_FR: "Affiche une liste",
+    default: 'Display a list',
+    fr_FR: 'Affiche une liste',
   },
   image: {
-    default: "https://source.unsplash.com/featured/300x250?nature&blockList",
+    default: 'https://source.unsplash.com/featured/300x250?nature&blockList',
   },
 };
 
