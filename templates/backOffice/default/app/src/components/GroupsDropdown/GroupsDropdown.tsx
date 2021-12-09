@@ -1,22 +1,22 @@
-import "./GroupsDropdown.css";
+import './GroupsDropdown.css';
 
-import React, { ChangeEvent, useRef, useState } from "react";
-import { useGroups, useLinkContentToGroup } from "../../hooks/data";
+import React, { ChangeEvent, useRef, useState } from 'react';
+import { useGroups, useLinkContentToGroup } from '../../hooks/data';
 
-import { GroupTypeStore } from "../../types";
-import Loader from "../Loader";
-import slugify from "../../utils/slugify";
-import useClickAway from "react-use/lib/useClickAway";
+import { GroupTypeStore } from '../../types';
+import Loader from '../Loader';
+import slugify from '../../utils/slugify';
+import useClickAway from 'react-use/lib/useClickAway';
 
 function GroupsDropdown() {
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useState<string>('');
   const [selectedGroup, setSelectedGroup] = useState<GroupTypeStore>();
   const [open, setOpen] = useState<boolean>(false);
   const {
     isLoading,
     isError,
     error,
-    data,
+    data
   }: {
     isLoading: boolean;
     isError: boolean;
@@ -43,13 +43,13 @@ function GroupsDropdown() {
   }
 
   const results = data.filter(
-    ({ slug }: { slug: GroupTypeStore["slug"] }) =>
-      slug?.search(new RegExp(slugify(search), "i")) !== -1
+    ({ slug }: { slug: GroupTypeStore['slug'] }) =>
+      slug?.search(new RegExp(slugify(search), 'i')) !== -1
   );
 
   const linkGroupToContent = (group: GroupTypeStore) => {
     mutation.mutate({
-      id: group.id,
+      id: group.id
     });
   };
 
@@ -79,6 +79,7 @@ function GroupsDropdown() {
             {results.map((group: GroupTypeStore) => (
               <li key={group.id} className="GroupsDropdown-dropdownItem">
                 <button
+                  type="button"
                   onClick={() => {
                     onClickGroup(group);
                   }}
@@ -102,6 +103,7 @@ function GroupsDropdown() {
       </div>
       <div className="ml-6">
         <button
+          type="button"
           className="px-8 font-bold uppercase Button Button--primary"
           onClick={() => selectedGroup && linkGroupToContent(selectedGroup)}
           disabled={!selectedGroup}

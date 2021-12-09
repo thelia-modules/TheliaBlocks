@@ -1,12 +1,12 @@
-import "./BlockWrapper.css";
+import './BlockWrapper.css';
 
-import React, { useState } from "react";
-import { moveBlockDown, moveBlockUp } from "../../redux/blocks";
+import React, { useState } from 'react';
+import { moveBlockDown, moveBlockUp } from '../../redux/blocks';
 
-import { IBlock } from "../../types";
-import { __PLUGINS } from "../../pluginManager";
-import { getI18nText } from "../../utils/i18n";
-import { useDispatch } from "react-redux";
+import { IBlock } from '../../types';
+import { __PLUGINS } from '../../pluginManager';
+import { getI18nText } from '../../utils/i18n';
+import { useDispatch } from 'react-redux';
 
 function BlockWrapper({
   children,
@@ -14,7 +14,7 @@ function BlockWrapper({
   canMove = true,
   canDelete = true,
   handleDelete,
-  DndDragHandle,
+  DndDragHandle
 }: {
   children: React.ReactNode;
   block: IBlock;
@@ -61,9 +61,10 @@ function BlockWrapper({
         </div>
         {canDelete ? (
           <button
+            type="button"
             className="ml-auto text-sm text-red-500"
             onClick={() => {
-              if (window.confirm("La suppression est définitive")) {
+              if (window.confirm('La suppression est définitive')) {
                 handleDelete(block);
               }
             }}
@@ -80,7 +81,7 @@ function BlockWrapper({
       </div>
       <div
         className={`p-2 border border-gray-400 border-dashed ${
-          hilight ? "border-red-500" : ""
+          hilight ? 'border-red-500' : ''
         }`}
       >
         <div className="">{children}</div>

@@ -1,15 +1,15 @@
-import "./Image.css";
+import './Image.css';
 
 import {
   BlockModuleComponentProps,
   BlockPluginDefinition,
-  LibraryImage,
-} from "../../types";
+  LibraryImage
+} from '../../types';
 
-import { useLibraryImageById } from "../../hooks/data";
+import { useLibraryImageById } from '../../hooks/data';
 
-import React from "react";
-import MediaLibrary from "../../components/MediaLibrary";
+import React from 'react';
+import MediaLibrary from '../../components/MediaLibrary';
 
 export type BlockImageComponentProps = BlockModuleComponentProps<LibraryImage>;
 
@@ -17,9 +17,9 @@ function BlockImageComponent(props: BlockImageComponentProps) {
   const { data, onUpdate } = props;
   const [isEditing, setIsEditing] = React.useState<boolean>(false);
   const image = useLibraryImageById(props.data.id);
-  const [linkUrl, setLinkUrl] = React.useState<string>(data?.link?.url || "");
+  const [linkUrl, setLinkUrl] = React.useState<string>(data?.link?.url || '');
   const [linkTarget, setLinkTarget] = React.useState<string>(
-    data?.link?.target || ""
+    data?.link?.target || ''
   );
 
   React.useEffect(() => {
@@ -32,10 +32,12 @@ function BlockImageComponent(props: BlockImageComponentProps) {
     if (data.id) {
       const newData = { ...data };
 
-      newData.link = linkUrl ? {
-        url: linkUrl,
-        target: linkTarget,
-      } : undefined;
+      newData.link = linkUrl
+        ? {
+            url: linkUrl,
+            target: linkTarget
+          }
+        : undefined;
 
       onUpdate(newData);
     }
@@ -44,7 +46,7 @@ function BlockImageComponent(props: BlockImageComponentProps) {
   return (
     <div
       className="relative flex flex-col overflow-y-auto bg-gray-300 BlockImage"
-      style={{ minHeight: "30vh" }}
+      style={{ minHeight: '30vh' }}
     >
       {image?.data ? (
         <>
@@ -71,9 +73,9 @@ function BlockImageComponent(props: BlockImageComponentProps) {
                 className="ml-2"
                 type="checkbox"
                 name="link[target]"
-                checked={linkTarget === "_blank"}
+                checked={linkTarget === '_blank'}
                 onChange={(e) =>
-                  setLinkTarget(e.target.checked ? "_blank" : "")
+                  setLinkTarget(e.target.checked ? '_blank' : '')
                 }
               />
             </label>
@@ -83,6 +85,7 @@ function BlockImageComponent(props: BlockImageComponentProps) {
       {isEditing ? (
         <div className="absolute bg-gray-800 bg-opacity-75 inset-4 ">
           <button
+            type="button"
             className="absolute right-0 ml-auto Button Button--info"
             onClick={() => setIsEditing(false)}
           >
@@ -99,9 +102,10 @@ function BlockImageComponent(props: BlockImageComponentProps) {
         </div>
       ) : (
         <button
+          type="button"
           onClick={() => setIsEditing(true)}
           className={`p-4 m-auto font-bold uppercase Button Button--primary ${
-            data.url ? "absolute right-0" : ""
+            data.url ? 'absolute right-0' : ''
           }`}
         >
           {data?.url ? (
@@ -118,12 +122,12 @@ function BlockImageComponent(props: BlockImageComponentProps) {
 const initialData = {
   url: null,
   id: null,
-  title: "",
-  fileName: "",
+  title: '',
+  fileName: ''
 };
 
 const moduleType = {
-  id: "blockImage",
+  id: 'blockImage'
 };
 
 const blockImage: BlockPluginDefinition<LibraryImage> = {
@@ -131,16 +135,16 @@ const blockImage: BlockPluginDefinition<LibraryImage> = {
   component: BlockImageComponent,
   initialData,
   title: {
-    default: "Image",
-    fr_FR: "Image",
+    default: 'Image',
+    fr_FR: 'Image'
   },
   description: {
-    default: "Display an image",
-    fr_FR: "Affiche une image",
+    default: 'Display an image',
+    fr_FR: 'Affiche une image'
   },
   image: {
-    default: "",
-  },
+    default: ''
+  }
 };
 
 export default blockImage;

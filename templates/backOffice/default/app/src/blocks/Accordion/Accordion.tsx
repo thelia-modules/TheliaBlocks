@@ -1,15 +1,15 @@
-import React, { ChangeEvent } from "react";
-import { nanoid } from "nanoid";
-import Tippy from "@tippyjs/react";
+import React, { ChangeEvent } from 'react';
+import { nanoid } from 'nanoid';
+import Tippy from '@tippyjs/react';
 
-import "./Accordion.css";
+import './Accordion.css';
 
 import {
   IBlock,
   BlockPluginDefinition,
-  BlockModuleComponentProps,
-} from "../../types";
-import BlockGroup from "../Group";
+  BlockModuleComponentProps
+} from '../../types';
+import BlockGroup from '../Group';
 
 type AccordionData = Array<ItemData>;
 type ItemData = {
@@ -22,26 +22,26 @@ export type AccordionComponentProps = {
 };
 const MIN_ITEMS = 1;
 const moduleType = {
-  id: "blockAccordion",
+  id: 'blockAccordion'
 };
 const emptyItemData = () => {
   const itemId = nanoid();
 
   return {
     id: itemId,
-    title: "",
+    title: '',
     group: {
       id: nanoid(),
       type: BlockGroup.type,
       parent: itemId,
-      data: BlockGroup.initialData,
-    },
+      data: BlockGroup.initialData
+    }
   };
 };
 
 function AccordionComponent({
   data,
-  onUpdate,
+  onUpdate
 }: BlockModuleComponentProps<AccordionData>) {
   const handleDeleteItem = (itemToDelete: ItemData) => {
     onUpdate(
@@ -53,12 +53,12 @@ function AccordionComponent({
     onUpdate([
       ...data.slice(0, index + 1),
       emptyItemData(),
-      ...data.slice(index + 1),
+      ...data.slice(index + 1)
     ]);
   };
 
   const handleUpdateGroup =
-    (currentItem: ItemData) => (newData: IBlock["data"]) => {
+    (currentItem: ItemData) => (newData: IBlock['data']) => {
       onUpdate(
         data.map((item) =>
           item.id === currentItem.id
@@ -66,8 +66,8 @@ function AccordionComponent({
                 ...item,
                 group: {
                   ...item.group,
-                  data: newData,
-                },
+                  data: newData
+                }
               }
             : item
         )
@@ -83,7 +83,7 @@ function AccordionComponent({
         item.id === currentItem.id
           ? {
               ...item,
-              title: e.target.value,
+              title: e.target.value
             }
           : item
       )
@@ -109,6 +109,7 @@ function AccordionComponent({
               {data.length > MIN_ITEMS && (
                 <Tippy content={"Supprimer l'élément"}>
                   <button
+                    type="button"
                     className="text-sm text-red-500 hover:bg-red-50"
                     onClick={() => handleDeleteItem(item)}
                   >
@@ -120,13 +121,14 @@ function AccordionComponent({
             <BlockGroup.component
               data={item.group.data}
               onUpdate={handleUpdateGroup(item)}
-              excludeBlockType={[moduleType.id, "blockFullWidthImage"]}
+              excludeBlockType={[moduleType.id, 'blockFullWidthImage']}
               id={item.id}
             />
           </div>
           {indexItem < data.length - 1 && (
-            <Tippy content={"Ajouter un élément"}>
+            <Tippy content={'Ajouter un élément'}>
               <button
+                type="button"
                 key={`${item.id}-add-block`}
                 className="px-3 py-2 border border-dashed bg-gray-50 focus:outline-none hover:bg-gray-100"
                 onClick={() => addItem(indexItem)}
@@ -148,16 +150,16 @@ const accordionBlock: BlockPluginDefinition<AccordionData> = {
   component: AccordionComponent,
   initialData,
   title: {
-    default: "Accordion",
-    fr_FR: "Accordéon",
+    default: 'Accordion',
+    fr_FR: 'Accordéon'
   },
   description: {
-    default: "Display a list of collapsable groups",
-    fr_FR: "Affiche une liste de groupes d'éléments refermables",
+    default: 'Display a list of collapsable groups',
+    fr_FR: "Affiche une liste de groupes d'éléments refermables"
   },
   image: {
-    default: "https://source.unsplash.com/featured/300x250?nature&accordion",
-  },
+    default: 'https://source.unsplash.com/featured/300x250?nature&accordion'
+  }
 };
 
 export default accordionBlock;

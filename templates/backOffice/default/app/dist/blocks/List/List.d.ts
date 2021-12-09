@@ -1,5 +1,5 @@
-import "./List.css";
-import { BlockPluginDefinition } from "../../types";
+import './List.css';
+import { BlockPluginDefinition } from '../../types';
 declare enum typeList {
     Unordered = "ul",
     Ordered = "ol"

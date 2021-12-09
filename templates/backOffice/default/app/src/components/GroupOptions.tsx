@@ -1,11 +1,11 @@
-import React, { ChangeEvent } from "react";
-import { setGroupSlug, setGroupTitle } from "../redux/group";
-import { useDispatch, useSelector } from "react-redux";
+import React, { ChangeEvent } from 'react';
+import { setGroupSlug, setGroupTitle } from '../redux/group';
+import { useDispatch, useSelector } from 'react-redux';
 
-import GroupsDropdown from "./GroupsDropdown";
-import { RootState } from "../redux/store";
-import Tippy from "@tippyjs/react";
-import { useUnlinkContentFromGroup } from "../hooks/data";
+import GroupsDropdown from './GroupsDropdown';
+import { RootState } from '../redux/store';
+import Tippy from '@tippyjs/react';
+import { useUnlinkContentFromGroup } from '../hooks/data';
 
 function GroupTitle() {
   const dispatch = useDispatch();
@@ -20,7 +20,7 @@ function GroupTitle() {
     <div className="flex flex-1 GroupTitle">
       <input
         type="text"
-        value={groupState.title || ""}
+        value={groupState.title || ''}
         placeholder="Titre du groupe"
         className="w-full"
         onChange={onInputChange}
@@ -35,15 +35,13 @@ function GroupActions({ onSave }: { onSave: Function }) {
 
   return (
     <div className="flex items-center">
-      {/*
-        <button className="px-8 font-bold uppercase Button">Validate</button>
-      */}
       <button
+        type="button"
         className="px-8 font-bold uppercase Button Button--primary"
         onClick={() => onSave()}
         disabled={!isUnsaved}
       >
-        {groupId ? "Enregistrer" : "Créer"}
+        {groupId ? 'Enregistrer' : 'Créer'}
       </button>
       <GroupUnlink />
     </div>
@@ -74,8 +72,9 @@ function GroupUnlink() {
   }
 
   return (
-    <Tippy content={"Délier le groupe de ce contenu"}>
+    <Tippy content={'Délier le groupe de ce contenu'}>
       <button
+        type="button"
         className="ml-6 font-bold text-red-600 uppercase"
         onClick={() => onUnlinkGroup()}
       >
@@ -98,7 +97,7 @@ function GroupOptions({ onSave }: { onSave: Function }) {
     <div className="flex">
       <div className="flex-1">
         <h3 className="mb-4 text-2xl font-bold">
-          {group.id ? "Edition du groupe" : "Créer un nouveau groupe"}
+          {group.id ? 'Edition du groupe' : 'Créer un nouveau groupe'}
         </h3>
         <div className="flex">
           <div className="flex-grow">
