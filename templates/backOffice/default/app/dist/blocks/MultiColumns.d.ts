@@ -1,4 +1,4 @@
-import { IBlock, BlockPluginDefinition } from "../types";
+import { IBlock, BlockPluginDefinition } from '../types';
 declare type MultiColumnsData = Array<ColumnData>;
 declare type ColumnData = {
     id: string;

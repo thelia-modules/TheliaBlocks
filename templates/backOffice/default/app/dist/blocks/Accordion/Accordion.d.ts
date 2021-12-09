@@ -1,5 +1,5 @@
-import "./Accordion.css";
-import { IBlock, BlockPluginDefinition } from "../../types";
+import './Accordion.css';
+import { IBlock, BlockPluginDefinition } from '../../types';
 declare type AccordionData = Array<ItemData>;
 declare type ItemData = {
     id: string;
