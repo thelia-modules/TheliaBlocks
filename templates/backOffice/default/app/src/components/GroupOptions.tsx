@@ -17,12 +17,12 @@ function GroupTitle() {
   };
 
   return (
-    <div className='flex flex-1 GroupTitle'>
+    <div className="flex flex-1 GroupTitle">
       <input
-        type='text'
+        type="text"
         value={groupState.title || ''}
-        placeholder='Titre du groupe'
-        className='w-full'
+        placeholder="Titre du groupe"
+        className="w-full"
         onChange={onInputChange}
       />
     </div>
@@ -34,10 +34,10 @@ function GroupActions({ onSave }: { onSave: Function }) {
   const isUnsaved = useSelector((state: RootState) => state.ui.isUnsaved);
 
   return (
-    <div className='flex items-center'>
+    <div className="flex items-center">
       <button
-        type='button'
-        className='px-8 font-bold uppercase Button Button--primary'
+        type="button"
+        className="px-8 font-bold uppercase Button Button--primary"
         onClick={() => onSave()}
         disabled={!isUnsaved}
       >
@@ -74,11 +74,11 @@ function GroupUnlink() {
   return (
     <Tippy content={'Délier le groupe de ce contenu'}>
       <button
-        type='button'
-        className='ml-6 font-bold text-red-600 uppercase'
+        type="button"
+        className="ml-6 font-bold text-red-600 uppercase"
         onClick={() => onUnlinkGroup()}
       >
-        <i className='fa fa-unlink'></i>
+        <i className="fa fa-unlink"></i>
       </button>
     </Tippy>
   );
@@ -94,23 +94,23 @@ function GroupOptions({ onSave }: { onSave: Function }) {
     !group.id && !!windowConstants.itemId && !!windowConstants.itemType;
 
   return (
-    <div className='flex'>
-      <div className='flex-1'>
-        <h3 className='mb-4 text-2xl font-bold'>
+    <div className="flex">
+      <div className="flex-1">
+        <h3 className="mb-4 text-2xl font-bold">
           {group.id ? 'Edition du groupe' : 'Créer un nouveau groupe'}
         </h3>
-        <div className='flex'>
-          <div className='flex-grow'>
+        <div className="flex">
+          <div className="flex-grow">
             <GroupTitle />
           </div>
-          <div className='ml-6'>
+          <div className="ml-6">
             <GroupActions onSave={onSave} />
           </div>
         </div>
       </div>
       {showLinkExistingGroup && (
-        <div className='flex-1 pl-10 ml-10 border-l'>
-          <h3 className='mb-4 text-2xl font-bold'>Lier un groupe existant</h3>
+        <div className="flex-1 pl-10 ml-10 border-l">
+          <h3 className="mb-4 text-2xl font-bold">Lier un groupe existant</h3>
           <GroupsDropdown />
         </div>
       )}

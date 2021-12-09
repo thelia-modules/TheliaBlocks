@@ -3,7 +3,7 @@ import './Image.css';
 import {
   BlockModuleComponentProps,
   BlockPluginDefinition,
-  LibraryImage,
+  LibraryImage
 } from '../../types';
 
 import { useLibraryImageById } from '../../hooks/data';
@@ -35,7 +35,7 @@ function BlockImageComponent(props: BlockImageComponentProps) {
       newData.link = linkUrl
         ? {
             url: linkUrl,
-            target: linkTarget,
+            target: linkTarget
           }
         : undefined;
 
@@ -45,7 +45,7 @@ function BlockImageComponent(props: BlockImageComponentProps) {
 
   return (
     <div
-      className='relative flex flex-col overflow-y-auto bg-gray-300 BlockImage'
+      className="relative flex flex-col overflow-y-auto bg-gray-300 BlockImage"
       style={{ minHeight: '30vh' }}
     >
       {image?.data ? (
@@ -53,26 +53,26 @@ function BlockImageComponent(props: BlockImageComponentProps) {
           <img
             src={image.data[0]?.url}
             alt={data.title}
-            className='BlockImage-img'
+            className="BlockImage-img"
           />
 
-          <div className='BlockImage-editLink'>
-            <label htmlFor='id'>Lien au clic sur l'image</label>
+          <div className="BlockImage-editLink">
+            <label htmlFor="id">Lien au clic sur l'image</label>
             <input
-              type='text'
-              name='link[url]'
-              id='image-link'
+              type="text"
+              name="link[url]"
+              id="image-link"
               placeholder="Lien de l'image"
-              className='w-full'
+              className="w-full"
               value={linkUrl}
               onChange={(e) => setLinkUrl(e.target.value)}
             />
-            <label className='block mt-2'>
+            <label className="block mt-2">
               Ouvrir dans une nouvelle fenêtre :
               <input
-                className='ml-2'
-                type='checkbox'
-                name='link[target]'
+                className="ml-2"
+                type="checkbox"
+                name="link[target]"
                 checked={linkTarget === '_blank'}
                 onChange={(e) =>
                   setLinkTarget(e.target.checked ? '_blank' : '')
@@ -83,15 +83,15 @@ function BlockImageComponent(props: BlockImageComponentProps) {
         </>
       ) : null}
       {isEditing ? (
-        <div className='absolute bg-gray-800 bg-opacity-75 inset-4 '>
+        <div className="absolute bg-gray-800 bg-opacity-75 inset-4 ">
           <button
-            type='button'
-            className='absolute right-0 ml-auto Button Button--info'
+            type="button"
+            className="absolute right-0 ml-auto Button Button--info"
             onClick={() => setIsEditing(false)}
           >
             Fermer
           </button>
-          <div className='min-h-full p-8 bg-white'>
+          <div className="min-h-full p-8 bg-white">
             <MediaLibrary
               onSelect={(image) => {
                 onUpdate(image);
@@ -102,7 +102,7 @@ function BlockImageComponent(props: BlockImageComponentProps) {
         </div>
       ) : (
         <button
-          type='button'
+          type="button"
           onClick={() => setIsEditing(true)}
           className={`p-4 m-auto font-bold uppercase Button Button--primary ${
             data.url ? 'absolute right-0' : ''
@@ -111,7 +111,7 @@ function BlockImageComponent(props: BlockImageComponentProps) {
           {data?.url ? (
             "Modifier l'image"
           ) : (
-            <span className=''>Ajouter une image</span>
+            <span className="">Ajouter une image</span>
           )}
         </button>
       )}
@@ -123,11 +123,11 @@ const initialData = {
   url: null,
   id: null,
   title: '',
-  fileName: '',
+  fileName: ''
 };
 
 const moduleType = {
-  id: 'blockImage',
+  id: 'blockImage'
 };
 
 const blockImage: BlockPluginDefinition<LibraryImage> = {
@@ -136,15 +136,15 @@ const blockImage: BlockPluginDefinition<LibraryImage> = {
   initialData,
   title: {
     default: 'Image',
-    fr_FR: 'Image',
+    fr_FR: 'Image'
   },
   description: {
     default: 'Display an image',
-    fr_FR: 'Affiche une image',
+    fr_FR: 'Affiche une image'
   },
   image: {
-    default: '',
-  },
+    default: ''
+  }
 };
 
 export default blockImage;

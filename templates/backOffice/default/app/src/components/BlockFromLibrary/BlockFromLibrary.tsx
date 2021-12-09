@@ -12,7 +12,7 @@ import { getI18nText } from '../../utils/i18n';
 import BlockTooltip from '../BlockTooltip';
 
 function BlockFromLibrary({
-  block,
+  block
 }: {
   block: BlockModuleI18n & {
     id: string;
@@ -27,13 +27,13 @@ function BlockFromLibrary({
         id: nanoid(),
         parent: null,
         data: block.initialData,
-        type: block.type,
+        type: block.type
       })
     );
     setTimeout(() => {
       window.scrollTo({
         top: document.body.scrollHeight,
-        behavior: 'smooth',
+        behavior: 'smooth'
       });
     }, 250);
   };
@@ -41,9 +41,9 @@ function BlockFromLibrary({
   const displayedTitle = block.title ? getI18nText(block.title) : block.type.id;
 
   return (
-    <div className='BlockFromLibrary'>
+    <div className="BlockFromLibrary">
       <Tippy
-        theme='light'
+        theme="light"
         content={
           <BlockTooltip
             title={displayedTitle}
@@ -53,8 +53,8 @@ function BlockFromLibrary({
         }
       >
         <button
-          type='button'
-          className='BlockFromLibrary-title'
+          type="button"
+          className="BlockFromLibrary-title"
           onClick={onClick}
         >
           {displayedTitle}

@@ -14,7 +14,7 @@ function BlockWrapper({
   canMove = true,
   canDelete = true,
   handleDelete,
-  DndDragHandle,
+  DndDragHandle
 }: {
   children: React.ReactNode;
   block: IBlock;
@@ -34,35 +34,35 @@ function BlockWrapper({
 
   return (
     <div className={`BlockWrapper`}>
-      <div className='flex items-center mb-1'>
+      <div className="flex items-center mb-1">
         {DndDragHandle && <DndDragHandle />}
-        <h3 className='BlockWrapper-title'>{blockTitle}</h3>
-        <div className='flex gap-6'>
+        <h3 className="BlockWrapper-title">{blockTitle}</h3>
+        <div className="flex gap-6">
           {canMove ? (
-            <div className='flex gap-3'>
+            <div className="flex gap-3">
               <div
-                className='cursor-pointer hover:text-blue-500'
+                className="cursor-pointer hover:text-blue-500"
                 onClick={() => {
                   dispatch(moveBlockUp(block.id));
                 }}
               >
-                <i className='text-sm fa fa-arrow-up'></i> up
+                <i className="text-sm fa fa-arrow-up"></i> up
               </div>
               <div
-                className='cursor-pointer hover:text-blue-500'
+                className="cursor-pointer hover:text-blue-500"
                 onClick={() => {
                   dispatch(moveBlockDown(block.id));
                 }}
               >
-                <i className='text-sm fa fa-arrow-down'></i> down
+                <i className="text-sm fa fa-arrow-down"></i> down
               </div>
             </div>
           ) : null}
         </div>
         {canDelete ? (
           <button
-            type='button'
-            className='ml-auto text-sm text-red-500'
+            type="button"
+            className="ml-auto text-sm text-red-500"
             onClick={() => {
               if (window.confirm('La suppression est définitive')) {
                 handleDelete(block);
@@ -75,7 +75,7 @@ function BlockWrapper({
               setHilight(false);
             }}
           >
-            <i className='fa fa-trash'></i> Supprimer
+            <i className="fa fa-trash"></i> Supprimer
           </button>
         ) : null}
       </div>
@@ -84,7 +84,7 @@ function BlockWrapper({
           hilight ? 'border-red-500' : ''
         }`}
       >
-        <div className=''>{children}</div>
+        <div className="">{children}</div>
       </div>
     </div>
   );

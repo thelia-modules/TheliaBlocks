@@ -9,7 +9,7 @@ import { nanoid } from 'nanoid';
 
 enum typeList {
   Unordered = 'ul',
-  Ordered = 'ol',
+  Ordered = 'ol'
 }
 
 export type BlockListData = {
@@ -22,17 +22,17 @@ type listItemType = { id: string; value: string };
 const types = [
   {
     label: 'Ordered',
-    value: typeList.Ordered,
+    value: typeList.Ordered
   },
   {
     label: 'Unordered',
-    value: typeList.Unordered,
-  },
+    value: typeList.Unordered
+  }
 ];
 
 function BlockListComponent({
   data,
-  onUpdate,
+  onUpdate
 }: BlockModuleComponentProps<BlockListData>) {
   const [listItems, setListItems] = React.useState<listItemType[]>([]);
 
@@ -66,22 +66,22 @@ function BlockListComponent({
   ) => {
     const newListItems = listItems.map(({ id, value }) => ({
       id,
-      value: id === listItem.id ? textData.value : value,
+      value: id === listItem.id ? textData.value : value
     }));
     setListItems(newListItems);
     onUpdate({
       ...data,
-      values: newListItems.map(({ value }) => value),
+      values: newListItems.map(({ value }) => value)
     });
   };
 
   return (
-    <div className='BlockList'>
-      <div className='BlockList-config'>
-        <label htmlFor='title-level'>Type</label>
+    <div className="BlockList">
+      <div className="BlockList-config">
+        <label htmlFor="title-level">Type</label>
         <select
-          name='title-level'
-          id='title-level'
+          name="title-level"
+          id="title-level"
           onChange={onChangeType}
           value={data.type}
         >
@@ -92,9 +92,9 @@ function BlockListComponent({
           ))}
         </select>
       </div>
-      <div className='BlockList-list'>
+      <div className="BlockList-list">
         {listItems.map((listItem) => (
-          <div className='BlockList-line' key={listItem.id}>
+          <div className="BlockList-line" key={listItem.id}>
             <BlockText.component
               id={`text-${listItem.id}`}
               data={{ value: listItem.value }}
@@ -104,17 +104,17 @@ function BlockListComponent({
             />
             <Tippy content={"Supprimer l'élément"}>
               <button
-                type='button'
+                type="button"
                 onClick={() => deleteLine(listItem.id)}
                 disabled={listItems.length < 2}
               >
-                <i className='fa fa-trash'></i>
+                <i className="fa fa-trash"></i>
               </button>
             </Tippy>
           </div>
         ))}
-        <div className='text-center'>
-          <button type='button' className='BlockList-add' onClick={addLine}>
+        <div className="text-center">
+          <button type="button" className="BlockList-add" onClick={addLine}>
             Ajouter un élément
           </button>
         </div>
@@ -125,11 +125,11 @@ function BlockListComponent({
 
 const initialData = {
   type: typeList.Unordered,
-  values: [''],
+  values: ['']
 };
 
 const moduleType = {
-  id: 'blockList',
+  id: 'blockList'
 };
 
 const BlockList: BlockPluginDefinition<BlockListData> = {
@@ -138,15 +138,15 @@ const BlockList: BlockPluginDefinition<BlockListData> = {
   initialData,
   title: {
     default: 'List',
-    fr_FR: 'Liste',
+    fr_FR: 'Liste'
   },
   description: {
     default: 'Display a list',
-    fr_FR: 'Affiche une liste',
+    fr_FR: 'Affiche une liste'
   },
   image: {
-    default: 'https://source.unsplash.com/featured/300x250?nature&blockList',
-  },
+    default: 'https://source.unsplash.com/featured/300x250?nature&blockList'
+  }
 };
 
 export default BlockList;

@@ -59,6 +59,12 @@
     "react-use": "^17.2.4",
     "use-query-params": "^1.2.0"
   },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "none",
+    "useTabs": false,
+    "tabWidth": 2
+  },
   "devDependencies": {
     "@rollup/plugin-typescript": "^8.2.1",
     "@types/lodash": "^4.14.168",

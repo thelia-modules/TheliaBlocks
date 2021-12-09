@@ -21,7 +21,7 @@ export default function ListGroups() {
     onSuccess: () => {
       toast.info('Le groupe a bien été supprimé');
       res.refetch();
-    },
+    }
   });
   const mutationDuplicate = useDuplicateGroup();
 
@@ -46,12 +46,12 @@ export default function ListGroups() {
   };
 
   if (res.isLoading) {
-    return <Loader width='80px' />;
+    return <Loader width="80px" />;
   }
 
   if (!res.data) {
     return (
-      <p className='alert alert-info'>
+      <p className="alert alert-info">
         Aucun groupe existant. Pour créer un nouveau groupe, cliquez sur le
         bouton "Ajouter un groupe de blocs".
       </p>
@@ -61,14 +61,14 @@ export default function ListGroups() {
   return (
     <ul>
       {res?.data?.map((group) => (
-        <li className='flex bg-white border-b' key={group.id}>
-          <Link className='flex-grow block p-5' to={`/edit/${group.id}`}>
+        <li className="flex bg-white border-b" key={group.id}>
+          <Link className="flex-grow block p-5" to={`/edit/${group.id}`}>
             #{group.id} - {group.title}
             {!!group.itemBlockGroups?.length && (
-              <span className='ml-3 text-sm font-normal text-gray-400'>
-                <i className='fa fa-link'></i>
+              <span className="ml-3 text-sm font-normal text-gray-400">
+                <i className="fa fa-link"></i>
                 {group.itemBlockGroups.map(({ itemId, itemType }) => (
-                  <span key={`${itemType}-${itemId}`} className='ml-1'>
+                  <span key={`${itemType}-${itemId}`} className="ml-1">
                     {itemType}-{itemId}
                   </span>
                 ))}
@@ -99,31 +99,31 @@ export default function ListGroups() {
             )} */}
             <Tippy content={'Dupliquer le groupe'} hideOnClick={false}>
               <button
-                type='button'
-                className='px-6 py-5 border-l hover:bg-gray-200'
+                type="button"
+                className="px-6 py-5 border-l hover:bg-gray-200"
                 onClick={() => duplicateGroup(group)}
               >
-                <i className='fa fa-clone'></i>
+                <i className="fa fa-clone"></i>
               </button>
             </Tippy>
             <Tippy content={copyText} hideOnClick={false}>
               <button
-                type='button'
-                className='px-6 py-5 border-l hover:bg-gray-200'
+                type="button"
+                className="px-6 py-5 border-l hover:bg-gray-200"
                 onClick={() =>
                   copyToClipboard(`[block_group slug=${group.slug}]`)
                 }
               >
-                <i className='fa fa-clipboard'></i>
+                <i className="fa fa-clipboard"></i>
               </button>
             </Tippy>
             <Tippy content={'Supprimer le groupe'} hideOnClick={false}>
               <button
-                type='button'
-                className='px-6 py-5 text-red-600 border-l hover:bg-gray-200'
+                type="button"
+                className="px-6 py-5 text-red-600 border-l hover:bg-gray-200"
                 onClick={() => deleteGroup(group)}
               >
-                <i className='fa fa-trash'></i>
+                <i className="fa fa-trash"></i>
               </button>
             </Tippy>
           </div>

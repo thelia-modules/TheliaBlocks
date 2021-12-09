@@ -5,7 +5,7 @@ import Tippy from '@tippyjs/react';
 import {
   BlockModuleComponentProps,
   BlockPluginDefinition,
-  IBlock,
+  IBlock
 } from '../types';
 import Block from '../components/Block';
 import { usePlugins, __PLUGINS } from '../pluginManager';
@@ -20,7 +20,7 @@ const emptyBlockData = () => ({
   id: nanoid(),
   type: { id: '', title: { default: '' } },
   parent: null,
-  data: null,
+  data: null
 });
 
 function EmptyBlock({
@@ -28,7 +28,7 @@ function EmptyBlock({
   onUpdate,
   onDelete,
   excludeBlockType,
-  DndDragHandle,
+  DndDragHandle
 }: {
   id: IBlock['id'];
   onUpdate: BlockModuleComponentProps<BlockGroupData>['onUpdate'];
@@ -39,19 +39,19 @@ function EmptyBlock({
   const blocksLibrary = usePlugins();
   const [isSettingBlock, setIsSettingBlock] = useState<boolean>(false);
   return (
-    <div className='flex flex-col flex-grow p-2 mt-2 border border-dashed'>
+    <div className="flex flex-col flex-grow p-2 mt-2 border border-dashed">
       {isSettingBlock ? (
         blocksLibrary
           .filter((block: any) => !excludeBlockType?.includes(block.type.id))
           .map((block: any) => (
             <div
               key={block.id}
-              className='px-4 py-2 border-b border-white cursor-pointer hover:bg-yellow-100 bg-yellow-50'
+              className="px-4 py-2 border-b border-white cursor-pointer hover:bg-yellow-100 bg-yellow-50"
               onClick={() => {
                 onUpdate({
                   id,
                   data: block.initialData,
-                  type: block.type,
+                  type: block.type
                 });
               }}
             >
@@ -59,11 +59,11 @@ function EmptyBlock({
             </div>
           ))
       ) : (
-        <div className='flex'>
+        <div className="flex">
           {DndDragHandle && <DndDragHandle />}
           <button
-            type='button'
-            className='flex-1 p-4 text-xl bg-yellow-50 hover:bg-yellow-100'
+            type="button"
+            className="flex-1 p-4 text-xl bg-yellow-50 hover:bg-yellow-100"
             onClick={() => setIsSettingBlock(true)}
           >
             Selectionnez un block
@@ -71,11 +71,11 @@ function EmptyBlock({
           {onDelete && (
             <Tippy content={'Supprimer le bloc'}>
               <button
-                type='button'
-                className='px-4 py-2 ml-2 text-sm text-red-500 bg-red-50 hover:bg-red-100'
+                type="button"
+                className="px-4 py-2 ml-2 text-sm text-red-500 bg-red-50 hover:bg-red-100"
                 onClick={() => onDelete()}
               >
-                <i className='fa fa-trash'></i>
+                <i className="fa fa-trash"></i>
               </button>
             </Tippy>
           )}
@@ -89,7 +89,7 @@ export function BlockGroupComponent({
   id,
   data,
   onUpdate,
-  excludeBlockType,
+  excludeBlockType
 }: BlockModuleComponentProps<BlockGroupData>) {
   const { DndWrapper, DndWrapElement } = useDragAndDrop();
 
@@ -117,7 +117,7 @@ export function BlockGroupComponent({
     onUpdate([
       ...data.slice(0, index + 1),
       emptyBlockData(),
-      ...data.slice(index + 1),
+      ...data.slice(index + 1)
     ]);
   };
 
@@ -128,7 +128,7 @@ export function BlockGroupComponent({
           if (block.id === currentBlock.id) {
             return {
               ...block,
-              data: newData,
+              data: newData
             };
           }
           return block;
@@ -147,14 +147,14 @@ export function BlockGroupComponent({
   };
 
   return (
-    <div className='BlockGroup'>
-      <DndWrapper id={id} onDragEnd={onDragEnd} wrapperClass='flex flex-col'>
+    <div className="BlockGroup">
+      <DndWrapper id={id} onDragEnd={onDragEnd} wrapperClass="flex flex-col">
         {data.map((block, indexBlock) => (
           <DndWrapElement
             key={block.id}
             id={block.id}
             index={indexBlock}
-            wrapperClass='flex flex-col'
+            wrapperClass="flex flex-col"
           >
             {({ DndDragHandle }: { DndDragHandle: () => JSX.Element }) => (
               <>
@@ -170,7 +170,7 @@ export function BlockGroupComponent({
                     DndDragHandle={DndDragHandle}
                   />
                 ) : (
-                  <div key={block.id} className='flex-1 mt-2'>
+                  <div key={block.id} className="flex-1 mt-2">
                     <BlockWrapper
                       block={block}
                       canMove={false}
@@ -186,12 +186,12 @@ export function BlockGroupComponent({
                 )}
                 <Tippy content={'Ajouter un bloc'}>
                   <button
-                    type='button'
+                    type="button"
                     key={`${block.id}-add-col`}
-                    className='p-2 mt-2 border border-dashed bg-gray-50 focus:outline-none hover:bg-gray-100'
+                    className="p-2 mt-2 border border-dashed bg-gray-50 focus:outline-none hover:bg-gray-100"
                     onClick={() => addBlock(indexBlock)}
                   >
-                    <i className='fa fa-plus'></i>
+                    <i className="fa fa-plus"></i>
                   </button>
                 </Tippy>
               </>
@@ -206,7 +206,7 @@ export function BlockGroupComponent({
 const initialData = [emptyBlockData()];
 
 const moduleType = {
-  id: 'blockGroup',
+  id: 'blockGroup'
 };
 
 const BlockGroup: BlockPluginDefinition<BlockGroupData> = {
@@ -215,15 +215,15 @@ const BlockGroup: BlockPluginDefinition<BlockGroupData> = {
   initialData,
   title: {
     default: 'Group',
-    fr_FR: 'Groupe',
+    fr_FR: 'Groupe'
   },
   description: {
     default: 'Allow to group multile blocks',
-    fr_FR: 'Permet de grouper plusieurs blocs',
+    fr_FR: 'Permet de grouper plusieurs blocs'
   },
   image: {
-    default: 'https://source.unsplash.com/featured/300x250?nature&blockGroup',
-  },
+    default: 'https://source.unsplash.com/featured/300x250?nature&blockGroup'
+  }
 };
 
 export default BlockGroup;

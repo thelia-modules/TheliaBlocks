@@ -5,7 +5,7 @@ import Tippy from '@tippyjs/react';
 import {
   IBlock,
   BlockPluginDefinition,
-  BlockModuleComponentProps,
+  BlockModuleComponentProps
 } from '../types';
 import BlockGroup from './Group';
 
@@ -19,7 +19,7 @@ export type MultiColumnsComponentProps = {
 };
 
 const moduleType = {
-  id: 'multiColumns',
+  id: 'multiColumns'
 };
 const MIN_COLUMNS = 2;
 const MAX_COLUMNS = 5;
@@ -33,14 +33,14 @@ const emptyColumnData = () => {
       id: nanoid(),
       type: BlockGroup.type,
       parent: columnId,
-      data: BlockGroup.initialData,
-    },
+      data: BlockGroup.initialData
+    }
   };
 };
 
 function MultiColumnsComponent({
   data,
-  onUpdate,
+  onUpdate
 }: BlockModuleComponentProps<MultiColumnsData>) {
   const handleDeleteColumn = (columnToDelete: ColumnData) => {
     onUpdate(
@@ -54,7 +54,7 @@ function MultiColumnsComponent({
     onUpdate([
       ...data.slice(0, index + 1),
       emptyColumnData(),
-      ...data.slice(index + 1),
+      ...data.slice(index + 1)
     ]);
   };
 
@@ -67,8 +67,8 @@ function MultiColumnsComponent({
                 ...column,
                 group: {
                   ...column.group,
-                  data: newData,
-                },
+                  data: newData
+                }
               }
             : column
         )
@@ -76,10 +76,10 @@ function MultiColumnsComponent({
     };
 
   return (
-    <div className='flex w-full gap-2 MultiColumns'>
+    <div className="flex w-full gap-2 MultiColumns">
       {data.map((column, indexColumn) => (
         <React.Fragment key={`${column.id}-wrapper`}>
-          <div className='flex flex-col flex-1'>
+          <div className="flex flex-col flex-1">
             <BlockGroup.component
               data={column.group.data}
               onUpdate={handleUpdateGroup(column)}
@@ -89,11 +89,11 @@ function MultiColumnsComponent({
             {data.length > MIN_COLUMNS && (
               <Tippy content={'Supprimer la colonne'}>
                 <button
-                  type='button'
-                  className='px-4 py-2 mt-auto text-sm text-red-500 border border-red-100 border-dashed hover:bg-red-50'
+                  type="button"
+                  className="px-4 py-2 mt-auto text-sm text-red-500 border border-red-100 border-dashed hover:bg-red-50"
                   onClick={() => handleDeleteColumn(column)}
                 >
-                  <i className='fa fa-trash'></i>
+                  <i className="fa fa-trash"></i>
                 </button>
               </Tippy>
             )}
@@ -101,12 +101,12 @@ function MultiColumnsComponent({
           {indexColumn < data.length - 1 && data.length < MAX_COLUMNS && (
             <Tippy content={'Ajouter une colonne'}>
               <button
-                type='button'
+                type="button"
                 key={`${column.id}-add-block`}
-                className='px-3 py-2 mt-2 border border-dashed bg-gray-50 focus:outline-none hover:bg-gray-100'
+                className="px-3 py-2 mt-2 border border-dashed bg-gray-50 focus:outline-none hover:bg-gray-100"
                 onClick={() => addColumn(indexColumn)}
               >
-                <i className='fa fa-plus'></i>
+                <i className="fa fa-plus"></i>
               </button>
             </Tippy>
           )}
@@ -124,15 +124,15 @@ const multiCols: BlockPluginDefinition<MultiColumnsData> = {
   initialData,
   title: {
     default: 'Columns',
-    fr_FR: 'Colonnes',
+    fr_FR: 'Colonnes'
   },
   description: {
     default: 'Display blocks in multiple columns',
-    fr_FR: 'Affiche des blocks dans différentes colonnes',
+    fr_FR: 'Affiche des blocks dans différentes colonnes'
   },
   image: {
-    default: 'https://source.unsplash.com/featured/300x250?nature&multiColumns',
-  },
+    default: 'https://source.unsplash.com/featured/300x250?nature&multiColumns'
+  }
 };
 
 export default multiCols;

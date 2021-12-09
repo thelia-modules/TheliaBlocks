@@ -16,7 +16,7 @@ function GroupsDropdown() {
     isLoading,
     isError,
     error,
-    data,
+    data
   }: {
     isLoading: boolean;
     isError: boolean;
@@ -33,7 +33,7 @@ function GroupsDropdown() {
   if (isLoading) {
     return (
       <div>
-        <Loader width='40px' />
+        <Loader width="40px" />
       </div>
     );
   }
@@ -49,7 +49,7 @@ function GroupsDropdown() {
 
   const linkGroupToContent = (group: GroupTypeStore) => {
     mutation.mutate({
-      id: group.id,
+      id: group.id
     });
   };
 
@@ -65,31 +65,31 @@ function GroupsDropdown() {
   };
 
   return (
-    <div className='GroupsDropdown'>
-      <div className='GroupsDropdown-select' ref={selectRef}>
+    <div className="GroupsDropdown">
+      <div className="GroupsDropdown-select" ref={selectRef}>
         <input
-          type='text'
+          type="text"
           value={search}
           onFocus={() => setOpen(true)}
           onChange={onChangeInput}
-          className='w-full'
+          className="w-full"
         />
         {open && (
-          <ul className='GroupsDropdown-dropdown'>
+          <ul className="GroupsDropdown-dropdown">
             {results.map((group: GroupTypeStore) => (
-              <li key={group.id} className='GroupsDropdown-dropdownItem'>
+              <li key={group.id} className="GroupsDropdown-dropdownItem">
                 <button
-                  type='button'
+                  type="button"
                   onClick={() => {
                     onClickGroup(group);
                   }}
                 >
                   #{group.id} - {group.title}
                   {!!group.itemBlockGroups?.length && (
-                    <span className='ml-3 text-sm font-normal text-gray-400'>
-                      <i className='fa fa-link'></i>
+                    <span className="ml-3 text-sm font-normal text-gray-400">
+                      <i className="fa fa-link"></i>
                       {group.itemBlockGroups.map(({ itemId, itemType }) => (
-                        <span key={`${itemType}-${itemId}`} className='ml-1'>
+                        <span key={`${itemType}-${itemId}`} className="ml-1">
                           {itemType}-{itemId}
                         </span>
                       ))}
@@ -101,10 +101,10 @@ function GroupsDropdown() {
           </ul>
         )}
       </div>
-      <div className='ml-6'>
+      <div className="ml-6">
         <button
-          type='button'
-          className='px-8 font-bold uppercase Button Button--primary'
+          type="button"
+          className="px-8 font-bold uppercase Button Button--primary"
           onClick={() => selectedGroup && linkGroupToContent(selectedGroup)}
           disabled={!selectedGroup}
         >

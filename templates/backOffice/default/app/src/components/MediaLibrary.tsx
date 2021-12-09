@@ -6,7 +6,7 @@ import Loader from './Loader';
 
 export default function MediaLibrary({
   onSelect,
-  limit = 20,
+  limit = 20
 }: {
   onSelect: (image: LibraryImage) => void;
   limit?: number;
@@ -18,64 +18,64 @@ export default function MediaLibrary({
   const images = useLibraryImage({ offset, limit, title });
 
   return (
-    <div className='p-4 bg-white MediaLibrary'>
-      <div className='mb-4 text-3xl font-bold'>Ajouter une nouvelle image</div>
+    <div className="p-4 bg-white MediaLibrary">
+      <div className="mb-4 text-3xl font-bold">Ajouter une nouvelle image</div>
       <form
-        className=''
+        className=""
         onSubmit={(e) => {
           e.preventDefault();
           const data = new FormData(e.currentTarget);
           mutation.mutate(data, {
             onSuccess: (data) => {
               onSelect(data);
-            },
+            }
           });
         }}
       >
-        <input type='file' name='image' />
+        <input type="file" name="image" />
         <input
-          className='mt-2'
-          type='text'
-          name='title'
+          className="mt-2"
+          type="text"
+          name="title"
           placeholder="Titre de l'image"
-          defaultValue=''
+          defaultValue=""
         />
-        <div className='w-full mt-2'>
-          <button type='submit' className='Button Button--primary'>
+        <div className="w-full mt-2">
+          <button type="submit" className="Button Button--primary">
             Envoyer
           </button>
         </div>
       </form>
       {mutation.isError ? (
-        <div className='mt-4 alert alert-danger'>{mutation.error?.message}</div>
+        <div className="mt-4 alert alert-danger">{mutation.error?.message}</div>
       ) : null}
-      <div className='flex mt-12 mb-2'>
-        <div className='text-3xl font-bold '>Images existantes</div>
+      <div className="flex mt-12 mb-2">
+        <div className="text-3xl font-bold ">Images existantes</div>
         <input
-          className='ml-4'
-          type='search'
+          className="ml-4"
+          type="search"
           value={title || ''}
           onChange={(e) => setTitle(e.target.value)}
-          name='title-search'
-          placeholder='Chercher une image par son titre'
+          name="title-search"
+          placeholder="Chercher une image par son titre"
         />
       </div>
       {images.isFetching ? (
-        <Loader width='80px' />
+        <Loader width="80px" />
       ) : (
-        <div className='grid grid-cols-5 gap-4'>
+        <div className="grid grid-cols-5 gap-4">
           {images?.data?.map((image) => {
             return image?.id ? (
-              <div key={image.id} className='flex flex-col p-2 border'>
+              <div key={image.id} className="flex flex-col p-2 border">
                 <div
-                  className='m-auto cursor-pointer hover:opacity-75'
+                  className="m-auto cursor-pointer hover:opacity-75"
                   onClick={() => onSelect(image)}
                 >
                   {image.url ? <img src={image.url} alt={image.title} /> : null}
                 </div>
                 <button
-                  type='button'
-                  className='mt-auto text-sm uppercase Button Button--danger'
+                  type="button"
+                  className="mt-auto text-sm uppercase Button Button--danger"
                   onClick={() => deleteMutation.mutate(image.id)}
                 >
                   effacer
@@ -87,23 +87,23 @@ export default function MediaLibrary({
       )}
 
       {!images.isFetching && images.isFetched && size(images.data) <= 0 ? (
-        <div className='alert alert-warning'>Aucun Résultat</div>
+        <div className="alert alert-warning">Aucun Résultat</div>
       ) : null}
 
       {!images.isFetching && images.isFetched && size(images.data) > 0 ? (
-        <div className='flex items-center justify-center gap-8 mt-4'>
+        <div className="flex items-center justify-center gap-8 mt-4">
           <button
-            type='button'
-            className='Button'
+            type="button"
+            className="Button"
             onClick={() => setOffset((old) => Math.max(old - limit, 0))}
             disabled={offset === 0}
           >
             page précédente
           </button>
-          <div className='px-4 Button'>{offset / limit + 1}</div>
+          <div className="px-4 Button">{offset / limit + 1}</div>
           <button
-            type='button'
-            className='Button'
+            type="button"
+            className="Button"
             onClick={() => {
               if (!images.isPreviousData && size(images?.data) >= limit) {
                 setOffset((old) => old + limit);
