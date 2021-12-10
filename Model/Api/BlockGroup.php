@@ -55,7 +55,7 @@ class BlockGroup extends BaseApiModel
      *     type="string",
      * )
      */
-    protected $slug;
+    protected $slug = null;
 
     /**
      * @var array
@@ -90,21 +90,23 @@ class BlockGroup extends BaseApiModel
 
         $violations = [];
 
-        $sameSlugQuery = BlockGroupQuery::create()
-            ->filterBySlug($this->getSlug());
+        if (null !== $this->getSlug()) {
+            $sameSlugQuery = BlockGroupQuery::create()
+                ->filterBySlug($this->getSlug());
 
-        if (null !== $this->getId()) {
-            $sameSlugQuery->filterById($this->getId(), Criteria::NOT_EQUAL);
-        }
+            if (null !== $this->getId()) {
+                $sameSlugQuery->filterById($this->getId(), Criteria::NOT_EQUAL);
+            }
 
-        if (null !== $sameSlugQuery->findOne()) {
-            $violations[] = $this->modelFactory->buildModel(
+            if (null !== $sameSlugQuery->findOne()) {
+                $violations[] = $this->modelFactory->buildModel(
                     'SchemaViolation',
                     [
                         'key' => 'slug',
                         'error' => Translator::getInstance()->trans('Slug must be unique', [], OpenApi::DOMAIN_NAME)
                     ]
                 );
+            }
         }
 
         if (!empty($violations)) {
@@ -179,7 +181,7 @@ class BlockGroup extends BaseApiModel
     /**
      * @return string
      */
-    public function getSlug(): string
+    public function getSlug(): ?string
     {
         return $this->slug;
     }
