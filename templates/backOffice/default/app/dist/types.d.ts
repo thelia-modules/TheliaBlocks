@@ -24,7 +24,7 @@ export declare type BlockModuleI18n = {
 export declare type IBlock = {
     readonly id: string;
     readonly type: BlockModuleType;
-    parent: IBlock["id"] | null;
+    parent: IBlock['id'] | null;
     data: any;
 };
 export declare type itemBlockGroupsType = {
@@ -36,7 +36,7 @@ export declare type GroupTypeStore = {
     id?: number;
     visible: boolean;
     title: string;
-    slug: string;
+    slug: string | null;
     itemBlockGroups?: itemBlockGroupsType[];
 };
 export declare type GroupTypeResponse = GroupTypeStore & {
@@ -57,9 +57,9 @@ export declare type BlockPluginDefinition<TProp = {
 export declare type uiStoreType = {
     isUnsaved: boolean;
     windowConstants: {
-        groupId?: GroupTypeStore["id"];
-        itemId?: itemBlockGroupsType["itemId"];
-        itemType?: itemBlockGroupsType["itemType"];
+        groupId?: GroupTypeStore['id'];
+        itemId?: itemBlockGroupsType['itemId'];
+        itemType?: itemBlockGroupsType['itemType'];
     };
 };
 export declare type LibraryImage = {

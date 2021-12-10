@@ -27,7 +27,7 @@ export type BlockModuleI18n = {
 export type IBlock = {
   readonly id: string;
   readonly type: BlockModuleType;
-  parent: IBlock["id"] | null;
+  parent: IBlock['id'] | null;
   data: any;
 };
 
@@ -41,7 +41,7 @@ export type GroupTypeStore = {
   id?: number;
   visible: boolean;
   title: string;
-  slug: string;
+  slug: string | null;
   itemBlockGroups?: itemBlockGroupsType[];
 };
 
@@ -64,9 +64,9 @@ export type BlockPluginDefinition<TProp = { [key: string]: any }> =
 export type uiStoreType = {
   isUnsaved: boolean;
   windowConstants: {
-    groupId?: GroupTypeStore["id"];
-    itemId?: itemBlockGroupsType["itemId"];
-    itemType?: itemBlockGroupsType["itemType"];
+    groupId?: GroupTypeStore['id'];
+    itemId?: itemBlockGroupsType['itemId'];
+    itemType?: itemBlockGroupsType['itemType'];
   };
 };
 

@@ -1,4 +1,4 @@
-import { ErrorType, GroupTypeResponse, GroupTypeStore, IBlock, LibraryImage } from "../types";
+import { ErrorType, GroupTypeResponse, GroupTypeStore, IBlock, LibraryImage } from '../types';
 export declare function useGroups(): import("react-query").UseQueryResult<GroupTypeResponse[], unknown>;
 export declare function useGroup({ id }: {
     id?: number;
@@ -12,10 +12,10 @@ export declare function useCreateOrUpdateGroup({ id }: {
 export declare function useDeleteGroup({ onSuccess }: {
     onSuccess: () => any;
 }): import("react-query").UseMutationResult<any, unknown, {
-    id: GroupTypeStore["id"];
+    id: GroupTypeStore['id'];
 }, unknown>;
 export declare function useDuplicateGroup(): import("react-query").UseMutationResult<number | undefined, unknown, {
-    id: GroupTypeStore["id"];
+    id: GroupTypeStore['id'];
 }, unknown>;
 export declare function useLibraryImage(options: {
     id?: number | null;
@@ -28,10 +28,10 @@ export declare function useCreateImage(): import("react-query").UseMutationResul
 export declare function useDeleteImage(): import("react-query").UseMutationResult<any, unknown, number | null, unknown>;
 export declare function useUpdateImage(): import("react-query").UseMutationResult<any, unknown, number | null, unknown>;
 export declare function useLinkContentToGroup(): import("react-query").UseMutationResult<GroupTypeResponse, unknown, {
-    id: GroupTypeStore["id"];
+    id: GroupTypeStore['id'];
 }, unknown>;
 export declare function useUnlinkContentFromGroup(): import("react-query").UseMutationResult<any, unknown, {
-    id: GroupTypeStore["id"];
+    id: GroupTypeStore['id'];
 }, unknown>;
 export declare function useProductByTitle(title: string | null): import("react-query").UseQueryResult<any, unknown>;
 export declare function useProductsByIds(ids: string | null): import("react-query").UseQueryResult<any, unknown>;
