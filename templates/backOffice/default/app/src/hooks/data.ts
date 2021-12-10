@@ -4,30 +4,30 @@ import {
   GroupTypeStore,
   IBlock,
   LibraryImage,
-  itemBlockGroupsType,
-} from "../types";
-import axios, { AxiosRequestConfig } from "axios";
-import { initializeWindowConstantsGroupId, setUnsaved } from "../redux/ui";
-import { useDispatch, useSelector } from "react-redux";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+  itemBlockGroupsType
+} from '../types';
+import axios, { AxiosRequestConfig } from 'axios';
+import { initializeWindowConstantsGroupId, setUnsaved } from '../redux/ui';
+import { useDispatch, useSelector } from 'react-redux';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
-import { CURRENT_LOCAL } from "../constants";
-import GroupOptions from "../components/GroupOptions";
-import { RootState } from "../redux/store";
-import { initialState as initialBlocksState } from "../redux/blocks";
-import { initialState as initialGroupState } from "../redux/group";
-import { setBlocks } from "../redux/blocks";
-import { setGroup } from "../redux/group";
-import { toast } from "react-toastify";
-import { useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { CURRENT_LOCAL } from '../constants';
+import GroupOptions from '../components/GroupOptions';
+import { RootState } from '../redux/store';
+import { initialState as initialBlocksState } from '../redux/blocks';
+import { initialState as initialGroupState } from '../redux/group';
+import { setBlocks } from '../redux/blocks';
+import { setGroup } from '../redux/group';
+import { toast } from 'react-toastify';
+import { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 async function fetcher(url: string, config: AxiosRequestConfig = {}) {
   try {
     const response = await axios({
       url,
       withCredentials: true,
-      ...config,
+      ...config
     });
     return response.data;
   } catch (error) {
@@ -36,7 +36,7 @@ async function fetcher(url: string, config: AxiosRequestConfig = {}) {
 }
 
 export function useGroups() {
-  return useQuery<GroupTypeResponse[]>(["block_group"], () =>
+  return useQuery<GroupTypeResponse[]>(['block_group'], () =>
     fetcher(`/open_api/block_group/list`)
   );
 }
@@ -53,13 +53,13 @@ export function useGroup({ id }: { id?: number }) {
   }, [id]);
 
   return useQuery<GroupTypeResponse>(
-    ["block_group", id],
+    ['block_group', id],
     () =>
       fetcher(`/open_api/block_group`, {
-        method: "GET",
+        method: 'GET',
         params: {
-          id,
-        },
+          id
+        }
       }),
     {
       enabled: !!id,
@@ -72,7 +72,7 @@ export function useGroup({ id }: { id?: number }) {
         if (jsonContent) {
           dispatch(setBlocks(JSON.parse(jsonContent)));
         }
-      },
+      }
     }
   );
 }
@@ -89,20 +89,20 @@ export function useCreateOrUpdateGroup({ id }: { id?: number }) {
       const { itemBlockGroups, ...groupOmitItemBlockGroups } = group;
 
       let data: {
-        blockGroup: Omit<GroupTypeStore, "itemBlockGroups"> & {
+        blockGroup: Omit<GroupTypeStore, 'itemBlockGroups'> & {
           jsonContent: string;
         };
         locale: string;
         itemBlockGroup?: {
-          itemId?: itemBlockGroupsType["itemId"];
-          itemType?: itemBlockGroupsType["itemType"];
+          itemId?: itemBlockGroupsType['itemId'];
+          itemType?: itemBlockGroupsType['itemType'];
         };
       } = {
         blockGroup: {
           ...groupOmitItemBlockGroups,
-          jsonContent: JSON.stringify(blocks),
+          jsonContent: JSON.stringify(blocks)
         },
-        locale: CURRENT_LOCAL,
+        locale: CURRENT_LOCAL
       };
 
       if (id) {
@@ -111,14 +111,17 @@ export function useCreateOrUpdateGroup({ id }: { id?: number }) {
         if (windowConstants.itemType && windowConstants.itemId) {
           data.itemBlockGroup = {
             itemType: windowConstants.itemType,
-            itemId: windowConstants.itemId,
+            itemId: windowConstants.itemId
           };
+
+          // to generate it with the back when we create a new block.
+          data.blockGroup.slug = null;
         }
       }
 
       return fetcher(`/open_api/block_group`, {
-        method: id ? "PATCH" : "POST",
-        data,
+        method: id ? 'PATCH' : 'POST',
+        data
       });
     },
     {
@@ -131,19 +134,19 @@ export function useCreateOrUpdateGroup({ id }: { id?: number }) {
             history.push(`/edit/${data.id}`);
           }
         }
-      },
+      }
     }
   );
 }
 
 export function useDeleteGroup({ onSuccess }: { onSuccess: () => any }) {
   return useMutation(
-    ({ id }: { id: GroupTypeStore["id"] }) =>
+    ({ id }: { id: GroupTypeStore['id'] }) =>
       fetcher(`/open_api/block_group/${id}`, {
-        method: "DELETE",
+        method: 'DELETE'
       }),
     {
-      onSuccess,
+      onSuccess
     }
   );
 }
@@ -152,14 +155,14 @@ export function useDuplicateGroup() {
   let history = useHistory();
 
   return useMutation(
-    ({ id }: { id: GroupTypeStore["id"] }) =>
+    ({ id }: { id: GroupTypeStore['id'] }) =>
       fetcher(`/open_api/block_group/duplicate/${id}`, {
-        method: "POST",
+        method: 'POST'
       }),
     {
-      onSuccess: (newGroupId: GroupTypeStore["id"]) => {
+      onSuccess: (newGroupId: GroupTypeStore['id']) => {
         history.push(`/edit/${newGroupId}`);
-      },
+      }
     }
   );
 }
@@ -171,36 +174,36 @@ export function useLibraryImage(options: {
   title?: string | null;
 }) {
   return useQuery(
-    ["LibraryImage", options],
+    ['LibraryImage', options],
     () =>
       fetcher(`/open_api/library/image`, {
-        method: "GET",
+        method: 'GET',
         params: {
           id: options.id || null,
           limit: options.limit || 5,
           offset: options.offset || 0,
-          title: options.title || null,
-        },
+          title: options.title || null
+        }
       }),
     {
       keepPreviousData: true,
-      onSuccess: (data: Array<LibraryImage>) => {},
+      onSuccess: (data: Array<LibraryImage>) => {}
     }
   );
 }
 
 export function useLibraryImageById(id: number | null) {
   return useQuery(
-    ["LibraryImage", id],
+    ['LibraryImage', id],
     () =>
       fetcher(`/open_api/library/image`, {
-        method: "GET",
+        method: 'GET',
         params: {
-          id: id || null,
-        },
+          id: id || null
+        }
       }),
     {
-      enabled: !!id,
+      enabled: !!id
     }
   );
 }
@@ -209,28 +212,28 @@ export function useCreateImage() {
   const queryClient = useQueryClient();
   return useMutation<LibraryImage, ErrorType, FormData>(
     (data) => {
-      if (!data.has("locale")) {
-        data.set("locale", CURRENT_LOCAL);
+      if (!data.has('locale')) {
+        data.set('locale', CURRENT_LOCAL);
       }
 
       return fetcher(`/open_api/library/image`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "content-type": "multipart/form-data",
+          'content-type': 'multipart/form-data'
         },
-        data,
+        data
       });
     },
     {
       onSuccess: (data) => {
-        queryClient.setQueryData(["LibraryImage"], (oldData) => {
+        queryClient.setQueryData(['LibraryImage'], (oldData) => {
           if (oldData && Array.isArray(oldData)) {
             return [...oldData, data];
           }
 
           return oldData;
         });
-      },
+      }
     }
   );
 }
@@ -238,42 +241,42 @@ export function useCreateImage() {
 export function useDeleteImage() {
   const queryClient = useQueryClient();
   return useMutation(
-    (id: LibraryImage["id"]) => {
+    (id: LibraryImage['id']) => {
       return fetcher(`/open_api/library/image/${id}`, {
-        method: "DELETE",
+        method: 'DELETE'
       });
     },
     {
       onSuccess: (_, id) => {
-        queryClient.setQueryData(["LibraryImage"], (oldData) => {
+        queryClient.setQueryData(['LibraryImage'], (oldData) => {
           if (oldData && Array.isArray(oldData)) {
             return oldData.filter((i) => i.id !== id);
           }
 
           return oldData;
         });
-      },
+      }
     }
   );
 }
 export function useUpdateImage() {
   const queryClient = useQueryClient();
   return useMutation(
-    (id: LibraryImage["id"]) => {
+    (id: LibraryImage['id']) => {
       return fetcher(`/open_api/library/image/${id}`, {
-        method: "POST",
+        method: 'POST'
       });
     },
     {
       onSuccess: (data, id) => {
-        queryClient.setQueryData(["LibraryImage"], (oldData) => {
+        queryClient.setQueryData(['LibraryImage'], (oldData) => {
           if (oldData && Array.isArray(oldData)) {
             return oldData.map((i) => (i.id === id ? data : i));
           }
 
           return oldData;
         });
-      },
+      }
     }
   );
 }
@@ -285,16 +288,16 @@ export function useLinkContentToGroup() {
   );
 
   return useMutation(
-    ({ id }: { id: GroupTypeStore["id"] }) =>
+    ({ id }: { id: GroupTypeStore['id'] }) =>
       fetcher(`/open_api/item_block_group`, {
-        method: "POST",
+        method: 'POST',
         data: {
           itemBlockGroup: {
             blockGroupId: id,
             itemId: windowConstants.itemId,
-            itemType: windowConstants.itemType,
-          },
-        },
+            itemType: windowConstants.itemType
+          }
+        }
       }),
     {
       onSuccess: (data: GroupTypeResponse) => {
@@ -306,7 +309,7 @@ export function useLinkContentToGroup() {
         if (jsonContent) {
           dispatch(setBlocks(JSON.parse(jsonContent)));
         }
-      },
+      }
     }
   );
 }
@@ -315,9 +318,9 @@ export function useUnlinkContentFromGroup() {
   const dispatch = useDispatch();
 
   return useMutation(
-    ({ id }: { id: GroupTypeStore["id"] }) =>
+    ({ id }: { id: GroupTypeStore['id'] }) =>
       fetcher(`/open_api/item_block_group/${id}`, {
-        method: "DELETE",
+        method: 'DELETE'
       }),
     {
       onSuccess: () => {
@@ -326,40 +329,40 @@ export function useUnlinkContentFromGroup() {
         dispatch(initializeWindowConstantsGroupId());
         dispatch(setUnsaved(false));
 
-        toast.success("Le groupe a bien été délié");
-      },
+        toast.success('Le groupe a bien été délié');
+      }
     }
   );
 }
 
 export function useProductByTitle(title: string | null) {
-    return useQuery(
-        ["Product", title],
-        () =>
-            fetcher(`/open_api/product/search`, {
-                method: "GET",
-                params: {
-                    title: title || null,
-                },
-            }),
-        {
-            enabled: !!title,
+  return useQuery(
+    ['Product', title],
+    () =>
+      fetcher(`/open_api/product/search`, {
+        method: 'GET',
+        params: {
+          title: title || null
         }
-    );
+      }),
+    {
+      enabled: !!title
+    }
+  );
 }
 
 export function useProductsByIds(ids: string | null) {
   return useQuery(
-      ["Product", ids],
-      () =>
-          fetcher(`/open_api/product/search`, {
-              method: "GET",
-              params: {
-                  ids: ids || null,
-              },
-          }),
-      {
-          enabled: !!ids,
-      }
+    ['Product', ids],
+    () =>
+      fetcher(`/open_api/product/search`, {
+        method: 'GET',
+        params: {
+          ids: ids || null
+        }
+      }),
+    {
+      enabled: !!ids
+    }
   );
 }

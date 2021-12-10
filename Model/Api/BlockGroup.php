@@ -190,7 +190,7 @@ class BlockGroup extends BaseApiModel
      * @param string $slug
      * @return BlockGroup
      */
-    public function setSlug(string $slug): BlockGroup
+    public function setSlug(?string $slug): BlockGroup
     {
         $this->slug = $slug;
         return $this;
