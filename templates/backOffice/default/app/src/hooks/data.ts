@@ -11,7 +11,6 @@ import { initializeWindowConstantsGroupId, setUnsaved } from '../redux/ui';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
-import { CURRENT_LOCAL } from '../constants';
 import GroupOptions from '../components/GroupOptions';
 import { RootState } from '../redux/store';
 import { initialState as initialBlocksState } from '../redux/blocks';
@@ -92,7 +91,6 @@ export function useCreateOrUpdateGroup({ id }: { id?: number }) {
         blockGroup: Omit<GroupTypeStore, 'itemBlockGroups'> & {
           jsonContent: string;
         };
-        locale: string;
         itemBlockGroup?: {
           itemId?: itemBlockGroupsType['itemId'];
           itemType?: itemBlockGroupsType['itemType'];
@@ -102,7 +100,6 @@ export function useCreateOrUpdateGroup({ id }: { id?: number }) {
           ...groupOmitItemBlockGroups,
           jsonContent: JSON.stringify(blocks)
         },
-        locale: CURRENT_LOCAL
       };
 
       if (id) {
@@ -212,10 +209,6 @@ export function useCreateImage() {
   const queryClient = useQueryClient();
   return useMutation<LibraryImage, ErrorType, FormData>(
     (data) => {
-      if (!data.has('locale')) {
-        data.set('locale', CURRENT_LOCAL);
-      }
-
       return fetcher(`/open_api/library/image`, {
         method: 'POST',
         headers: {
