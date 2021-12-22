@@ -67,6 +67,10 @@ class BlockGroupController extends BaseAdminOpenApiController
         $openApiBlockGroup = $modelFactory->buildModel('BlockGroup', $data['blockGroup']);
         $openApiBlockGroup->validate(self::GROUP_CREATE);
 
+        if(!isset($data['locale'])){
+            $data['locale'] = $request->getSession()->getAdminLang()->getLocale();
+        }
+
         /** @var BlockGroup $blockGroup */
         $blockGroup = $openApiBlockGroup->toTheliaModel($data['locale']);
         $blockGroup->save();
@@ -127,6 +131,10 @@ class BlockGroupController extends BaseAdminOpenApiController
         /** @var \TheliaBlocks\Model\Api\BlockGroup $openApiBlockGroup */
         $openApiBlockGroup = $modelFactory->buildModel('BlockGroup', $data['blockGroup']);
         $openApiBlockGroup->validate(self::GROUP_UPDATE);
+
+        if(!isset($data['locale'])){
+            $data['locale'] = $request->getSession()->getAdminLang()->getLocale();
+        }
 
         /** @var BlockGroup $blockGroup */
         $blockGroup = $openApiBlockGroup->toTheliaModel($data['locale']);
