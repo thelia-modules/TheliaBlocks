@@ -2,6 +2,7 @@
 
 namespace TheliaBlocks\Model;
 
+use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Connection\ConnectionInterface;
 use TheliaBlocks\Model\Base\BlockGroup as BaseBlockGroup;
 use TheliaBlocks\Model\Event\BlockGroupEvent;
@@ -18,12 +19,13 @@ use TheliaBlocks\Model\Event\BlockGroupEvent;
 class BlockGroup extends BaseBlockGroup
 {
     const SLUG_MAX_LENGTH = 45;
+
     /**
      * Code to be run before inserting to database
      * @param  ConnectionInterface $con
      * @return boolean
      */
-    public function preInsert(ConnectionInterface $con = null)
+    public function preSave(ConnectionInterface $con = null)
     {
         if (null === $this->getSlug()) {
             $this->setSlug($this->slugify($this->getTitle()));
@@ -40,7 +42,13 @@ class BlockGroup extends BaseBlockGroup
             $iterationSuffix = "_".$iteration;
             $iteratedSlug =  substr($baseSlug,0, self::SLUG_MAX_LENGTH - mb_strlen($iterationSuffix)).$iterationSuffix;
         }
-        if (null === BlockGroupQuery::create()->filterBySlug($iteratedSlug)->findOne()) {
+
+        $alreadyExistForAnotherGroupQuery = BlockGroupQuery::create()->filterBySlug($iteratedSlug);
+        if (null !== $this->getId()) {
+            $alreadyExistForAnotherGroupQuery->filterById($this->getId(), Criteria::NOT_EQUAL);
+        }
+
+        if (null === $alreadyExistForAnotherGroupQuery->findOne()) {
             return $iteratedSlug;
         }
 
