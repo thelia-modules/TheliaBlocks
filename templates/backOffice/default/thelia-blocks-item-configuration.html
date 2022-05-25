@@ -1,8 +1,5 @@
 {block name="after-admin-css"}
-    {stylesheets file='app/dist/style.css' template="default" source="TheliaBlocks"}
-        <link rel="stylesheet" href="{$asset_url}" />
-    {/stylesheets}
-
+    <link rel="stylesheet" href="{encore_module_asset file='vendor/index.css' module="TheliaBlocks"}" />
     {hook name="thelia.blocks.plugincss"}
 {/block}
 
@@ -10,38 +7,28 @@
     <div id="thelia-blocks-root-{$itemId}-{$itemType}" class="thelia-blocks-ui"></div>
 
     <script>
-        window.global = window;
         window.groupId = {$groupId|default:'null'};
         window.itemId = {$itemId};
         window.itemType = "{$itemType}";
     </script>
 {/block}
 
+
 {block name="javascript-last-call"}
-    {if $smarty.server.THELIABLOCKS_DEV|default:false}
-        <script type="module">
-            import RefreshRuntime from 'http://localhost:3000/@react-refresh'
-            RefreshRuntime.injectIntoGlobalHook(window)
-            window.$RefreshReg$ = () => {}
-            window.$RefreshSig$ = () => (type) => type
-            window.__vite_plugin_react_preamble_installed__ = true
-        </script>
-        <script type="module" src="http://localhost:3000/@vite/client"></script>
-
-        {hook name="thelia.blocks.plugins"}
-
-        <script type="module" src="http://localhost:3000/src/dev/editpage.js"></script>
-    {else}
-        <script type="text/javascript" crossorigin src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
-        <script type="text/javascript" crossorigin src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
-        {javascripts file='app/dist/thelia-blocks.umd.js' template="default" source="TheliaBlocks"}
-            <script type="text/javascript" src="{$asset_url}"></script>
-        {/javascripts}
-
-        {hook name="thelia.blocks.plugins"}
 
         <script>
-            ReactDOM.render(React.createElement(TheliaBlocks.EditPage), document.getElementById('thelia-blocks-root-{$itemId}-{$itemType}'))
+            API_ROOT = "{navigate to='index'}/"
         </script>
-    {/if}
+
+        <script type="text/javascript" crossorigin src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+        <script type="text/javascript" crossorigin src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+        <script type="text/javascript" src="{encore_module_asset file='vendor/index.global.js' module="TheliaBlocks"}"></script>
+
+        {hook name="thelia.blocks.plugins"}
+
+        {literal}
+        <script>
+             ReactDOM.render(React.createElement(TheliaBlocks.EditPage, {apiUrl: API_ROOT}, null), document.getElementById('thelia-blocks-root'))
+        </script>
+        {/literal}
 {/block}
