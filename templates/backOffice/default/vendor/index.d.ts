@@ -4,4 +4,4 @@ declare function BlocksEditor({
   apiUrl: string;
 }): JSX.Element | null;
 
-export { BlocksEditor };
+export { BlocksEditor, BlocksList };

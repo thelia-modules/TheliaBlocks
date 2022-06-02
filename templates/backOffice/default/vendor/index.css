@@ -1,13 +1,14 @@
+/* src/index.css */
 *,
-:before,
-:after {
+::before,
+::after {
   box-sizing: border-box;
   border-width: 0;
   border-style: solid;
   border-color: #e5e7eb;
 }
-:before,
-:after {
+::before,
+::after {
   --tw-content: "";
 }
 html {
@@ -16,8 +17,8 @@ html {
   -moz-tab-size: 4;
   tab-size: 4;
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 body {
   margin: 0;
@@ -53,7 +54,7 @@ kbd,
 samp,
 pre {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    Liberation Mono, Courier New, monospace;
+    "Liberation Mono", "Courier New", monospace;
   font-size: 1em;
 }
 small {
@@ -210,8 +211,11 @@ select {
   background-color: #fff;
   border-color: #6b7280;
   border-width: 1px;
-  border-radius: 0;
-  padding: 0.5rem 0.75rem;
+  border-radius: 0px;
+  padding-top: 0.5rem;
+  padding-right: 0.75rem;
+  padding-bottom: 0.5rem;
+  padding-left: 0.75rem;
   font-size: 1rem;
   line-height: 1.5rem;
   --tw-shadow: 0 0 #0000;
@@ -303,7 +307,7 @@ select {
   --tw-shadow: 0 0 #0000;
 }
 [type="checkbox"] {
-  border-radius: 0;
+  border-radius: 0px;
 }
 [type="radio"] {
   border-radius: 100%;
@@ -370,8 +374,8 @@ select {
   outline: 1px auto -webkit-focus-ring-color;
 }
 *,
-:before,
-:after {
+::before,
+::after {
   --tw-translate-x: 0;
   --tw-translate-y: 0;
   --tw-rotate: 0;
@@ -415,6 +419,17 @@ select {
   --tw-backdrop-saturate: ;
   --tw-backdrop-sepia: ;
 }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
 .visible {
   visibility: visible;
 }
@@ -428,19 +443,22 @@ select {
   position: sticky;
 }
 .inset-0 {
-  inset: 0;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
 }
 .top-full {
   top: 100%;
 }
 .right-0 {
-  right: 0;
+  right: 0px;
 }
 .left-0 {
-  left: 0;
+  left: 0px;
 }
 .bottom-0 {
-  bottom: 0;
+  bottom: 0px;
 }
 .mx-auto {
   margin-left: auto;
@@ -453,6 +471,9 @@ select {
 .my-12 {
   margin-top: 3rem;
   margin-bottom: 3rem;
+}
+.mb-8 {
+  margin-bottom: 2rem;
 }
 .mt-4 {
   margin-top: 1rem;
@@ -470,7 +491,7 @@ select {
   margin-bottom: 1.5rem;
 }
 .mb-0 {
-  margin-bottom: 0;
+  margin-bottom: 0px;
 }
 .mt-8 {
   margin-top: 2rem;
@@ -492,6 +513,9 @@ select {
 }
 .flex {
   display: flex;
+}
+.table {
+  display: table;
 }
 .hidden {
   display: none;
@@ -693,6 +717,10 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(235 255 248 / var(--tw-bg-opacity));
 }
+.bg-gray-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(107 114 128 / var(--tw-bg-opacity));
+}
 .bg-slate-900 {
   --tw-bg-opacity: 1;
   background-color: rgb(15 23 42 / var(--tw-bg-opacity));
@@ -704,6 +732,10 @@ select {
 .bg-lightCharbon {
   --tw-bg-opacity: 1;
   background-color: rgb(68 68 68 / var(--tw-bg-opacity));
+}
+.bg-red {
+  --tw-bg-opacity: 1;
+  background-color: rgb(210 25 25 / var(--tw-bg-opacity));
 }
 .p-4 {
   padding: 1rem;
@@ -789,6 +821,10 @@ select {
 .text-xl {
   font-size: 1.25rem;
   line-height: 1.75rem;
+}
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
 }
 .text-base {
   font-size: 1rem;
@@ -905,26 +941,35 @@ input[type="checkbox"]:focus {
 }
 .Modal-addBlocks {
   position: absolute;
-  inset: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
   margin: auto;
   height: max-content;
   width: 60%;
   border-radius: 8px;
-  background-color: #fff;
+  background-color: white;
 }
 .Modal-htmlWarning {
   position: absolute;
-  inset: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
   margin: auto;
   height: max-content;
   width: 25%;
   border-radius: 8px;
-  background-color: #fff;
+  background-color: white;
 }
 .Overlay {
   position: fixed;
-  inset: 0;
-  background-color: #00000080;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 @media screen and (max-width: 1500px) {
   .Modal-htmlWarning {
@@ -973,6 +1018,10 @@ input[type="checkbox"]:focus {
 .hover\:bg-pearlMedium:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(235 235 235 / var(--tw-bg-opacity));
+}
+.hover\:bg-gray-700:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(55 65 81 / var(--tw-bg-opacity));
 }
 .hover\:bg-gray-300:hover {
   --tw-bg-opacity: 1;
@@ -1140,6 +1189,8 @@ input[type="checkbox"]:focus {
     padding-right: 15rem;
   }
 }
+
+/* ../../node_modules/tippy.js/dist/tippy.css */
 .tippy-box[data-animation="fade"][data-state="hidden"] {
   opacity: 0;
 }
