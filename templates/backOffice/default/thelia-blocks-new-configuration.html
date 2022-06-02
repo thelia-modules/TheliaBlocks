@@ -17,10 +17,14 @@
 {/block}
 
 {block name="main-content"}
-    <div id="thelia-blocks-root" class="thelia-blocks-ui"></div>
+    <div id="thelia-blocks-root-new" class="thelia-blocks-ui"></div>
 {/block}
 
 {block name="javascript-last-call"}
+
+        <script>
+            API_ROOT = "{navigate to='index'}/open_api"
+        </script>
 
         <script type="text/javascript" crossorigin src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
         <script type="text/javascript" crossorigin src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
@@ -28,10 +32,12 @@
 
         {hook name="thelia.blocks.plugins"}
 
-        <script>
-            let API_ROOT = "{navigate to='index'}/open_api";
-            {literal}
-             ReactDOM.render(React.createElement(TheliaBlocks.BlocksList, {apiUrl: API_ROOT}, null), document.getElementById('thelia-blocks-root'))
-            {/literal}
+        {literal}
+        <script type="module">
+            let containerId = "thelia-blocks-root-new";
+            let CONTAINER = document.getElementById(containerId);
+            let locales = [{id:0, title: 'en_US',code: 'en_US', active: true}, {id:1, title: 'fr_FR', code: 'fr_FR', active: false}];
+            ReactDOM.render(React.createElement(TheliaBlocks.BlocksEditor, {apiUrl: API_ROOT, containerId: containerId, groupId: null, locales}, null), CONTAINER)
         </script>
+        {/literal}
 {/block}
