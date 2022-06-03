@@ -13,14 +13,13 @@ use Thelia\Type\BooleanOrBothType;
 use TheliaBlocks\Model\BlockGroupQuery;
 
 /**
- * Class BlockGroup
- * @package TheliaBlocks\Loop
+ * Class BlockGroup.
  *
- * @method int[]          getId()
- * @method string[]       getSlug()
- * @method string       getItemType()
- * @method integer      getItemId()
- * @method bool|string  getVisible()
+ * @method int[]       getId()
+ * @method string[]    getSlug()
+ * @method string      getItemType()
+ * @method int         getItemId()
+ * @method bool|string getVisible()
  */
 class BlockGroup extends BaseI18nLoop implements PropelSearchLoopInterface
 {
@@ -82,14 +81,9 @@ class BlockGroup extends BaseI18nLoop implements PropelSearchLoopInterface
 
     public function parseResults(LoopResult $loopResult)
     {
-        /** @var \TheliaBlocks\Model\BlockGroup  $entry */
+        /** @var \TheliaBlocks\Model\BlockGroup $entry */
         foreach ($loopResult->getResultDataCollection() as $entry) {
-            $blockRenders = [];
-
-            foreach (json_decode($entry->getVirtualColumn('i18n_JSON_CONTENT'), true) as $block) {
-                $blockRenders[] = $this->container->get("thelia.parser")->render("blocks".DS.$block['type']['id'].".html", $block);
-            }
-            $htmlRender = implode(' ', $blockRenders);
+            $htmlRender = $this->container->get('theliablocks.json.block')->renderJsonBlocks($entry->getVirtualColumn('i18n_JSON_CONTENT'));
 
             $content = json_decode($entry->getVirtualColumn('i18n_JSON_CONTENT'), true);
 

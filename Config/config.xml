@@ -4,6 +4,11 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://thelia.net/schema/dic/config http://thelia.net/schema/dic/config/thelia-1.0.xsd">
 
+    <services>
+      <service id="theliablocks.json.block" alias="TheliaBlocks\Service\JsonBlockService" public="true">
+      </service>
+    </services>
+
     <hooks>
         <hook id="theliablocks.hook.menu" class="TheliaBlocks\Hook\TheliaBlocksMenuHook" scope="request">
             <tag name="hook.event_listener" event="main.top-menu-tools" type="back" method="onMainTopMenuTools"/>
