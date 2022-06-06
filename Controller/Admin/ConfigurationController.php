@@ -12,10 +12,8 @@
 
 namespace TheliaBlocks\Controller\Admin;
 
-use OpenApi\Annotations as OA;
 use Symfony\Component\Routing\Annotation\Route;
 use Thelia\Controller\Admin\BaseAdminController;
-use Thelia\Core\HttpFoundation\Request;
 use TheliaBlocks\Service\JsonBlockService;
 use TheliaBlocks\TheliaBlocks;
 
@@ -62,23 +60,6 @@ class ConfigurationController extends BaseAdminController
     {
         return $this->render('thelia-blocks-item-configuration', [
             'groupId' => $blockGroupId,
-        ]);
-    }
-
-    /**
-     * @Route("/preview", name="_preview", methods="POST")
-     *     @OA\Parameter(
-     *          name="json",
-     *          required=true,
-     *          @OA\Schema(
-     *              type="string"
-     *          )
-     *     ),
-     */
-    public function previewBlockGroup(Request $request)
-    {
-        return $this->render('thelia-blocks-preview', [
-            'json' => $request->get('json'),
         ]);
     }
 }

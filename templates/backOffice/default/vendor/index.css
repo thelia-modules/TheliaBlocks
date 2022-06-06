@@ -740,6 +740,9 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(68 68 68 / var(--tw-bg-opacity));
 }
+.p-8 {
+  padding: 2rem;
+}
 .p-4 {
   padding: 1rem;
 }
@@ -748,9 +751,6 @@ select {
 }
 .p-2 {
   padding: 0.5rem;
-}
-.p-8 {
-  padding: 2rem;
 }
 .px-4 {
   padding-left: 1rem;
@@ -816,6 +816,10 @@ select {
 .text-center {
   text-align: center;
 }
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -835,10 +839,6 @@ select {
 .text-base {
   font-size: 1rem;
   line-height: 1.5rem;
-}
-.text-3xl {
-  font-size: 1.875rem;
-  line-height: 2.25rem;
 }
 .font-semibold {
   font-weight: 600;
@@ -863,6 +863,10 @@ select {
 }
 .tracking-normal {
   letter-spacing: 0em;
+}
+.text-red {
+  --tw-text-opacity: 1;
+  color: rgb(210 25 25 / var(--tw-text-opacity));
 }
 .text-darkCharbon {
   --tw-text-opacity: 1;
@@ -891,10 +895,6 @@ select {
 .text-greenDark {
   --tw-text-opacity: 1;
   color: rgb(0 137 88 / var(--tw-text-opacity));
-}
-.text-red {
-  --tw-text-opacity: 1;
-  color: rgb(210 25 25 / var(--tw-text-opacity));
 }
 .text-green {
   --tw-text-opacity: 1;
@@ -957,7 +957,7 @@ input[type="checkbox"]:focus {
   outline-offset: 2px;
   --tw-ring-color: transparent;
 }
-.Modal-addBlocks {
+.Modal-TheliaBlocks {
   position: absolute;
   left: 0;
   right: 0;
@@ -1005,7 +1005,7 @@ input[type="checkbox"]:focus {
   }
 }
 @media screen and (max-width: 768px) {
-  .Modal-addBlocks {
+  .Modal-TheliaBlocks {
     width: 90%;
     height: 50%;
     overflow: scroll;
