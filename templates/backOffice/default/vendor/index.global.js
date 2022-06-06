@@ -5,6 +5,7 @@ var TheliaBlocks = (() => {
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
   var __markAsModule = (target) => __defProp(target, "__esModule", { value: true });
   var __esm = (fn4, res) => function __init() {
     return fn4 && (res = (0, fn4[__getOwnPropNames(fn4)[0]])(fn4 = 0)), res;
@@ -32,6 +33,10 @@ var TheliaBlocks = (() => {
       return cache2 && cache2.get(module) || (temp = __reExport(__markAsModule({}), module, 1), cache2 && cache2.set(module, temp), temp);
     };
   })(typeof WeakMap !== "undefined" ? /* @__PURE__ */ new WeakMap() : 0);
+  var __publicField = (obj, key, value) => {
+    __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+    return value;
+  };
 
   // external-global:react
   var require_react = __commonJS({
@@ -7083,8 +7088,8 @@ var TheliaBlocks = (() => {
               return describeNativeComponentFrame(fn4, false);
             }
           }
-          function shouldConstruct(Component) {
-            var prototype = Component.prototype;
+          function shouldConstruct(Component2) {
+            var prototype = Component2.prototype;
             return !!(prototype && prototype.isReactComponent);
           }
           function describeUnknownElementTypeFrameInDEV(type, source, ownerFn) {
@@ -13674,9 +13679,9 @@ var TheliaBlocks = (() => {
           var contextStackCursor = createCursor(emptyContextObject);
           var didPerformWorkStackCursor = createCursor(false);
           var previousContext = emptyContextObject;
-          function getUnmaskedContext(workInProgress2, Component, didPushOwnContextIfProvider) {
+          function getUnmaskedContext(workInProgress2, Component2, didPushOwnContextIfProvider) {
             {
-              if (didPushOwnContextIfProvider && isContextProvider(Component)) {
+              if (didPushOwnContextIfProvider && isContextProvider(Component2)) {
                 return previousContext;
               }
               return contextStackCursor.current;
@@ -13821,8 +13826,8 @@ var TheliaBlocks = (() => {
                   case HostRoot:
                     return node.stateNode.context;
                   case ClassComponent: {
-                    var Component = node.type;
-                    if (isContextProvider(Component)) {
+                    var Component2 = node.type;
+                    if (isContextProvider(Component2)) {
                       return node.stateNode.__reactInternalMemoizedMergedChildContext;
                     }
                     break;
@@ -14234,10 +14239,10 @@ var TheliaBlocks = (() => {
               pendingLegacyContextWarning = /* @__PURE__ */ new Map();
             };
           }
-          function resolveDefaultProps(Component, baseProps) {
-            if (Component && Component.defaultProps) {
+          function resolveDefaultProps(Component2, baseProps) {
+            if (Component2 && Component2.defaultProps) {
               var props = _assign({}, baseProps);
-              var defaultProps3 = Component.defaultProps;
+              var defaultProps3 = Component2.defaultProps;
               for (var propName in defaultProps3) {
                 if (props[propName] === void 0) {
                   props[propName] = defaultProps3[propName];
@@ -16553,7 +16558,7 @@ var TheliaBlocks = (() => {
             }
             return true;
           }
-          function renderWithHooks(current2, workInProgress2, Component, props, secondArg, nextRenderLanes) {
+          function renderWithHooks(current2, workInProgress2, Component2, props, secondArg, nextRenderLanes) {
             renderLanes = nextRenderLanes;
             currentlyRenderingFiber$1 = workInProgress2;
             {
@@ -16573,7 +16578,7 @@ var TheliaBlocks = (() => {
                 ReactCurrentDispatcher$1.current = HooksDispatcherOnMountInDEV;
               }
             }
-            var children = Component(props, secondArg);
+            var children = Component2(props, secondArg);
             if (didScheduleRenderPhaseUpdateDuringThisPass) {
               var numberOfReRenders = 0;
               do {
@@ -16594,7 +16599,7 @@ var TheliaBlocks = (() => {
                   hookTypesUpdateIndexDev = -1;
                 }
                 ReactCurrentDispatcher$1.current = HooksDispatcherOnRerenderInDEV;
-                children = Component(props, secondArg);
+                children = Component2(props, secondArg);
               } while (didScheduleRenderPhaseUpdateDuringThisPass);
             }
             ReactCurrentDispatcher$1.current = ContextOnlyDispatcher;
@@ -18181,16 +18186,16 @@ var TheliaBlocks = (() => {
             workInProgress2.child = reconcileChildFibers(workInProgress2, current2.child, null, renderLanes2);
             workInProgress2.child = reconcileChildFibers(workInProgress2, null, nextChildren, renderLanes2);
           }
-          function updateForwardRef(current2, workInProgress2, Component, nextProps, renderLanes2) {
+          function updateForwardRef(current2, workInProgress2, Component2, nextProps, renderLanes2) {
             {
               if (workInProgress2.type !== workInProgress2.elementType) {
-                var innerPropTypes = Component.propTypes;
+                var innerPropTypes = Component2.propTypes;
                 if (innerPropTypes) {
-                  checkPropTypes(innerPropTypes, nextProps, "prop", getComponentName(Component));
+                  checkPropTypes(innerPropTypes, nextProps, "prop", getComponentName(Component2));
                 }
               }
             }
-            var render3 = Component.render;
+            var render3 = Component2.render;
             var ref2 = workInProgress2.ref;
             var nextChildren;
             prepareToReadContext(workInProgress2, renderLanes2);
@@ -18216,10 +18221,10 @@ var TheliaBlocks = (() => {
             reconcileChildren(current2, workInProgress2, nextChildren, renderLanes2);
             return workInProgress2.child;
           }
-          function updateMemoComponent(current2, workInProgress2, Component, nextProps, updateLanes, renderLanes2) {
+          function updateMemoComponent(current2, workInProgress2, Component2, nextProps, updateLanes, renderLanes2) {
             if (current2 === null) {
-              var type = Component.type;
-              if (isSimpleFunctionComponent(type) && Component.compare === null && Component.defaultProps === void 0) {
+              var type = Component2.type;
+              if (isSimpleFunctionComponent(type) && Component2.compare === null && Component2.defaultProps === void 0) {
                 var resolvedType = type;
                 {
                   resolvedType = resolveFunctionForHotReloading(type);
@@ -18237,14 +18242,14 @@ var TheliaBlocks = (() => {
                   checkPropTypes(innerPropTypes, nextProps, "prop", getComponentName(type));
                 }
               }
-              var child = createFiberFromTypeAndProps(Component.type, null, nextProps, workInProgress2, workInProgress2.mode, renderLanes2);
+              var child = createFiberFromTypeAndProps(Component2.type, null, nextProps, workInProgress2, workInProgress2.mode, renderLanes2);
               child.ref = workInProgress2.ref;
               child.return = workInProgress2;
               workInProgress2.child = child;
               return child;
             }
             {
-              var _type = Component.type;
+              var _type = Component2.type;
               var _innerPropTypes = _type.propTypes;
               if (_innerPropTypes) {
                 checkPropTypes(_innerPropTypes, nextProps, "prop", getComponentName(_type));
@@ -18253,7 +18258,7 @@ var TheliaBlocks = (() => {
             var currentChild = current2.child;
             if (!includesSomeLane(updateLanes, renderLanes2)) {
               var prevProps = currentChild.memoizedProps;
-              var compare = Component.compare;
+              var compare = Component2.compare;
               compare = compare !== null ? compare : shallowEqual2;
               if (compare(prevProps, nextProps) && current2.ref === workInProgress2.ref) {
                 return bailoutOnAlreadyFinishedWork(current2, workInProgress2, renderLanes2);
@@ -18266,7 +18271,7 @@ var TheliaBlocks = (() => {
             workInProgress2.child = newChild;
             return newChild;
           }
-          function updateSimpleMemoComponent(current2, workInProgress2, Component, nextProps, updateLanes, renderLanes2) {
+          function updateSimpleMemoComponent(current2, workInProgress2, Component2, nextProps, updateLanes, renderLanes2) {
             {
               if (workInProgress2.type !== workInProgress2.elementType) {
                 var outerMemoType = workInProgress2.elementType;
@@ -18298,7 +18303,7 @@ var TheliaBlocks = (() => {
                 }
               }
             }
-            return updateFunctionComponent(current2, workInProgress2, Component, nextProps, renderLanes2);
+            return updateFunctionComponent(current2, workInProgress2, Component2, nextProps, renderLanes2);
           }
           function updateOffscreenComponent(current2, workInProgress2, renderLanes2) {
             var nextProps = workInProgress2.pendingProps;
@@ -18379,18 +18384,18 @@ var TheliaBlocks = (() => {
               workInProgress2.flags |= Ref;
             }
           }
-          function updateFunctionComponent(current2, workInProgress2, Component, nextProps, renderLanes2) {
+          function updateFunctionComponent(current2, workInProgress2, Component2, nextProps, renderLanes2) {
             {
               if (workInProgress2.type !== workInProgress2.elementType) {
-                var innerPropTypes = Component.propTypes;
+                var innerPropTypes = Component2.propTypes;
                 if (innerPropTypes) {
-                  checkPropTypes(innerPropTypes, nextProps, "prop", getComponentName(Component));
+                  checkPropTypes(innerPropTypes, nextProps, "prop", getComponentName(Component2));
                 }
               }
             }
             var context;
             {
-              var unmaskedContext = getUnmaskedContext(workInProgress2, Component, true);
+              var unmaskedContext = getUnmaskedContext(workInProgress2, Component2, true);
               context = getMaskedContext(workInProgress2, unmaskedContext);
             }
             var nextChildren;
@@ -18398,11 +18403,11 @@ var TheliaBlocks = (() => {
             {
               ReactCurrentOwner$1.current = workInProgress2;
               setIsRendering(true);
-              nextChildren = renderWithHooks(current2, workInProgress2, Component, nextProps, context, renderLanes2);
+              nextChildren = renderWithHooks(current2, workInProgress2, Component2, nextProps, context, renderLanes2);
               if (workInProgress2.mode & StrictMode) {
                 disableLogs();
                 try {
-                  nextChildren = renderWithHooks(current2, workInProgress2, Component, nextProps, context, renderLanes2);
+                  nextChildren = renderWithHooks(current2, workInProgress2, Component2, nextProps, context, renderLanes2);
                 } finally {
                   reenableLogs();
                 }
@@ -18417,17 +18422,17 @@ var TheliaBlocks = (() => {
             reconcileChildren(current2, workInProgress2, nextChildren, renderLanes2);
             return workInProgress2.child;
           }
-          function updateClassComponent(current2, workInProgress2, Component, nextProps, renderLanes2) {
+          function updateClassComponent(current2, workInProgress2, Component2, nextProps, renderLanes2) {
             {
               if (workInProgress2.type !== workInProgress2.elementType) {
-                var innerPropTypes = Component.propTypes;
+                var innerPropTypes = Component2.propTypes;
                 if (innerPropTypes) {
-                  checkPropTypes(innerPropTypes, nextProps, "prop", getComponentName(Component));
+                  checkPropTypes(innerPropTypes, nextProps, "prop", getComponentName(Component2));
                 }
               }
             }
             var hasContext;
-            if (isContextProvider(Component)) {
+            if (isContextProvider(Component2)) {
               hasContext = true;
               pushContextProvider(workInProgress2);
             } else {
@@ -18442,15 +18447,15 @@ var TheliaBlocks = (() => {
                 workInProgress2.alternate = null;
                 workInProgress2.flags |= Placement;
               }
-              constructClassInstance(workInProgress2, Component, nextProps);
-              mountClassInstance(workInProgress2, Component, nextProps, renderLanes2);
+              constructClassInstance(workInProgress2, Component2, nextProps);
+              mountClassInstance(workInProgress2, Component2, nextProps, renderLanes2);
               shouldUpdate = true;
             } else if (current2 === null) {
-              shouldUpdate = resumeMountClassInstance(workInProgress2, Component, nextProps, renderLanes2);
+              shouldUpdate = resumeMountClassInstance(workInProgress2, Component2, nextProps, renderLanes2);
             } else {
-              shouldUpdate = updateClassInstance(current2, workInProgress2, Component, nextProps, renderLanes2);
+              shouldUpdate = updateClassInstance(current2, workInProgress2, Component2, nextProps, renderLanes2);
             }
-            var nextUnitOfWork = finishClassComponent(current2, workInProgress2, Component, shouldUpdate, hasContext, renderLanes2);
+            var nextUnitOfWork = finishClassComponent(current2, workInProgress2, Component2, shouldUpdate, hasContext, renderLanes2);
             {
               var inst = workInProgress2.stateNode;
               if (shouldUpdate && inst.props !== nextProps) {
@@ -18462,19 +18467,19 @@ var TheliaBlocks = (() => {
             }
             return nextUnitOfWork;
           }
-          function finishClassComponent(current2, workInProgress2, Component, shouldUpdate, hasContext, renderLanes2) {
+          function finishClassComponent(current2, workInProgress2, Component2, shouldUpdate, hasContext, renderLanes2) {
             markRef(current2, workInProgress2);
             var didCaptureError = (workInProgress2.flags & DidCapture) !== NoFlags;
             if (!shouldUpdate && !didCaptureError) {
               if (hasContext) {
-                invalidateContextProvider(workInProgress2, Component, false);
+                invalidateContextProvider(workInProgress2, Component2, false);
               }
               return bailoutOnAlreadyFinishedWork(current2, workInProgress2, renderLanes2);
             }
             var instance2 = workInProgress2.stateNode;
             ReactCurrentOwner$1.current = workInProgress2;
             var nextChildren;
-            if (didCaptureError && typeof Component.getDerivedStateFromError !== "function") {
+            if (didCaptureError && typeof Component2.getDerivedStateFromError !== "function") {
               nextChildren = null;
               {
                 stopProfilerTimerIfRunning();
@@ -18502,7 +18507,7 @@ var TheliaBlocks = (() => {
             }
             workInProgress2.memoizedState = instance2.state;
             if (hasContext) {
-              invalidateContextProvider(workInProgress2, Component, true);
+              invalidateContextProvider(workInProgress2, Component2, true);
             }
             return workInProgress2.child;
           }
@@ -18594,60 +18599,60 @@ var TheliaBlocks = (() => {
             var lazyComponent = elementType;
             var payload = lazyComponent._payload;
             var init = lazyComponent._init;
-            var Component = init(payload);
-            workInProgress2.type = Component;
-            var resolvedTag = workInProgress2.tag = resolveLazyComponentTag(Component);
-            var resolvedProps = resolveDefaultProps(Component, props);
+            var Component2 = init(payload);
+            workInProgress2.type = Component2;
+            var resolvedTag = workInProgress2.tag = resolveLazyComponentTag(Component2);
+            var resolvedProps = resolveDefaultProps(Component2, props);
             var child;
             switch (resolvedTag) {
               case FunctionComponent: {
                 {
-                  validateFunctionComponentInDev(workInProgress2, Component);
-                  workInProgress2.type = Component = resolveFunctionForHotReloading(Component);
+                  validateFunctionComponentInDev(workInProgress2, Component2);
+                  workInProgress2.type = Component2 = resolveFunctionForHotReloading(Component2);
                 }
-                child = updateFunctionComponent(null, workInProgress2, Component, resolvedProps, renderLanes2);
+                child = updateFunctionComponent(null, workInProgress2, Component2, resolvedProps, renderLanes2);
                 return child;
               }
               case ClassComponent: {
                 {
-                  workInProgress2.type = Component = resolveClassForHotReloading(Component);
+                  workInProgress2.type = Component2 = resolveClassForHotReloading(Component2);
                 }
-                child = updateClassComponent(null, workInProgress2, Component, resolvedProps, renderLanes2);
+                child = updateClassComponent(null, workInProgress2, Component2, resolvedProps, renderLanes2);
                 return child;
               }
               case ForwardRef: {
                 {
-                  workInProgress2.type = Component = resolveForwardRefForHotReloading(Component);
+                  workInProgress2.type = Component2 = resolveForwardRefForHotReloading(Component2);
                 }
-                child = updateForwardRef(null, workInProgress2, Component, resolvedProps, renderLanes2);
+                child = updateForwardRef(null, workInProgress2, Component2, resolvedProps, renderLanes2);
                 return child;
               }
               case MemoComponent: {
                 {
                   if (workInProgress2.type !== workInProgress2.elementType) {
-                    var outerPropTypes = Component.propTypes;
+                    var outerPropTypes = Component2.propTypes;
                     if (outerPropTypes) {
-                      checkPropTypes(outerPropTypes, resolvedProps, "prop", getComponentName(Component));
+                      checkPropTypes(outerPropTypes, resolvedProps, "prop", getComponentName(Component2));
                     }
                   }
                 }
-                child = updateMemoComponent(null, workInProgress2, Component, resolveDefaultProps(Component.type, resolvedProps), updateLanes, renderLanes2);
+                child = updateMemoComponent(null, workInProgress2, Component2, resolveDefaultProps(Component2.type, resolvedProps), updateLanes, renderLanes2);
                 return child;
               }
             }
             var hint = "";
             {
-              if (Component !== null && typeof Component === "object" && Component.$$typeof === REACT_LAZY_TYPE) {
+              if (Component2 !== null && typeof Component2 === "object" && Component2.$$typeof === REACT_LAZY_TYPE) {
                 hint = " Did you wrap a component in React.lazy() more than once?";
               }
             }
             {
               {
-                throw Error("Element type is invalid. Received a promise that resolves to: " + Component + ". Lazy element type must resolve to a class or function." + hint);
+                throw Error("Element type is invalid. Received a promise that resolves to: " + Component2 + ". Lazy element type must resolve to a class or function." + hint);
               }
             }
           }
-          function mountIncompleteClassComponent(_current, workInProgress2, Component, nextProps, renderLanes2) {
+          function mountIncompleteClassComponent(_current, workInProgress2, Component2, nextProps, renderLanes2) {
             if (_current !== null) {
               _current.alternate = null;
               workInProgress2.alternate = null;
@@ -18655,18 +18660,18 @@ var TheliaBlocks = (() => {
             }
             workInProgress2.tag = ClassComponent;
             var hasContext;
-            if (isContextProvider(Component)) {
+            if (isContextProvider(Component2)) {
               hasContext = true;
               pushContextProvider(workInProgress2);
             } else {
               hasContext = false;
             }
             prepareToReadContext(workInProgress2, renderLanes2);
-            constructClassInstance(workInProgress2, Component, nextProps);
-            mountClassInstance(workInProgress2, Component, nextProps, renderLanes2);
-            return finishClassComponent(null, workInProgress2, Component, true, hasContext, renderLanes2);
+            constructClassInstance(workInProgress2, Component2, nextProps);
+            mountClassInstance(workInProgress2, Component2, nextProps, renderLanes2);
+            return finishClassComponent(null, workInProgress2, Component2, true, hasContext, renderLanes2);
           }
-          function mountIndeterminateComponent(_current, workInProgress2, Component, renderLanes2) {
+          function mountIndeterminateComponent(_current, workInProgress2, Component2, renderLanes2) {
             if (_current !== null) {
               _current.alternate = null;
               workInProgress2.alternate = null;
@@ -18675,14 +18680,14 @@ var TheliaBlocks = (() => {
             var props = workInProgress2.pendingProps;
             var context;
             {
-              var unmaskedContext = getUnmaskedContext(workInProgress2, Component, false);
+              var unmaskedContext = getUnmaskedContext(workInProgress2, Component2, false);
               context = getMaskedContext(workInProgress2, unmaskedContext);
             }
             prepareToReadContext(workInProgress2, renderLanes2);
             var value;
             {
-              if (Component.prototype && typeof Component.prototype.render === "function") {
-                var componentName = getComponentName(Component) || "Unknown";
+              if (Component2.prototype && typeof Component2.prototype.render === "function") {
+                var componentName = getComponentName(Component2) || "Unknown";
                 if (!didWarnAboutBadClass[componentName]) {
                   error2("The <%s /> component appears to have a render method, but doesn't extend React.Component. This is likely to cause errors. Change %s to extend React.Component instead.", componentName, componentName);
                   didWarnAboutBadClass[componentName] = true;
@@ -18693,13 +18698,13 @@ var TheliaBlocks = (() => {
               }
               setIsRendering(true);
               ReactCurrentOwner$1.current = workInProgress2;
-              value = renderWithHooks(null, workInProgress2, Component, props, context, renderLanes2);
+              value = renderWithHooks(null, workInProgress2, Component2, props, context, renderLanes2);
               setIsRendering(false);
             }
             workInProgress2.flags |= PerformedWork;
             {
               if (typeof value === "object" && value !== null && typeof value.render === "function" && value.$$typeof === void 0) {
-                var _componentName = getComponentName(Component) || "Unknown";
+                var _componentName = getComponentName(Component2) || "Unknown";
                 if (!didWarnAboutModulePatternComponent[_componentName]) {
                   error2("The <%s /> component appears to be a function component that returns a class instance. Change %s to a class that extends React.Component instead. If you can't use a class try assigning the prototype on the function as a workaround. `%s.prototype = React.Component.prototype`. Don't use an arrow function since it cannot be called with `new` by React.", _componentName, _componentName, _componentName);
                   didWarnAboutModulePatternComponent[_componentName] = true;
@@ -18708,7 +18713,7 @@ var TheliaBlocks = (() => {
             }
             if (typeof value === "object" && value !== null && typeof value.render === "function" && value.$$typeof === void 0) {
               {
-                var _componentName2 = getComponentName(Component) || "Unknown";
+                var _componentName2 = getComponentName(Component2) || "Unknown";
                 if (!didWarnAboutModulePatternComponent[_componentName2]) {
                   error2("The <%s /> component appears to be a function component that returns a class instance. Change %s to a class that extends React.Component instead. If you can't use a class try assigning the prototype on the function as a workaround. `%s.prototype = React.Component.prototype`. Don't use an arrow function since it cannot be called with `new` by React.", _componentName2, _componentName2, _componentName2);
                   didWarnAboutModulePatternComponent[_componentName2] = true;
@@ -18718,7 +18723,7 @@ var TheliaBlocks = (() => {
               workInProgress2.memoizedState = null;
               workInProgress2.updateQueue = null;
               var hasContext = false;
-              if (isContextProvider(Component)) {
+              if (isContextProvider(Component2)) {
                 hasContext = true;
                 pushContextProvider(workInProgress2);
               } else {
@@ -18726,20 +18731,20 @@ var TheliaBlocks = (() => {
               }
               workInProgress2.memoizedState = value.state !== null && value.state !== void 0 ? value.state : null;
               initializeUpdateQueue(workInProgress2);
-              var getDerivedStateFromProps = Component.getDerivedStateFromProps;
+              var getDerivedStateFromProps = Component2.getDerivedStateFromProps;
               if (typeof getDerivedStateFromProps === "function") {
-                applyDerivedStateFromProps(workInProgress2, Component, getDerivedStateFromProps, props);
+                applyDerivedStateFromProps(workInProgress2, Component2, getDerivedStateFromProps, props);
               }
               adoptClassInstance(workInProgress2, value);
-              mountClassInstance(workInProgress2, Component, props, renderLanes2);
-              return finishClassComponent(null, workInProgress2, Component, true, hasContext, renderLanes2);
+              mountClassInstance(workInProgress2, Component2, props, renderLanes2);
+              return finishClassComponent(null, workInProgress2, Component2, true, hasContext, renderLanes2);
             } else {
               workInProgress2.tag = FunctionComponent;
               {
                 if (workInProgress2.mode & StrictMode) {
                   disableLogs();
                   try {
-                    value = renderWithHooks(null, workInProgress2, Component, props, context, renderLanes2);
+                    value = renderWithHooks(null, workInProgress2, Component2, props, context, renderLanes2);
                   } finally {
                     reenableLogs();
                   }
@@ -18747,16 +18752,16 @@ var TheliaBlocks = (() => {
               }
               reconcileChildren(null, workInProgress2, value, renderLanes2);
               {
-                validateFunctionComponentInDev(workInProgress2, Component);
+                validateFunctionComponentInDev(workInProgress2, Component2);
               }
               return workInProgress2.child;
             }
           }
-          function validateFunctionComponentInDev(workInProgress2, Component) {
+          function validateFunctionComponentInDev(workInProgress2, Component2) {
             {
-              if (Component) {
-                if (Component.childContextTypes) {
-                  error2("%s(...): childContextTypes cannot be defined on a function component.", Component.displayName || Component.name || "Component");
+              if (Component2) {
+                if (Component2.childContextTypes) {
+                  error2("%s(...): childContextTypes cannot be defined on a function component.", Component2.displayName || Component2.name || "Component");
                 }
               }
               if (workInProgress2.ref !== null) {
@@ -18775,15 +18780,15 @@ var TheliaBlocks = (() => {
                   error2("Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s", info);
                 }
               }
-              if (typeof Component.getDerivedStateFromProps === "function") {
-                var _componentName3 = getComponentName(Component) || "Unknown";
+              if (typeof Component2.getDerivedStateFromProps === "function") {
+                var _componentName3 = getComponentName(Component2) || "Unknown";
                 if (!didWarnAboutGetDerivedStateOnFunctionComponent[_componentName3]) {
                   error2("%s: Function components do not support getDerivedStateFromProps.", _componentName3);
                   didWarnAboutGetDerivedStateOnFunctionComponent[_componentName3] = true;
                 }
               }
-              if (typeof Component.contextType === "object" && Component.contextType !== null) {
-                var _componentName4 = getComponentName(Component) || "Unknown";
+              if (typeof Component2.contextType === "object" && Component2.contextType !== null) {
+                var _componentName4 = getComponentName(Component2) || "Unknown";
                 if (!didWarnAboutContextTypeOnFunctionComponent[_componentName4]) {
                   error2("%s: Function components do not support contextType.", _componentName4);
                   didWarnAboutContextTypeOnFunctionComponent[_componentName4] = true;
@@ -19392,8 +19397,8 @@ var TheliaBlocks = (() => {
                     pushHostContext(workInProgress2);
                     break;
                   case ClassComponent: {
-                    var Component = workInProgress2.type;
-                    if (isContextProvider(Component)) {
+                    var Component2 = workInProgress2.type;
+                    if (isContextProvider(Component2)) {
                       pushContextProvider(workInProgress2);
                     }
                     break;
@@ -19688,8 +19693,8 @@ var TheliaBlocks = (() => {
               case MemoComponent:
                 return null;
               case ClassComponent: {
-                var Component = workInProgress2.type;
-                if (isContextProvider(Component)) {
+                var Component2 = workInProgress2.type;
+                if (isContextProvider(Component2)) {
                   popContext(workInProgress2);
                 }
                 return null;
@@ -19971,8 +19976,8 @@ var TheliaBlocks = (() => {
           function unwindWork(workInProgress2, renderLanes2) {
             switch (workInProgress2.tag) {
               case ClassComponent: {
-                var Component = workInProgress2.type;
-                if (isContextProvider(Component)) {
+                var Component2 = workInProgress2.type;
+                if (isContextProvider(Component2)) {
                   popContext(workInProgress2);
                 }
                 var flags = workInProgress2.flags;
@@ -23138,18 +23143,18 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           var createFiber = function(tag, pendingProps, key, mode) {
             return new FiberNode(tag, pendingProps, key, mode);
           };
-          function shouldConstruct$1(Component) {
-            var prototype = Component.prototype;
+          function shouldConstruct$1(Component2) {
+            var prototype = Component2.prototype;
             return !!(prototype && prototype.isReactComponent);
           }
           function isSimpleFunctionComponent(type) {
             return typeof type === "function" && !shouldConstruct$1(type) && type.defaultProps === void 0;
           }
-          function resolveLazyComponentTag(Component) {
-            if (typeof Component === "function") {
-              return shouldConstruct$1(Component) ? ClassComponent : FunctionComponent;
-            } else if (Component !== void 0 && Component !== null) {
-              var $$typeof = Component.$$typeof;
+          function resolveLazyComponentTag(Component2) {
+            if (typeof Component2 === "function") {
+              return shouldConstruct$1(Component2) ? ClassComponent : FunctionComponent;
+            } else if (Component2 !== void 0 && Component2 !== null) {
+              var $$typeof = Component2.$$typeof;
               if ($$typeof === REACT_FORWARD_REF_TYPE) {
                 return ForwardRef;
               }
@@ -23588,9 +23593,9 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             var fiber = get2(parentComponent);
             var parentContext = findCurrentUnmaskedContext(fiber);
             if (fiber.tag === ClassComponent) {
-              var Component = fiber.type;
-              if (isContextProvider(Component)) {
-                return processChildContext(fiber, Component, parentContext);
+              var Component2 = fiber.type;
+              if (isContextProvider(Component2)) {
+                return processChildContext(fiber, Component2, parentContext);
               }
             }
             return parentContext;
@@ -24363,7 +24368,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           var Portal = REACT_PORTAL_TYPE;
           var Profiler = REACT_PROFILER_TYPE;
           var StrictMode = REACT_STRICT_MODE_TYPE;
-          var Suspense4 = REACT_SUSPENSE_TYPE;
+          var Suspense5 = REACT_SUSPENSE_TYPE;
           var hasWarnedAboutDeprecatedIsAsyncMode = false;
           function isAsyncMode(object) {
             {
@@ -24422,7 +24427,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           exports.Portal = Portal;
           exports.Profiler = Profiler;
           exports.StrictMode = StrictMode;
-          exports.Suspense = Suspense4;
+          exports.Suspense = Suspense5;
           exports.isAsyncMode = isAsyncMode;
           exports.isConcurrentMode = isConcurrentMode;
           exports.isContextConsumer = isContextConsumer2;
@@ -26058,13 +26063,13 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       this.state = prevState;
     }
   }
-  function polyfill(Component) {
-    var prototype = Component.prototype;
+  function polyfill(Component2) {
+    var prototype = Component2.prototype;
     if (!prototype || !prototype.isReactComponent) {
       throw new Error("Can only polyfill class components");
     }
-    if (typeof Component.getDerivedStateFromProps !== "function" && typeof prototype.getSnapshotBeforeUpdate !== "function") {
-      return Component;
+    if (typeof Component2.getDerivedStateFromProps !== "function" && typeof prototype.getSnapshotBeforeUpdate !== "function") {
+      return Component2;
     }
     var foundWillMountName = null;
     var foundWillReceivePropsName = null;
@@ -26085,11 +26090,11 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       foundWillUpdateName = "UNSAFE_componentWillUpdate";
     }
     if (foundWillMountName !== null || foundWillReceivePropsName !== null || foundWillUpdateName !== null) {
-      var componentName = Component.displayName || Component.name;
-      var newApiName = typeof Component.getDerivedStateFromProps === "function" ? "getDerivedStateFromProps()" : "getSnapshotBeforeUpdate()";
+      var componentName = Component2.displayName || Component2.name;
+      var newApiName = typeof Component2.getDerivedStateFromProps === "function" ? "getDerivedStateFromProps()" : "getSnapshotBeforeUpdate()";
       throw Error("Unsafe legacy lifecycles will not be called for components using new component APIs.\n\n" + componentName + " uses " + newApiName + " but also contains the following legacy lifecycles:" + (foundWillMountName !== null ? "\n  " + foundWillMountName : "") + (foundWillReceivePropsName !== null ? "\n  " + foundWillReceivePropsName : "") + (foundWillUpdateName !== null ? "\n  " + foundWillUpdateName : "") + "\n\nThe above lifecycles should be removed. Learn more about this warning here:\nhttps://fb.me/react-async-component-lifecycle-hooks");
     }
-    if (typeof Component.getDerivedStateFromProps === "function") {
+    if (typeof Component2.getDerivedStateFromProps === "function") {
       prototype.componentWillMount = componentWillMount;
       prototype.componentWillReceiveProps = componentWillReceiveProps;
     }
@@ -26104,7 +26109,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         componentDidUpdate.call(this, prevProps, prevState, snapshot);
       };
     }
-    return Component;
+    return Component2;
   }
   var init_react_lifecycles_compat_es = __esm({
     "../../node_modules/react-lifecycles-compat/react-lifecycles-compat.es.js"() {
@@ -27754,7 +27759,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           var Portal = REACT_PORTAL_TYPE;
           var Profiler = REACT_PROFILER_TYPE;
           var StrictMode = REACT_STRICT_MODE_TYPE;
-          var Suspense4 = REACT_SUSPENSE_TYPE;
+          var Suspense5 = REACT_SUSPENSE_TYPE;
           var hasWarnedAboutDeprecatedIsAsyncMode = false;
           function isAsyncMode(object) {
             {
@@ -27813,7 +27818,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           exports.Portal = Portal;
           exports.Profiler = Profiler;
           exports.StrictMode = StrictMode;
-          exports.Suspense = Suspense4;
+          exports.Suspense = Suspense5;
           exports.isAsyncMode = isAsyncMode;
           exports.isConcurrentMode = isConcurrentMode;
           exports.isContextConsumer = isContextConsumer2;
@@ -28041,7 +28046,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           var Portal = REACT_PORTAL_TYPE;
           var Profiler = REACT_PROFILER_TYPE;
           var StrictMode = REACT_STRICT_MODE_TYPE;
-          var Suspense4 = REACT_SUSPENSE_TYPE;
+          var Suspense5 = REACT_SUSPENSE_TYPE;
           var hasWarnedAboutDeprecatedIsAsyncMode = false;
           var hasWarnedAboutDeprecatedIsConcurrentMode = false;
           function isAsyncMode(object) {
@@ -28105,7 +28110,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           exports.Portal = Portal;
           exports.Profiler = Profiler;
           exports.StrictMode = StrictMode;
-          exports.Suspense = Suspense4;
+          exports.Suspense = Suspense5;
           exports.isAsyncMode = isAsyncMode;
           exports.isConcurrentMode = isConcurrentMode;
           exports.isContextConsumer = isContextConsumer2;
@@ -28146,7 +28151,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   });
 
   // src/BlocksEditor.tsx
-  var import_react28 = __toESM(require_react(), 1);
+  var import_react30 = __toESM(require_react(), 1);
 
   // src/components/AddBlocks/AddBlocks.tsx
   var React43 = __toESM(require_react(), 1);
@@ -33969,6 +33974,27 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       }
     });
   }
+  function usePreviewGroup(timestamp, data) {
+    const { currentLocale } = (0, import_react7.useContext)(LocaleContext);
+    const key = ["preview_block_group", currentLocale, timestamp];
+    const query = useQuery(key, async () => {
+      return fetcher(`/preview`, {
+        baseURL: window.location.origin + "/admin/TheliaBlocks",
+        method: "POST",
+        data: {
+          json: data
+        }
+      });
+    }, {
+      enabled: !!timestamp && !!currentLocale,
+      cacheTime: Infinity,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      retry: false,
+      suspense: false
+    });
+    return query;
+  }
 
   // src/providers/BlockGroupContext.tsx
   var BlocksGroupContext = React8.createContext({
@@ -34552,7 +34578,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         DndDragHandle: DndDragHandle2
       }));
     }
-    const Component = currentPlugin.component;
+    const Component2 = currentPlugin.component;
     const Icon2 = currentPlugin.icon;
     return /* @__PURE__ */ React12.createElement("div", {
       className: `Block mb-4 py-4 md:py-8 rounded-md ${className} ${inLayout ? "bg-pearlLight shadow-md px-4 md:px-8" : ""}`
@@ -34571,7 +34597,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       inLayout,
       blockId: block.id,
       DndDragHandle: DndDragHandle2
-    })), /* @__PURE__ */ React12.createElement(Component, {
+    })), /* @__PURE__ */ React12.createElement(Component2, {
       data: block.data,
       onUpdate: (data) => updateBlock(block.id, data)
     }));
@@ -35961,8 +35987,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     }
   }
   var ErrorBoundary = function(_React$Component) {
-    _inheritsLoose(ErrorBoundary2, _React$Component);
-    function ErrorBoundary2() {
+    _inheritsLoose(ErrorBoundary3, _React$Component);
+    function ErrorBoundary3() {
       var _this;
       for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
@@ -35995,7 +36021,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       };
       return _this;
     }
-    var _proto = ErrorBoundary2.prototype;
+    var _proto = ErrorBoundary3.prototype;
     _proto.componentDidMount = function componentDidMount() {
       this.unbind = bindEvents(window, [{
         eventName: "error",
@@ -36018,7 +36044,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     _proto.render = function render2() {
       return this.props.children(this.setCallbacks);
     };
-    return ErrorBoundary2;
+    return ErrorBoundary3;
   }(import_react19.default.Component);
   var dragHandleUsageInstructions = "\n  Press space bar to start a drag.\n  When dragging you can use the arrow keys to move the item around and escape to cancel.\n  Some screen readers may require you to be in focus mode or to use your pass through key\n";
   var position = function position2(index2) {
@@ -45449,13 +45475,66 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   var import_react_modal3 = __toESM(require_lib(), 1);
 
   // src/components/ToolBar/ToolBar.tsx
+  var import_react29 = __toESM(require_react(), 1);
+
+  // src/components/ErrorBoundary.tsx
+  var import_react28 = __toESM(require_react(), 1);
+  var ErrorBoundary2 = class extends import_react28.Component {
+    constructor() {
+      super(...arguments);
+      __publicField(this, "state", {
+        hasError: false
+      });
+    }
+    static getDerivedStateFromError(_2) {
+      return { hasError: true };
+    }
+    componentDidCatch(error2, errorInfo) {
+    }
+    render() {
+      if (this.state.hasError) {
+        return /* @__PURE__ */ React.createElement("h1", {
+          className: "p-8 text-3xl text-red"
+        }, "Une erreur est survenue");
+      }
+      return this.props.children;
+    }
+  };
+  var ErrorBoundary_default = ErrorBoundary2;
+
+  // src/components/Preview/Preview.tsx
+  function Preview({
+    timestamp,
+    data
+  }) {
+    const { blockList } = useBlocksContext();
+    const preview = usePreviewGroup(timestamp, JSON.stringify(data || blockList));
+    console.log(timestamp, preview);
+    if (preview.isLoading) {
+      return /* @__PURE__ */ React.createElement("div", {
+        className: "text-green text-4xl"
+      }, "Chargement");
+    }
+    if (preview.isError) {
+      return /* @__PURE__ */ React.createElement("div", {
+        className: "text-red text-4xl"
+      }, "Erreur");
+    }
+    return /* @__PURE__ */ React.createElement("div", null, "Preview");
+  }
+
+  // src/components/ToolBar/ToolBar.tsx
   var ToolBar = () => {
     const { blockList } = useBlocksContext();
     const mutation = useCreateOrUpdateGroup();
-    return /* @__PURE__ */ React.createElement(React.Fragment, null, blockList.length !== 0 && /* @__PURE__ */ React.createElement("div", {
+    const [showPreview, setShowPreview] = (0, import_react29.useState)(false);
+    return /* @__PURE__ */ React.createElement(React.Fragment, null, blockList.length !== 0 && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", {
       className: "w-full bg-lightCharbon h-20 sticky bottom-0 px-4 py-5 md:px-12 xl:px-44 2xl:px-60 flex gap-2 items-center justify-end text-white"
     }, /* @__PURE__ */ React.createElement("button", {
-      className: "Toolbar-view border border-white rounded-md px-3 py-1 hover:text-black hover:bg-white h-full"
+      className: "Toolbar-view border border-white rounded-md px-3 py-1 hover:text-black hover:bg-white h-full",
+      onClick: () => {
+        setShowPreview(Date.now());
+      }
     }, /* @__PURE__ */ React.createElement("i", {
       className: "fas fa-eye mr-3"
     }), "Pr\xE9visualiser"), /* @__PURE__ */ React.createElement("button", {
@@ -45464,7 +45543,11 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       onClick: () => {
         mutation.mutate({ blocks: blockList });
       }
-    }, "Enregistrer")));
+    }, "Enregistrer")), typeof showPreview === "number" ? /* @__PURE__ */ React.createElement(ErrorBoundary_default, null, /* @__PURE__ */ React.createElement(import_react29.Suspense, {
+      fallback: "loading"
+    }, /* @__PURE__ */ React.createElement(Preview, {
+      timestamp: showPreview
+    }))) : null));
   };
   var ToolBar_default = ToolBar;
 
@@ -45477,7 +45560,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   }) {
     if (!apiUrl)
       return null;
-    (0, import_react28.useLayoutEffect)(() => {
+    (0, import_react30.useLayoutEffect)(() => {
       if (containerId) {
         import_react_modal3.default.setAppElement("#" + containerId);
       }
@@ -45486,7 +45569,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       locales
     }, /* @__PURE__ */ React.createElement(BlocksProvider, {
       api: apiUrl
-    }, /* @__PURE__ */ React.createElement(import_react28.Suspense, {
+    }, /* @__PURE__ */ React.createElement(import_react30.Suspense, {
       fallback: "loading"
     }, /* @__PURE__ */ React.createElement(BlocksGroupProvider, {
       groupId
@@ -45506,7 +45589,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   }
 
   // src/BlocksList.tsx
-  var import_react29 = __toESM(require_react(), 1);
+  var import_react31 = __toESM(require_react(), 1);
   function List() {
     const { data: groups = [] } = useGroups();
     if (groups.length <= 0) {
@@ -45532,7 +45615,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     }, /* @__PURE__ */ React.createElement("a", {
       href: "/admin/TheliaBlocks/new",
       className: "btn btn-danger "
-    }, "Create new group")), /* @__PURE__ */ React.createElement(import_react29.Suspense, {
+    }, "Create new group")), /* @__PURE__ */ React.createElement(import_react31.Suspense, {
       fallback: "loading"
     }, /* @__PURE__ */ React.createElement(List, null))));
   }

@@ -1,8 +1,15 @@
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => {
+  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+  return value;
+};
+
 // src/index.tsx
 import "tippy.js/dist/tippy.css";
 
 // src/BlocksEditor.tsx
-import { Suspense as Suspense2, useLayoutEffect as useLayoutEffect2 } from "react";
+import { Suspense as Suspense3, useLayoutEffect as useLayoutEffect2 } from "react";
 
 // src/components/AddBlocks/AddBlocks.tsx
 import * as React34 from "react";
@@ -201,6 +208,27 @@ function useCreateOrUpdateGroup() {
       window.location.replace(`/admin/TheliaBlocks/${data.id}`);
     }
   });
+}
+function usePreviewGroup(timestamp, data) {
+  const { currentLocale } = useContext(LocaleContext);
+  const key = ["preview_block_group", currentLocale, timestamp];
+  const query = useQuery(key, async () => {
+    return fetcher(`/preview`, {
+      baseURL: window.location.origin + "/admin/TheliaBlocks",
+      method: "POST",
+      data: {
+        json: data
+      }
+    });
+  }, {
+    enabled: !!timestamp && !!currentLocale,
+    cacheTime: Infinity,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    retry: false,
+    suspense: false
+  });
+  return query;
 }
 
 // src/providers/BlockGroupContext.tsx
@@ -405,7 +433,7 @@ var Block = ({
       DndDragHandle: DndDragHandle2
     }));
   }
-  const Component = currentPlugin.component;
+  const Component2 = currentPlugin.component;
   const Icon2 = currentPlugin.icon;
   return /* @__PURE__ */ React7.createElement("div", {
     className: `Block mb-4 py-4 md:py-8 rounded-md ${className} ${inLayout ? "bg-pearlLight shadow-md px-4 md:px-8" : ""}`
@@ -424,7 +452,7 @@ var Block = ({
     inLayout,
     blockId: block.id,
     DndDragHandle: DndDragHandle2
-  })), /* @__PURE__ */ React7.createElement(Component, {
+  })), /* @__PURE__ */ React7.createElement(Component2, {
     data: block.data,
     onUpdate: (data) => updateBlock(block.id, data)
   }));
@@ -2252,13 +2280,66 @@ function GroupTitle() {
 import ReactModal from "react-modal";
 
 // src/components/ToolBar/ToolBar.tsx
+import { Suspense as Suspense2, useState as useState19 } from "react";
+
+// src/components/ErrorBoundary.tsx
+import { Component } from "react";
+var ErrorBoundary = class extends Component {
+  constructor() {
+    super(...arguments);
+    __publicField(this, "state", {
+      hasError: false
+    });
+  }
+  static getDerivedStateFromError(_) {
+    return { hasError: true };
+  }
+  componentDidCatch(error, errorInfo) {
+  }
+  render() {
+    if (this.state.hasError) {
+      return /* @__PURE__ */ React.createElement("h1", {
+        className: "p-8 text-3xl text-red"
+      }, "Une erreur est survenue");
+    }
+    return this.props.children;
+  }
+};
+var ErrorBoundary_default = ErrorBoundary;
+
+// src/components/Preview/Preview.tsx
+function Preview({
+  timestamp,
+  data
+}) {
+  const { blockList } = useBlocksContext();
+  const preview = usePreviewGroup(timestamp, JSON.stringify(data || blockList));
+  console.log(timestamp, preview);
+  if (preview.isLoading) {
+    return /* @__PURE__ */ React.createElement("div", {
+      className: "text-green text-4xl"
+    }, "Chargement");
+  }
+  if (preview.isError) {
+    return /* @__PURE__ */ React.createElement("div", {
+      className: "text-red text-4xl"
+    }, "Erreur");
+  }
+  return /* @__PURE__ */ React.createElement("div", null, "Preview");
+}
+
+// src/components/ToolBar/ToolBar.tsx
 var ToolBar = () => {
   const { blockList } = useBlocksContext();
   const mutation = useCreateOrUpdateGroup();
-  return /* @__PURE__ */ React.createElement(React.Fragment, null, blockList.length !== 0 && /* @__PURE__ */ React.createElement("div", {
+  const [showPreview, setShowPreview] = useState19(false);
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, blockList.length !== 0 && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", {
     className: "w-full bg-lightCharbon h-20 sticky bottom-0 px-4 py-5 md:px-12 xl:px-44 2xl:px-60 flex gap-2 items-center justify-end text-white"
   }, /* @__PURE__ */ React.createElement("button", {
-    className: "Toolbar-view border border-white rounded-md px-3 py-1 hover:text-black hover:bg-white h-full"
+    className: "Toolbar-view border border-white rounded-md px-3 py-1 hover:text-black hover:bg-white h-full",
+    onClick: () => {
+      setShowPreview(Date.now());
+    }
   }, /* @__PURE__ */ React.createElement("i", {
     className: "fas fa-eye mr-3"
   }), "Pr\xE9visualiser"), /* @__PURE__ */ React.createElement("button", {
@@ -2267,7 +2348,11 @@ var ToolBar = () => {
     onClick: () => {
       mutation.mutate({ blocks: blockList });
     }
-  }, "Enregistrer")));
+  }, "Enregistrer")), typeof showPreview === "number" ? /* @__PURE__ */ React.createElement(ErrorBoundary_default, null, /* @__PURE__ */ React.createElement(Suspense2, {
+    fallback: "loading"
+  }, /* @__PURE__ */ React.createElement(Preview, {
+    timestamp: showPreview
+  }))) : null));
 };
 var ToolBar_default = ToolBar;
 
@@ -2289,7 +2374,7 @@ function BlocksEditor({
     locales
   }, /* @__PURE__ */ React.createElement(BlocksProvider, {
     api: apiUrl
-  }, /* @__PURE__ */ React.createElement(Suspense2, {
+  }, /* @__PURE__ */ React.createElement(Suspense3, {
     fallback: "loading"
   }, /* @__PURE__ */ React.createElement(BlocksGroupProvider, {
     groupId
@@ -2309,7 +2394,7 @@ function BlocksEditor({
 }
 
 // src/BlocksList.tsx
-import { Suspense as Suspense3 } from "react";
+import { Suspense as Suspense4 } from "react";
 function List() {
   const { data: groups = [] } = useGroups();
   if (groups.length <= 0) {
@@ -2335,7 +2420,7 @@ function BlocksList({ apiUrl }) {
   }, /* @__PURE__ */ React.createElement("a", {
     href: "/admin/TheliaBlocks/new",
     className: "btn btn-danger "
-  }, "Create new group")), /* @__PURE__ */ React.createElement(Suspense3, {
+  }, "Create new group")), /* @__PURE__ */ React.createElement(Suspense4, {
     fallback: "loading"
   }, /* @__PURE__ */ React.createElement(List, null))));
 }
