@@ -433,6 +433,9 @@ select {
 .visible {
   visibility: visible;
 }
+.static {
+  position: static;
+}
 .absolute {
   position: absolute;
 }
@@ -717,6 +720,10 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(235 255 248 / var(--tw-bg-opacity));
 }
+.bg-red {
+  --tw-bg-opacity: 1;
+  background-color: rgb(210 25 25 / var(--tw-bg-opacity));
+}
 .bg-gray-500 {
   --tw-bg-opacity: 1;
   background-color: rgb(107 114 128 / var(--tw-bg-opacity));
@@ -733,10 +740,6 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(68 68 68 / var(--tw-bg-opacity));
 }
-.bg-red {
-  --tw-bg-opacity: 1;
-  background-color: rgb(210 25 25 / var(--tw-bg-opacity));
-}
 .p-4 {
   padding: 1rem;
 }
@@ -745,6 +748,9 @@ select {
 }
 .p-2 {
   padding: 0.5rem;
+}
+.p-8 {
+  padding: 2rem;
 }
 .px-4 {
   padding-left: 1rem;
@@ -830,6 +836,10 @@ select {
   font-size: 1rem;
   line-height: 1.5rem;
 }
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
 .font-semibold {
   font-weight: 600;
 }
@@ -881,6 +891,14 @@ select {
 .text-greenDark {
   --tw-text-opacity: 1;
   color: rgb(0 137 88 / var(--tw-text-opacity));
+}
+.text-red {
+  --tw-text-opacity: 1;
+  color: rgb(210 25 25 / var(--tw-text-opacity));
+}
+.text-green {
+  --tw-text-opacity: 1;
+  color: rgb(115 206 111 / var(--tw-text-opacity));
 }
 .underline {
   text-decoration-line: underline;
