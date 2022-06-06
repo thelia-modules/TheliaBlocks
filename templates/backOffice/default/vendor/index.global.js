@@ -28151,7 +28151,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   });
 
   // src/BlocksEditor.tsx
-  var import_react30 = __toESM(require_react(), 1);
+  var import_react32 = __toESM(require_react(), 1);
 
   // src/components/AddBlocks/AddBlocks.tsx
   var React43 = __toESM(require_react(), 1);
@@ -33979,7 +33979,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     const key = ["preview_block_group", currentLocale, timestamp];
     const query = useQuery(key, async () => {
       return fetcher(`/preview`, {
-        baseURL: window.location.origin + "/admin/TheliaBlocks",
+        baseURL: window.location.origin + "/TheliaBlocks",
         method: "POST",
         data: {
           json: data
@@ -45311,7 +45311,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       isOpen,
       onRequestClose: () => setIsOpen(false),
       overlayClassName: "Overlay",
-      className: "Modal-addBlocks"
+      className: "Modal-TheliaBlocks"
     }, /* @__PURE__ */ React43.createElement("div", {
       className: "flex flex-col p-4 Modal-content"
     }, /* @__PURE__ */ React43.createElement("button", {
@@ -45472,10 +45472,10 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   }
 
   // src/BlocksEditor.tsx
-  var import_react_modal3 = __toESM(require_lib(), 1);
+  var import_react_modal4 = __toESM(require_lib(), 1);
 
   // src/components/ToolBar/ToolBar.tsx
-  var import_react29 = __toESM(require_react(), 1);
+  var import_react31 = __toESM(require_react(), 1);
 
   // src/components/ErrorBoundary.tsx
   var import_react28 = __toESM(require_react(), 1);
@@ -45503,31 +45503,78 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   var ErrorBoundary_default = ErrorBoundary2;
 
   // src/components/Preview/Preview.tsx
+  var import_react30 = __toESM(require_react(), 1);
+
+  // src/components/Iframe/Iframe.tsx
+  var import_react29 = __toESM(require_react(), 1);
+  var Iframe = ({ content }) => {
+    const ref2 = (0, import_react29.useRef)(null);
+    (0, import_react29.useEffect)(() => {
+      const node = ref2.current;
+      if (!node)
+        return;
+      let doc = node.contentDocument;
+      if (!doc)
+        return;
+      doc.open();
+      doc.write(content);
+      doc.close();
+      node.style.width = "100%";
+      if (node.contentWindow) {
+        node.style.height = `80vh`;
+      }
+    }, [ref2, content]);
+    return /* @__PURE__ */ React.createElement("iframe", {
+      src: "about:blank",
+      frameBorder: "0",
+      ref: ref2,
+      sandbox: true
+    });
+  };
+  var Iframe_default = Iframe;
+
+  // src/components/Preview/Preview.tsx
+  var import_react_modal3 = __toESM(require_lib(), 1);
   function Preview({
     timestamp,
     data
   }) {
+    const [isOpen, setIsOpen] = (0, import_react30.useState)(true);
     const { blockList } = useBlocksContext();
     const preview = usePreviewGroup(timestamp, JSON.stringify(data || blockList));
-    console.log(timestamp, preview);
+    (0, import_react30.useEffect)(() => {
+      if (timestamp) {
+        setIsOpen(true);
+      }
+      return () => {
+        setIsOpen(false);
+      };
+    }, [timestamp]);
     if (preview.isLoading) {
       return /* @__PURE__ */ React.createElement("div", {
         className: "text-green text-4xl"
       }, "Chargement");
     }
     if (preview.isError) {
-      return /* @__PURE__ */ React.createElement("div", {
-        className: "text-red text-4xl"
-      }, "Erreur");
     }
-    return /* @__PURE__ */ React.createElement("div", null, "Preview");
+    return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(import_react_modal3.default, {
+      onRequestClose: () => setIsOpen(false),
+      isOpen,
+      overlayClassName: "Overlay",
+      className: "Modal-TheliaBlocks"
+    }, /* @__PURE__ */ React.createElement("button", {
+      onClick: () => setIsOpen(false),
+      className: "bg-red"
+    }, "close"), preview.data ? /* @__PURE__ */ React.createElement(Iframe_default, {
+      content: preview.data
+    }) : null));
   }
 
   // src/components/ToolBar/ToolBar.tsx
   var ToolBar = () => {
     const { blockList } = useBlocksContext();
     const mutation = useCreateOrUpdateGroup();
-    const [showPreview, setShowPreview] = (0, import_react29.useState)(false);
+    const [showPreview, setShowPreview] = (0, import_react31.useState)(false);
     return /* @__PURE__ */ React.createElement(React.Fragment, null, blockList.length !== 0 && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", {
       className: "w-full bg-lightCharbon h-20 sticky bottom-0 px-4 py-5 md:px-12 xl:px-44 2xl:px-60 flex gap-2 items-center justify-end text-white"
     }, /* @__PURE__ */ React.createElement("button", {
@@ -45543,7 +45590,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       onClick: () => {
         mutation.mutate({ blocks: blockList });
       }
-    }, "Enregistrer")), typeof showPreview === "number" ? /* @__PURE__ */ React.createElement(ErrorBoundary_default, null, /* @__PURE__ */ React.createElement(import_react29.Suspense, {
+    }, "Enregistrer")), typeof showPreview === "number" ? /* @__PURE__ */ React.createElement(ErrorBoundary_default, null, /* @__PURE__ */ React.createElement(import_react31.Suspense, {
       fallback: "loading"
     }, /* @__PURE__ */ React.createElement(Preview, {
       timestamp: showPreview
@@ -45560,16 +45607,16 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   }) {
     if (!apiUrl)
       return null;
-    (0, import_react30.useLayoutEffect)(() => {
+    (0, import_react32.useLayoutEffect)(() => {
       if (containerId) {
-        import_react_modal3.default.setAppElement("#" + containerId);
+        import_react_modal4.default.setAppElement("#" + containerId);
       }
     }, [containerId]);
     return /* @__PURE__ */ React.createElement(LocaleProvider, {
       locales
     }, /* @__PURE__ */ React.createElement(BlocksProvider, {
       api: apiUrl
-    }, /* @__PURE__ */ React.createElement(import_react30.Suspense, {
+    }, /* @__PURE__ */ React.createElement(import_react32.Suspense, {
       fallback: "loading"
     }, /* @__PURE__ */ React.createElement(BlocksGroupProvider, {
       groupId
@@ -45589,7 +45636,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   }
 
   // src/BlocksList.tsx
-  var import_react31 = __toESM(require_react(), 1);
+  var import_react33 = __toESM(require_react(), 1);
   function List() {
     const { data: groups = [] } = useGroups();
     if (groups.length <= 0) {
@@ -45615,7 +45662,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     }, /* @__PURE__ */ React.createElement("a", {
       href: "/admin/TheliaBlocks/new",
       className: "btn btn-danger "
-    }, "Create new group")), /* @__PURE__ */ React.createElement(import_react31.Suspense, {
+    }, "Create new group")), /* @__PURE__ */ React.createElement(import_react33.Suspense, {
       fallback: "loading"
     }, /* @__PURE__ */ React.createElement(List, null))));
   }

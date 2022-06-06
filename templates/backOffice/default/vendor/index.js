@@ -9,7 +9,7 @@ var __publicField = (obj, key, value) => {
 import "tippy.js/dist/tippy.css";
 
 // src/BlocksEditor.tsx
-import { Suspense as Suspense3, useLayoutEffect as useLayoutEffect2 } from "react";
+import { Suspense as Suspense3, useLayoutEffect as useLayoutEffect3 } from "react";
 
 // src/components/AddBlocks/AddBlocks.tsx
 import * as React34 from "react";
@@ -214,7 +214,7 @@ function usePreviewGroup(timestamp, data) {
   const key = ["preview_block_group", currentLocale, timestamp];
   const query = useQuery(key, async () => {
     return fetcher(`/preview`, {
-      baseURL: window.location.origin + "/admin/TheliaBlocks",
+      baseURL: window.location.origin + "/TheliaBlocks",
       method: "POST",
       data: {
         json: data
@@ -2110,7 +2110,7 @@ var AddBlockModal = ({
     isOpen,
     onRequestClose: () => setIsOpen(false),
     overlayClassName: "Overlay",
-    className: "Modal-addBlocks"
+    className: "Modal-TheliaBlocks"
   }, /* @__PURE__ */ React34.createElement("div", {
     className: "flex flex-col p-4 Modal-content"
   }, /* @__PURE__ */ React34.createElement("button", {
@@ -2277,10 +2277,10 @@ function GroupTitle() {
 }
 
 // src/BlocksEditor.tsx
-import ReactModal from "react-modal";
+import ReactModal2 from "react-modal";
 
 // src/components/ToolBar/ToolBar.tsx
-import { Suspense as Suspense2, useState as useState19 } from "react";
+import { Suspense as Suspense2, useState as useState20 } from "react";
 
 // src/components/ErrorBoundary.tsx
 import { Component } from "react";
@@ -2308,31 +2308,78 @@ var ErrorBoundary = class extends Component {
 var ErrorBoundary_default = ErrorBoundary;
 
 // src/components/Preview/Preview.tsx
+import { useEffect as useEffect19, useState as useState19 } from "react";
+
+// src/components/Iframe/Iframe.tsx
+import { useEffect as useEffect18, useRef as useRef2 } from "react";
+var Iframe = ({ content }) => {
+  const ref = useRef2(null);
+  useEffect18(() => {
+    const node = ref.current;
+    if (!node)
+      return;
+    let doc = node.contentDocument;
+    if (!doc)
+      return;
+    doc.open();
+    doc.write(content);
+    doc.close();
+    node.style.width = "100%";
+    if (node.contentWindow) {
+      node.style.height = `80vh`;
+    }
+  }, [ref, content]);
+  return /* @__PURE__ */ React.createElement("iframe", {
+    src: "about:blank",
+    frameBorder: "0",
+    ref,
+    sandbox: true
+  });
+};
+var Iframe_default = Iframe;
+
+// src/components/Preview/Preview.tsx
+import ReactModal from "react-modal";
 function Preview({
   timestamp,
   data
 }) {
+  const [isOpen, setIsOpen] = useState19(true);
   const { blockList } = useBlocksContext();
   const preview = usePreviewGroup(timestamp, JSON.stringify(data || blockList));
-  console.log(timestamp, preview);
+  useEffect19(() => {
+    if (timestamp) {
+      setIsOpen(true);
+    }
+    return () => {
+      setIsOpen(false);
+    };
+  }, [timestamp]);
   if (preview.isLoading) {
     return /* @__PURE__ */ React.createElement("div", {
       className: "text-green text-4xl"
     }, "Chargement");
   }
   if (preview.isError) {
-    return /* @__PURE__ */ React.createElement("div", {
-      className: "text-red text-4xl"
-    }, "Erreur");
   }
-  return /* @__PURE__ */ React.createElement("div", null, "Preview");
+  return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(ReactModal, {
+    onRequestClose: () => setIsOpen(false),
+    isOpen,
+    overlayClassName: "Overlay",
+    className: "Modal-TheliaBlocks"
+  }, /* @__PURE__ */ React.createElement("button", {
+    onClick: () => setIsOpen(false),
+    className: "bg-red"
+  }, "close"), preview.data ? /* @__PURE__ */ React.createElement(Iframe_default, {
+    content: preview.data
+  }) : null));
 }
 
 // src/components/ToolBar/ToolBar.tsx
 var ToolBar = () => {
   const { blockList } = useBlocksContext();
   const mutation = useCreateOrUpdateGroup();
-  const [showPreview, setShowPreview] = useState19(false);
+  const [showPreview, setShowPreview] = useState20(false);
   return /* @__PURE__ */ React.createElement(React.Fragment, null, blockList.length !== 0 && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", {
     className: "w-full bg-lightCharbon h-20 sticky bottom-0 px-4 py-5 md:px-12 xl:px-44 2xl:px-60 flex gap-2 items-center justify-end text-white"
   }, /* @__PURE__ */ React.createElement("button", {
@@ -2365,9 +2412,9 @@ function BlocksEditor({
 }) {
   if (!apiUrl)
     return null;
-  useLayoutEffect2(() => {
+  useLayoutEffect3(() => {
     if (containerId) {
-      ReactModal.setAppElement("#" + containerId);
+      ReactModal2.setAppElement("#" + containerId);
     }
   }, [containerId]);
   return /* @__PURE__ */ React.createElement(LocaleProvider, {
