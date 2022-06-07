@@ -104,7 +104,6 @@ class TheliaBlocksBackHook extends BaseHook
             ->endUse();
 
         $group = $search->findOne();
-        dump($group->getId());
 
         return $this->render(
             'item-configuration.html',
