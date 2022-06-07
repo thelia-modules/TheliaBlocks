@@ -5,7 +5,7 @@ declare type Locale = {
     active: boolean;
 };
 
-declare function BlocksEditor({ apiUrl, containerId, groupId, itemId, itemType, locales, backlink, }: {
+declare function BlocksEditor({ apiUrl, containerId, groupId, itemId, itemType, locales, backlink, noRedirect, }: {
     apiUrl: string;
     locales: Locale[];
     containerId: string;
@@ -13,6 +13,7 @@ declare function BlocksEditor({ apiUrl, containerId, groupId, itemId, itemType, 
     itemId?: number;
     itemType?: string;
     backlink: boolean;
+    noRedirect: boolean;
 }): JSX.Element | null;
 
 declare function BlocksList({ apiUrl }: {

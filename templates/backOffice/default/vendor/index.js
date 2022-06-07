@@ -173,7 +173,8 @@ function useCreateOrUpdateGroup() {
   const {
     groupId: contextGroupId,
     itemId: contextItemId,
-    itemType: contextItemType
+    itemType: contextItemType,
+    noRedirect = false
   } = useContext(BlocksGroupContext);
   const { currentLocale } = useContext(LocaleContext);
   const { group: contextGroup } = useContext(BlocksGroupContext);
@@ -209,6 +210,12 @@ function useCreateOrUpdateGroup() {
     });
   }, {
     onSuccess: (data) => {
+      toast.success("enregistr\xE9 avec succ\xE8s");
+      if (noRedirect) {
+        window.location.reload();
+        return;
+      }
+      window.location.replace(`/admin/TheliaBlocks/${data.id}`);
     }
   });
 }
@@ -271,13 +278,15 @@ function usePreviewGroup(timestamp, data) {
 var BlocksGroupContext = React3.createContext({
   group: void 0,
   editGroup: () => {
-  }
+  },
+  noRedirect: false
 });
 var BlocksGroupProvider = ({
   groupId,
   itemType,
   itemId,
-  children
+  children,
+  noRedirect
 }) => {
   const [group, setGroup] = React3.useState({
     visible: true,
@@ -291,7 +300,7 @@ var BlocksGroupProvider = ({
     }
   }, [data]);
   return /* @__PURE__ */ React3.createElement(BlocksGroupContext.Provider, {
-    value: { group, editGroup, groupId, itemType, itemId }
+    value: { group, editGroup, groupId, itemType, itemId, noRedirect }
   }, /* @__PURE__ */ React3.createElement(React3.Suspense, {
     fallback: "loading group"
   }, children));
@@ -2457,7 +2466,8 @@ function BlocksEditor({
   itemId,
   itemType,
   locales,
-  backlink = true
+  backlink = true,
+  noRedirect = false
 }) {
   if (!apiUrl)
     return null;
@@ -2475,7 +2485,8 @@ function BlocksEditor({
   }, /* @__PURE__ */ React.createElement(BlocksGroupProvider, {
     groupId,
     itemType,
-    itemId
+    itemId,
+    noRedirect
   }, /* @__PURE__ */ React.createElement("div", {
     className: "BlocksEditor"
   }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(Toaster, null)), /* @__PURE__ */ React.createElement("div", {

@@ -34739,7 +34739,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     const {
       groupId: contextGroupId,
       itemId: contextItemId,
-      itemType: contextItemType
+      itemType: contextItemType,
+      noRedirect = false
     } = (0, import_react8.useContext)(BlocksGroupContext);
     const { currentLocale } = (0, import_react8.useContext)(LocaleContext);
     const { group: contextGroup } = (0, import_react8.useContext)(BlocksGroupContext);
@@ -34775,6 +34776,12 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       });
     }, {
       onSuccess: (data) => {
+        react_hot_toast_esm_default.success("enregistr\xE9 avec succ\xE8s");
+        if (noRedirect) {
+          window.location.reload();
+          return;
+        }
+        window.location.replace(`/admin/TheliaBlocks/${data.id}`);
       }
     });
   }
@@ -34837,13 +34844,15 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   var BlocksGroupContext = React8.createContext({
     group: void 0,
     editGroup: () => {
-    }
+    },
+    noRedirect: false
   });
   var BlocksGroupProvider = ({
     groupId,
     itemType,
     itemId,
-    children
+    children,
+    noRedirect
   }) => {
     const [group, setGroup] = React8.useState({
       visible: true,
@@ -34857,7 +34866,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       }
     }, [data]);
     return /* @__PURE__ */ React8.createElement(BlocksGroupContext.Provider, {
-      value: { group, editGroup, groupId, itemType, itemId }
+      value: { group, editGroup, groupId, itemType, itemId, noRedirect }
     }, /* @__PURE__ */ React8.createElement(React8.Suspense, {
       fallback: "loading group"
     }, children));
@@ -46451,7 +46460,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     itemId,
     itemType,
     locales,
-    backlink = true
+    backlink = true,
+    noRedirect = false
   }) {
     if (!apiUrl)
       return null;
@@ -46469,7 +46479,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     }, /* @__PURE__ */ React.createElement(BlocksGroupProvider, {
       groupId,
       itemType,
-      itemId
+      itemId,
+      noRedirect
     }, /* @__PURE__ */ React.createElement("div", {
       className: "BlocksEditor"
     }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(Toaster, null)), /* @__PURE__ */ React.createElement("div", {
