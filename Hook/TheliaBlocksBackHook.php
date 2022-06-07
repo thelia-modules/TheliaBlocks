@@ -1,13 +1,23 @@
 <?php
 
+/*
+ * This file is part of the Thelia package.
+ * http://www.thelia.net
+ *
+ * (c) OpenStudio <info@thelia.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace TheliaBlocks\Hook;
 
-use Thelia\Core\Event\Hook\HookRenderEvent;
-use TheliaBlocks\TheliaBlocks;
-use Thelia\Core\Hook\BaseHook;
 use Thelia\Core\Event\Hook\HookRenderBlockEvent;
+use Thelia\Core\Event\Hook\HookRenderEvent;
+use Thelia\Core\Hook\BaseHook;
 use Thelia\Tools\URL;
 use TheliaBlocks\Model\BlockGroupQuery;
+use TheliaBlocks\TheliaBlocks;
 
 class TheliaBlocksBackHook extends BaseHook
 {
@@ -64,7 +74,7 @@ class TheliaBlocksBackHook extends BaseHook
         $this->addTheliaBlocksConfigurationTab($event, 'folder', $formRedirectUrl);
     }
 
-    public function onBlockItemConfiguration(HookRenderEvent $event)
+    public function onBlockItemConfiguration(HookRenderEvent $event): void
     {
         $itemId = $event->getArgument('itemId');
         $itemType = $event->getArgument('itemType');
@@ -80,7 +90,7 @@ class TheliaBlocksBackHook extends BaseHook
             [
                 'id' => 'theliablocks_item_details',
                 'title' => $this->trans('Thelia Blocks', [], TheliaBlocks::DOMAIN_NAME),
-                'content' => $this->getConfigurationRender($itemType, $itemId)
+                'content' => $this->getConfigurationRender($itemType, $itemId),
             ]
         );
     }
@@ -96,11 +106,11 @@ class TheliaBlocksBackHook extends BaseHook
         $group = $search->findOne();
 
         return $this->render(
-            'thelia-blocks-item-configuration.html',
+            'item-configuration.html',
             [
                 'itemId' => $itemId,
                 'itemType' => $itemType,
-                'groupId' => $group ? $group->getId() : null
+                'groupId' => $group ? $group->getId() : null,
             ]
         );
     }

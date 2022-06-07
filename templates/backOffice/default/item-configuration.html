@@ -1,13 +1,8 @@
-{extends file="admin-layout.tpl"}
-
 {block name="no-return-functions"}
     {$admin_current_location = 'tools'}
 {/block}
 
 {block name="page-title"}{intl l='Thelia blocks'}{/block}
-
-{block name="check-resource"}admin.content{/block}
-{block name="check-access"}view{/block}
 
 {block name="after-admin-css"}
 
@@ -41,8 +36,15 @@
                 let locales = [{id:0, title: 'en_US',code: 'en_US', active: true}, {id:1, title: 'fr_FR', code: 'fr_FR', active: false}];
                 let containerId = "thelia-blocks-root-edit";
                 let CONTAINER = document.getElementById(containerId);
-                ReactDOM.render(React.createElement(TheliaBlocks.BlocksEditor, {apiUrl: API_ROOT, containerId: containerId, groupId, itemId, itemType, locales}, null), CONTAINER)
+                ReactDOM.render(React.createElement(TheliaBlocks.BlocksEditor, {
+                    apiUrl: API_ROOT,
+                    containerId: containerId,
+                    groupId,
+                    itemId,
+                    itemType,
+                    locales,
+                    backlink: false
+                }, null), CONTAINER)
             {/literal}
         </script>
 {/block}
-

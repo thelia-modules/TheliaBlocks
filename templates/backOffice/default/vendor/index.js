@@ -93,13 +93,13 @@ function LocaleProvider({
       }
     }
   }, [locales]);
-  console.log(currentLocale);
   return /* @__PURE__ */ React.createElement(LocaleContext.Provider, {
     value: { locales, currentLocale, setCurrentLocale }
   }, children);
 }
 
 // src/utils/queries.tsx
+import toast from "react-hot-toast";
 var instance = axios.create();
 async function fetcher(url, config = {}) {
   try {
@@ -199,6 +199,9 @@ function useCreateOrUpdateGroup() {
         blockGroupId: group.id
       };
     }
+    if (!data.blockGroup.slug) {
+      data.blockGroup.slug = null;
+    }
     return fetcher(`/block_group`, {
       method: groupId ? "PATCH" : "POST",
       data
@@ -206,6 +209,39 @@ function useCreateOrUpdateGroup() {
   }, {
     onSuccess: (data) => {
       window.location.replace(`/admin/TheliaBlocks/${data.id}`);
+    }
+  });
+}
+function useDeleteGroup() {
+  const queryClient2 = useQueryClient();
+  const { groupId: contextGroupId } = useContext(BlocksGroupContext);
+  const { currentLocale } = useContext(LocaleContext);
+  return useMutation((id) => {
+    if (!id && !contextGroupId) {
+      throw new Error("id is mandatory, and no fallback groupId was found in current context");
+    }
+    return fetcher(`/block_group/${id || contextGroupId}`, {
+      method: "DELETE"
+    });
+  }, {
+    onSuccess: (data, groupId) => {
+      queryClient2.invalidateQueries(["block_group"]);
+      toast.success("groupe supprim\xE9");
+    }
+  });
+}
+function useDuplicateGroup() {
+  const { groupId } = useContext(BlocksGroupContext);
+  return useMutation((id) => {
+    if (!id && !groupId) {
+      throw new Error("id is mandatory, and no fallback groupId was found in current context");
+    }
+    return fetcher(`/block_group/duplicate/${id}`, {
+      method: "POST"
+    });
+  }, {
+    onSuccess: (newGroupId) => {
+      window.location.replace(`/admin/TheliaBlocks/${newGroupId}`);
     }
   });
 }
@@ -2090,7 +2126,9 @@ function AddBlock({
     className: "my-4"
   }, "Glissez-d\xE9posez le type de contenu souhait\xE9"), /* @__PURE__ */ React34.createElement("button", {
     className: "px-2 font-semibold border-2 rounded-md w-max border-vermillon text-vermillon hover:bg-vermillon hover:text-white md:px-4 md:py-1",
-    onClick: () => setIsOpen(true)
+    onClick: () => {
+      setIsOpen(true);
+    }
   }, "Ajouter du contenu"), /* @__PURE__ */ React34.createElement(AddBlockModal, {
     title: "Choisissez le contenu souhait\xE9",
     isOpen,
@@ -2278,9 +2316,10 @@ function GroupTitle() {
 
 // src/BlocksEditor.tsx
 import ReactModal2 from "react-modal";
+import { Toaster } from "react-hot-toast";
 
 // src/components/ToolBar/ToolBar.tsx
-import { Suspense as Suspense2, useState as useState20 } from "react";
+import { Suspense as Suspense2, useContext as useContext6, useState as useState20 } from "react";
 
 // src/components/ErrorBoundary.tsx
 import { Component } from "react";
@@ -2333,7 +2372,7 @@ var Iframe = ({ content }) => {
     src: "about:blank",
     frameBorder: "0",
     ref,
-    sandbox: true
+    sandbox: "allow-same-origin"
   });
 };
 var Iframe_default = Iframe;
@@ -2376,7 +2415,9 @@ function Preview({
 }
 
 // src/components/ToolBar/ToolBar.tsx
+import toast2 from "react-hot-toast";
 var ToolBar = () => {
+  const { group } = useContext6(BlocksGroupContext);
   const { blockList } = useBlocksContext();
   const mutation = useCreateOrUpdateGroup();
   const [showPreview, setShowPreview] = useState20(false);
@@ -2393,6 +2434,11 @@ var ToolBar = () => {
     type: "button",
     className: "Toolbar-save text-white bg-vermillon hover:bg-lightVermillon px-2 md:px-4 md:py-1 rounded-md h-full",
     onClick: () => {
+      if (!group?.title) {
+        console.log("hey");
+        toast2.error("Titre manquant");
+        return;
+      }
       mutation.mutate({ blocks: blockList });
     }
   }, "Enregistrer")), typeof showPreview === "number" ? /* @__PURE__ */ React.createElement(ErrorBoundary_default, null, /* @__PURE__ */ React.createElement(Suspense2, {
@@ -2408,7 +2454,8 @@ function BlocksEditor({
   apiUrl,
   containerId,
   groupId,
-  locales
+  locales,
+  backlink = true
 }) {
   if (!apiUrl)
     return null;
@@ -2427,11 +2474,11 @@ function BlocksEditor({
     groupId
   }, /* @__PURE__ */ React.createElement("div", {
     className: "BlocksEditor"
-  }, /* @__PURE__ */ React.createElement("div", {
+  }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(Toaster, null)), /* @__PURE__ */ React.createElement("div", {
     className: "BlocksEditor__header"
-  }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("a", {
+  }, backlink ? /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("a", {
     href: "/admin/TheliaBlocks"
-  }, "Back to BlocksList")), /* @__PURE__ */ React.createElement(GroupTitle, null), /* @__PURE__ */ React.createElement(GroupLocale, null)), /* @__PURE__ */ React.createElement(BlockContextProvider, {
+  }, "Back to BlocksList")) : null, /* @__PURE__ */ React.createElement(GroupTitle, null), /* @__PURE__ */ React.createElement(GroupLocale, null)), /* @__PURE__ */ React.createElement(BlockContextProvider, {
     root: true
   }, /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", {
     className: "BlocksEditor__content"
@@ -2441,9 +2488,14 @@ function BlocksEditor({
 }
 
 // src/BlocksList.tsx
+import toast3, { Toaster as Toaster2 } from "react-hot-toast";
 import { Suspense as Suspense4 } from "react";
+import useCopyToClipboard from "react-use/esm/useCopyToClipboard";
 function List() {
   const { data: groups = [] } = useGroups();
+  const [copied, copyToClipboard] = useCopyToClipboard();
+  const mutationDelete = useDeleteGroup();
+  const mutationDuplicate = useDuplicateGroup();
   if (groups.length <= 0) {
     return /* @__PURE__ */ React.createElement("div", null, "No blocks to display");
   }
@@ -2452,7 +2504,22 @@ function List() {
   }, /* @__PURE__ */ React.createElement("thead", null, /* @__PURE__ */ React.createElement("tr", null, /* @__PURE__ */ React.createElement("th", null, "ID"), /* @__PURE__ */ React.createElement("th", null, "Nom"), /* @__PURE__ */ React.createElement("th", null, "Contenus li\xE9s"), /* @__PURE__ */ React.createElement("th", null, "Langues disponibles"), /* @__PURE__ */ React.createElement("th", null, "Actions"))), /* @__PURE__ */ React.createElement("tbody", null, groups.map((group) => {
     return /* @__PURE__ */ React.createElement("tr", null, /* @__PURE__ */ React.createElement("td", null, group.id), /* @__PURE__ */ React.createElement("td", null, /* @__PURE__ */ React.createElement("a", {
       href: `/admin/TheliaBlocks/${group.id}`
-    }, group.title || "No Title")), /* @__PURE__ */ React.createElement("td", null, "TODO"), /* @__PURE__ */ React.createElement("td", null, "TODO"), /* @__PURE__ */ React.createElement("td", null, "TODO"));
+    }, group.title || "No Title")), /* @__PURE__ */ React.createElement("td", null, "TODO"), /* @__PURE__ */ React.createElement("td", null, "TODO"), /* @__PURE__ */ React.createElement("td", null, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("button", {
+      onClick: () => {
+        mutationDelete.mutate(group.id);
+      }
+    }, "delete"), /* @__PURE__ */ React.createElement("button", {
+      onClick: () => {
+        mutationDuplicate.mutate(group.id);
+      }
+    }, "duplicate"), /* @__PURE__ */ React.createElement("button", {
+      type: "button",
+      onClick: () => {
+        const shortcode = `[block_group slug=${group.slug}]`;
+        copyToClipboard(shortcode);
+        toast3(`${shortcode} copi\xE9 avec succ\xE8s`);
+      }
+    }, "shortcode"))));
   })));
 }
 function BlocksList({ apiUrl }) {
@@ -2462,7 +2529,7 @@ function BlocksList({ apiUrl }) {
     api: apiUrl
   }, /* @__PURE__ */ React.createElement("div", {
     className: "BlocksList"
-  }, /* @__PURE__ */ React.createElement("div", {
+  }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(Toaster2, null)), /* @__PURE__ */ React.createElement("div", {
     className: "mb-8"
   }, /* @__PURE__ */ React.createElement("a", {
     href: "/admin/TheliaBlocks/new",
