@@ -121,7 +121,6 @@ class TheliaBlocksBackHook extends BaseHook
         }
 
         $group = $search->findOne();
-        dump($group->getId());
 
         return $this->render(
             'item-configuration.html',
