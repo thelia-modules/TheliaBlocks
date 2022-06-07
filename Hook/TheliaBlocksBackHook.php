@@ -128,7 +128,7 @@ class TheliaBlocksBackHook extends BaseHook
             [
                 'itemId' => $itemId,
                 'itemType' => $itemType,
-                'groupId' => $group->getId() ?? null,
+                'groupId' => $group ? $group->getId() : null,
             ]
         );
     }
