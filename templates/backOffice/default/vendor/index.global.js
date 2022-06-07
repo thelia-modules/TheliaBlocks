@@ -34758,6 +34758,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         },
         locale: currentLocale
       };
+      console.log(itemId, itemType, contextItemId, contextItemType);
       if (itemId || itemType) {
         data.itemBlockGroup = {
           itemType,
@@ -34774,7 +34775,6 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       });
     }, {
       onSuccess: (data) => {
-        window.location.replace(`/admin/TheliaBlocks/${data.id}`);
       }
     });
   }
@@ -46448,6 +46448,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     apiUrl,
     containerId,
     groupId,
+    itemId,
+    itemType,
     locales,
     backlink = true
   }) {
@@ -46465,7 +46467,9 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     }, /* @__PURE__ */ React.createElement(import_react33.Suspense, {
       fallback: "loading"
     }, /* @__PURE__ */ React.createElement(BlocksGroupProvider, {
-      groupId
+      groupId,
+      itemType,
+      itemId
     }, /* @__PURE__ */ React.createElement("div", {
       className: "BlocksEditor"
     }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(Toaster, null)), /* @__PURE__ */ React.createElement("div", {

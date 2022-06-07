@@ -192,6 +192,7 @@ function useCreateOrUpdateGroup() {
       },
       locale: currentLocale
     };
+    console.log(itemId, itemType, contextItemId, contextItemType);
     if (itemId || itemType) {
       data.itemBlockGroup = {
         itemType,
@@ -208,7 +209,6 @@ function useCreateOrUpdateGroup() {
     });
   }, {
     onSuccess: (data) => {
-      window.location.replace(`/admin/TheliaBlocks/${data.id}`);
     }
   });
 }
@@ -2454,6 +2454,8 @@ function BlocksEditor({
   apiUrl,
   containerId,
   groupId,
+  itemId,
+  itemType,
   locales,
   backlink = true
 }) {
@@ -2471,7 +2473,9 @@ function BlocksEditor({
   }, /* @__PURE__ */ React.createElement(Suspense3, {
     fallback: "loading"
   }, /* @__PURE__ */ React.createElement(BlocksGroupProvider, {
-    groupId
+    groupId,
+    itemType,
+    itemId
   }, /* @__PURE__ */ React.createElement("div", {
     className: "BlocksEditor"
   }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(Toaster, null)), /* @__PURE__ */ React.createElement("div", {

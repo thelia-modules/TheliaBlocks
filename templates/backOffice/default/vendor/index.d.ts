@@ -5,11 +5,13 @@ declare type Locale = {
     active: boolean;
 };
 
-declare function BlocksEditor({ apiUrl, containerId, groupId, locales, backlink, }: {
+declare function BlocksEditor({ apiUrl, containerId, groupId, itemId, itemType, locales, backlink, }: {
     apiUrl: string;
     locales: Locale[];
     containerId: string;
     groupId?: number;
+    itemId?: number;
+    itemType?: string;
     backlink: boolean;
 }): JSX.Element | null;
 
