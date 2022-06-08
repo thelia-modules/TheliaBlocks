@@ -92,16 +92,6 @@ class TheliaBlocksBackHook extends BaseHook
         $event->add('[block_group_admin_js]');
     }
 
-    public function onMainCss(HookRenderEvent $event)
-    {
-        $event->add($this->render("thelia-blocks-css-shortcode.html"));
-    }
-
-    public function onMainJs(HookRenderEvent $event)
-    {
-        $event->add($this->render("thelia-blocks-js-shortcode.html"));
-    }
-
     protected function addTheliaBlocksConfigurationTab(HookRenderBlockEvent $event, $itemType, $formRedirectUrl): void
     {
         $itemId = $event->getArgument('id');
