@@ -77,34 +77,36 @@ class TheliaBlocksBackHook extends BaseHook
     {
         $itemId = $event->getArgument('itemId');
         $itemType = $event->getArgument('itemType');
+        $groupId = $event->getArgument('groupId');
 
-        $event->add($this->getConfigurationRender($itemType, $itemId));
+        $event->add($this->getConfigurationRender($itemType, $itemId, $groupId));
     }
 
-    public function onMainCss(HookRenderEvent $event)
+    public function onMainCss(HookRenderEvent $event): void
     {
-        $event->add($this->render("thelia-blocks-css-shortcode.html"));
+        $event->add($this->render('thelia-blocks-css-shortcode.html'));
     }
 
-    public function onMainJs(HookRenderEvent $event)
+    public function onMainJs(HookRenderEvent $event): void
     {
-        $event->add($this->render("thelia-blocks-js-shortcode.html"));
+        $event->add($this->render('thelia-blocks-js-shortcode.html'));
     }
 
     protected function addTheliaBlocksConfigurationTab(HookRenderBlockEvent $event, $itemType, $formRedirectUrl): void
     {
         $itemId = $event->getArgument('id');
+        $groupId = $event->getArgument('groupId');
 
         $event->add(
             [
                 'id' => 'theliablocks_item_details',
                 'title' => $this->trans('Thelia Blocks', [], TheliaBlocks::DOMAIN_NAME),
-                'content' => $this->getConfigurationRender($itemType, $itemId),
+                'content' => $this->getConfigurationRender($itemType, $itemId, $groupId),
             ]
         );
     }
 
-    private function getConfigurationRender($itemType, $itemId)
+    private function getConfigurationRender($itemType, $itemId, $groupId = null)
     {
         TheliaBlocks::$pageNeedTheliaBlockAssets = true;
 
@@ -113,6 +115,10 @@ class TheliaBlocksBackHook extends BaseHook
             ->filterByItemType($itemType)
             ->filterByItemId($itemId)
             ->endUse();
+
+        if ($groupId) {
+            $search->filterById($groupId);
+        }
 
         $group = $search->findOne();
 
