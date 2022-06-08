@@ -38,6 +38,12 @@ class TheliaBlocks extends BaseModule
     public const FOLDER_LINK = 'folder_link';
     public const CONTENT_LINK = 'content_link';
 
+    public static bool $pageNeedTheliaBlockAssets = false;
+
+    const ADMIN_CSS_SHORTCODE = 'block_group_admin_css';
+
+    const ADMIN_JS_SHORTCODE = 'block_group_admin_js';
+
     public function update($currentVersion, $newVersion, ConnectionInterface $con = null): void
     {
         $finder = Finder::create()
