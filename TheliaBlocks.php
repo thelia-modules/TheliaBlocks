@@ -17,6 +17,12 @@ class TheliaBlocks extends BaseModule
 
     const BLOCK_GROUP_SHORT_CODE = 'block_group';
 
+    public static bool $pageNeedTheliaBlockAssets = false;
+
+    const ADMIN_CSS_SHORTCODE = 'block_group_admin_css';
+
+    const ADMIN_JS_SHORTCODE = 'block_group_admin_js';
+
     public function update($currentVersion, $newVersion, ConnectionInterface $con = null): void
     {
         $finder = Finder::create()
@@ -89,5 +95,7 @@ class TheliaBlocks extends BaseModule
     public function postActivation(ConnectionInterface $con = null): void
     {
         ShortCode::createNewShortCodeIfNotExist(self::BLOCK_GROUP_SHORT_CODE, self::BLOCK_GROUP_SHORT_CODE);
+        ShortCode::createNewShortCodeIfNotExist(self::ADMIN_CSS_SHORTCODE, self::ADMIN_CSS_SHORTCODE);
+        ShortCode::createNewShortCodeIfNotExist(self::ADMIN_JS_SHORTCODE, self::ADMIN_JS_SHORTCODE);
     }
 }

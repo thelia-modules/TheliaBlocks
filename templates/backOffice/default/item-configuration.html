@@ -1,40 +1,16 @@
-{block name="no-return-functions"}
-    {$admin_current_location = 'tools'}
-{/block}
-
-{block name="page-title"}{intl l='Thelia blocks'}{/block}
-
-{block name="after-admin-css"}
-
-    <link rel="stylesheet" href="{encore_module_asset file='vendor/index.css' module="TheliaBlocks"}" />
-
-    {hook name="thelia.blocks.plugincss"}
-{/block}
-
-
-{block name="main-content"}
-    <div id="thelia-blocks-root-edit" class="thelia-blocks-ui"></div>
-{/block}
-
+{$containerId = "thelia-blocks-root-edit"|cat:bin2hex(random_bytes(5))}
+<div id="{$containerId}" class="thelia-blocks-ui"></div>
 
 {block name="javascript-last-call"}
-
-
-        <script type="text/javascript" crossorigin src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
-        <script type="text/javascript" crossorigin src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"></script>
-        <script type="text/javascript" src="{encore_module_asset file='vendor/index.global.js' module="TheliaBlocks"}"></script>
-
-        {hook name="thelia.blocks.plugins"}
-
         <script type="module">
             let API_ROOT = "{navigate to='index'}/open_api"
             let groupId = "{$groupId|default:null}";
             let itemId = "{$itemId|default:null}";
             let itemType = "{$itemType|default:null}";
+            let containerId = "{$containerId}";
 
             {literal}
                 let locales = [{id:0, title: 'en_US',code: 'en_US', active: true}, {id:1, title: 'fr_FR', code: 'fr_FR', active: false}];
-                let containerId = "thelia-blocks-root-edit";
                 let CONTAINER = document.getElementById(containerId);
                 ReactDOM.render(React.createElement(TheliaBlocks.BlocksEditor, {
                     apiUrl: API_ROOT,

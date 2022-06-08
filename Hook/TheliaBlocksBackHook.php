@@ -22,7 +22,6 @@ use TheliaBlocks\TheliaBlocks;
 class TheliaBlocksBackHook extends BaseHook
 {
     protected $requestStack;
-    protected $productDataImageService;
 
     public function onProductTab(HookRenderBlockEvent $event): void
     {
@@ -82,6 +81,16 @@ class TheliaBlocksBackHook extends BaseHook
         $event->add($this->getConfigurationRender($itemType, $itemId));
     }
 
+    public function onMainCss(HookRenderEvent $event)
+    {
+        $event->add($this->render("thelia-blocks-css-shortcode.html"));
+    }
+
+    public function onMainJs(HookRenderEvent $event)
+    {
+        $event->add($this->render("thelia-blocks-js-shortcode.html"));
+    }
+
     protected function addTheliaBlocksConfigurationTab(HookRenderBlockEvent $event, $itemType, $formRedirectUrl): void
     {
         $itemId = $event->getArgument('id');
@@ -97,6 +106,8 @@ class TheliaBlocksBackHook extends BaseHook
 
     private function getConfigurationRender($itemType, $itemId)
     {
+        TheliaBlocks::$pageNeedTheliaBlockAssets = true;
+
         $search = BlockGroupQuery::create();
         $search->useItemBlockGroupQuery()
             ->filterByItemType($itemType)

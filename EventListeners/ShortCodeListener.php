@@ -28,8 +28,28 @@ class ShortCodeListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            TheliaBlocks::BLOCK_GROUP_SHORT_CODE => [['blockGroupShortCode']]
+            TheliaBlocks::BLOCK_GROUP_SHORT_CODE => [['blockGroupShortCode']],
+            TheliaBlocks::ADMIN_CSS_SHORTCODE => [['addBlockGroupCss']],
+            TheliaBlocks::ADMIN_JS_SHORTCODE => [['addBlockGroupJs']]
         ];
+    }
+
+    public function addBlockGroupCss(ShortCodeEvent $event)
+    {
+        if (TheliaBlocks::$pageNeedTheliaBlockAssets) {
+            $event->setResult(
+                $this->parser->render("thelia-blocks-css.html")
+            );
+        }
+    }
+
+    public function addBlockGroupJs(ShortCodeEvent $event)
+    {
+        if (TheliaBlocks::$pageNeedTheliaBlockAssets) {
+            $event->setResult(
+                $this->parser->render("thelia-blocks-js.html")
+            );
+        }
     }
 
     public function blockGroupShortCode(ShortCodeEvent $event)
