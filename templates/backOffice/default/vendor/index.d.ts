@@ -4,4 +4,6 @@ declare function BlocksEditor({
   apiUrl: string;
 }): JSX.Element | null;
 
-export { BlocksEditor, BlocksList };
+declare function registerPlugin(plugin: any): void;
+
+export { BlocksEditor, BlocksList, registerPlugin };
