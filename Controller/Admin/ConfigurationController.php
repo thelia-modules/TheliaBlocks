@@ -57,7 +57,7 @@ class ConfigurationController extends BaseAdminController
     public function reactAppEditAction($blockGroupId)
     {
         return $this->render('thelia-blocks-item-configuration', [
-            'blockGroupId' => $blockGroupId,
+            'groupId' => $blockGroupId,
         ]);
     }
 }

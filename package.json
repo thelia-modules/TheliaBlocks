@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "install": "npm link @thelia/blocks-editor",
     "prepare": "husky install",
-    "build": "NODE_ENV=production gulp",
-    "dev": "gulp"
+    "build": "NODE_ENV=production node_modules/.bin/gulp",
+    "dev": "node_modules/.bin/gulp"
   },
   "repository": {
     "type": "git",
