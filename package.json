@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/thelia-modules/TheliaBlocks#readme",
   "devDependencies": {
-    "husky": "^8.0.1",
-    "gulp": "^4.0.2"
+    "gulp": "^4.0.2",
+    "husky": "^8.0.1"
   }
 }
