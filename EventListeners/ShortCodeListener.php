@@ -122,73 +122,42 @@ class ShortCodeListener implements EventSubscriberInterface
 
     public function renderProductLink(ShortCodeEvent $event): void
     {
-        $attributes = $event->getAttributes();
-        $id = $attributes['id'];
-        $locale = $this->request->getSession()->getLang()->getLocale();
-
-        $item = ProductQuery::create()
-        ->filterById($id)
-        ->findOne();
-
-        $url = $item->getUrl($locale);
-        $title = $attributes['title'] ?? $item->getTitle();
-        $link = $this->renderLink($url, $title);
-
-        $event->setResult($link);
+        $event->setResult($this->generateLink(ProductQuery::create(), $event));
     }
 
     public function renderCategoryLink(ShortCodeEvent $event): void
     {
-        $attributes = $event->getAttributes();
-        $id = $attributes['id'];
-        $locale = $this->request->getSession()->getLang()->getLocale();
-
-        $item = CategoryQuery::create()
-        ->filterById($id)
-        ->findOne();
-
-        $url = $item->getUrl($locale);
-        $title = $attributes['title'] ?? $item->getTitle();
-        $link = $this->renderLink($url, $title);
-
-        $event->setResult($link, $title);
+        $event->setResult($this->generateLink(CategoryQuery::create(), $event));
     }
 
     public function renderContentLink(ShortCodeEvent $event): void
     {
-        $attributes = $event->getAttributes();
-        $id = $attributes['id'];
-        $locale = $this->request->getSession()->getLang()->getLocale();
-
-        $item = ContentQuery::create()
-        ->filterById($id)
-        ->findOne();
-
-        $url = $item->getUrl($locale);
-        $title = $attributes['title'] ?? $item->getTitle();
-        $link = $this->renderLink($url, $title);
-
-        $event->setResult($link);
+        $event->setResult($this->generateLink(ContentQuery::create(), $event));
     }
 
     public function renderFolderLink(ShortCodeEvent $event): void
+    {
+        $event->setResult($this->generateLink(FolderQuery::create(), $event));
+    }
+
+    public function generateLink(CategoryQuery|ProductQuery|ContentQuery|FolderQuery $query, ShortCodeEvent $event)
     {
         $attributes = $event->getAttributes();
         $id = $attributes['id'];
         $locale = $this->request->getSession()->getLang()->getLocale();
 
-        $item = FolderQuery::create()
+        $item = $query
         ->filterById($id)
         ->findOne();
 
         $url = $item->getUrl($locale);
         $title = $attributes['title'] ?? $item->getTitle();
-        $link = $this->renderLink($url, $title);
+        $link = $this->renderLinkTemplate($url, $title);
 
-        $event->setResult($link);
+        return $link;
     }
 
-    private function renderLink(string $url, string $title)
+    private function renderLinkTemplate(string $url, string $title)
     {
         return '<a href="'.$url.'">'.$title.'</a>';
     }

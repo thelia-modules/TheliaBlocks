@@ -12,7 +12,6 @@
 
 namespace TheliaBlocks\Service;
 
-use Thelia\Core\Template\TheliaTemplateHelper;
 use TheliaSmarty\Template\SmartyParser;
 
 class JsonBlockService
@@ -20,24 +19,16 @@ class JsonBlockService
     /** @var SmartyParser */
     private $parser;
 
-    /** @var TheliaTemplateHelper */
-    private $templateHelper;
-
-    public function __construct(SmartyParser $parser, TheliaTemplateHelper $templateHelper)
+    public function __construct(SmartyParser $parser)
     {
         $this->parser = $parser;
-        $this->templateHelper = $templateHelper;
     }
 
     public function renderJsonBlocks($json): string
     {
-        // $currentTemplateDefinition = $this->parser->getTemplateDefinition();
-        // $this->parser->setTemplateDefinition($this->templateHelper->getActiveFrontTemplate());
         $blockRenders = array_map(function ($block) {
             return $this->parser->render('blocks'.DS.$block['type']['id'].'.html', $block);
         }, json_decode($json, true));
-
-        // $this->parser->setTemplateDefinition($currentTemplateDefinition);
 
         return implode(' ', $blockRenders);
     }
