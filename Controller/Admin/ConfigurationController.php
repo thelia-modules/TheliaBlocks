@@ -15,6 +15,7 @@ namespace TheliaBlocks\Controller\Admin;
 use Symfony\Component\Routing\Annotation\Route;
 use Thelia\Controller\Admin\BaseAdminController;
 use TheliaBlocks\Service\JsonBlockService;
+use TheliaBlocks\TheliaBlocks;
 
 /**
  * Class ConfigurationController.
@@ -32,6 +33,7 @@ class ConfigurationController extends BaseAdminController
 
     public function __construct(JsonBlockService $jsonBlockService)
     {
+        TheliaBlocks::$pageNeedTheliaBlockAssets = true;
         $this->jsonBlockService = $jsonBlockService;
     }
 

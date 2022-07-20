@@ -9,29 +9,18 @@
 {block name="check-resource"}admin.content{/block}
 {block name="check-access"}view{/block}
 
-{block name="after-admin-css"}
-
-    <link rel="stylesheet" href="{encore_module_asset file='vendor/index.css' module="TheliaBlocks"}" />
-
-    {hook name="thelia.blocks.plugincss"}
-{/block}
-
 {block name="main-content"}
+[product_link id=1 title="lol"]
     <div id="thelia-blocks-root" class="thelia-blocks-ui"></div>
 {/block}
 
 {block name="javascript-last-call"}
-
-        <script type="text/javascript" crossorigin src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
-        <script type="text/javascript" crossorigin src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
-        <script type="text/javascript" src="{encore_module_asset file='vendor/index.global.js' module="TheliaBlocks"}"></script>
-
-        {hook name="thelia.blocks.plugins"}
-
-        <script>
-            let API_ROOT = "{navigate to='index'}/open_api";
-            {literal}
-             ReactDOM.render(React.createElement(TheliaBlocks.BlocksList, {apiUrl: API_ROOT}, null), document.getElementById('thelia-blocks-root'))
-            {/literal}
-        </script>
+    <script>
+        {literal}
+        let CONTAINER = document.getElementById('thelia-blocks-root');
+            ReactDOM.render(React.createElement(TheliaBlocks.BlocksList, {
+            apiUrl: window.THELIA_BLOCKS_API_ROOT
+        }, null), CONTAINER)
+        {/literal}
+    </script>
 {/block}

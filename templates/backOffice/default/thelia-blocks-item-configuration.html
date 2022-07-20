@@ -9,15 +9,6 @@
 {block name="check-resource"}admin.content{/block}
 {block name="check-access"}view{/block}
 
-{block name="after-admin-css"}
-
-    <link rel="stylesheet" href="{encore_module_asset file='vendor/index.css' module="TheliaBlocks"}" />
-    <link rel="stylesheet" href="{encore_module_asset file='styles/styles.css' module="TheliaBlocks"}" /> 
-
-    {hook name="thelia.blocks.plugincss"}
-{/block}
-
-
 {block name="main-content"}
     <div id="thelia-blocks-root-edit" class="thelia-blocks-ui"></div>
 {/block}
@@ -25,24 +16,25 @@
 
 {block name="javascript-last-call"}
 
-
-        <script type="text/javascript" crossorigin src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
-        <script type="text/javascript" crossorigin src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"></script>
-        <script type="text/javascript" src="{encore_module_asset file='vendor/index.global.js' module="TheliaBlocks"}"></script>
-
         {hook name="thelia.blocks.plugins"}
 
         <script type="module">
-            let API_ROOT = "{navigate to='index'}/open_api"
+
             let groupId = "{$groupId|default:null}";
             let itemId = "{$itemId|default:null}";
             let itemType = "{$itemType|default:null}";
+            let CONTAINER_ID = "thelia-blocks-root-edit";
+            let CONTAINER = document.getElementById(CONTAINER_ID);
 
             {literal}
-                let locales = [{id:0, title: 'en_US',code: 'en_US', active: true}, {id:1, title: 'fr_FR', code: 'fr_FR', active: false}];
-                let containerId = "thelia-blocks-root-edit";
-                let CONTAINER = document.getElementById(containerId);
-                ReactDOM.render(React.createElement(TheliaBlocks.BlocksEditor, {apiUrl: API_ROOT, containerId: containerId, groupId, itemId, itemType, locales}, null), CONTAINER)
+                ReactDOM.render(React.createElement(TheliaBlocks.BlocksEditor, {
+                    apiUrl: window.THELIA_BLOCKS_API_ROOT,
+                    containerId: CONTAINER_ID,
+                    groupId,
+                    itemId,
+                    itemType,
+                    locales: window.THELIA_BLOCKS_LOCALES
+                }, null), CONTAINER)
             {/literal}
         </script>
 {/block}
