@@ -6,4 +6,11 @@ declare function BlocksEditor({
 
 declare function registerPlugin(plugin: any): void;
 
-export { BlocksEditor, BlocksList, registerPlugin };
+export {
+  BlocksEditor,
+  BlocksList,
+  fetcher,
+  queryClient,
+  registerPlugin,
+  withQueryClient,
+};
