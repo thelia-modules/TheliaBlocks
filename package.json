@@ -1,0 +1,28 @@
+{
+  "name": "theliablocks",
+  "version": "1.0.0",
+  "description": "This module is under development, please do not try to use it.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "npm link @thelia/blocks-editor",
+    "prepare": "husky install",
+    "build": "NODE_ENV=production node_modules/.bin/gulp",
+    "dev": "node_modules/.bin/gulp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thelia-modules/TheliaBlocks.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thelia-modules/TheliaBlocks/issues"
+  },
+  "homepage": "https://github.com/thelia-modules/TheliaBlocks#readme",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "husky": "^8.0.1"
+  }
+}

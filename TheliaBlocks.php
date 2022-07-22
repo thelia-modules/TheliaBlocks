@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * This file is part of the Thelia package.
+ * http://www.thelia.net
+ *
+ * (c) OpenStudio <info@thelia.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace TheliaBlocks;
 
 use Propel\Runtime\Connection\ConnectionInterface;
@@ -13,9 +23,20 @@ use Thelia\Module\BaseModule;
 class TheliaBlocks extends BaseModule
 {
     /** @var string */
-    const DOMAIN_NAME = 'TheliaBlocks';
+    public const DOMAIN_NAME = 'TheliaBlocks';
 
-    const BLOCK_GROUP_SHORT_CODE = 'block_group';
+    public const BLOCK_GROUP_SHORT_CODE = 'block_group';
+
+    public static bool $pageNeedTheliaBlockAssets = false;
+
+    public const ADMIN_CSS_SHORTCODE = 'block_group_admin_css';
+
+    public const ADMIN_JS_SHORTCODE = 'block_group_admin_js';
+
+    public const CATEGORY_LINK = 'category_link';
+    public const PRODUCT_LINK = 'product_link';
+    public const FOLDER_LINK = 'folder_link';
+    public const CONTENT_LINK = 'content_link';
 
     public function update($currentVersion, $newVersion, ConnectionInterface $con = null): void
     {
@@ -89,5 +110,11 @@ class TheliaBlocks extends BaseModule
     public function postActivation(ConnectionInterface $con = null): void
     {
         ShortCode::createNewShortCodeIfNotExist(self::BLOCK_GROUP_SHORT_CODE, self::BLOCK_GROUP_SHORT_CODE);
+        ShortCode::createNewShortCodeIfNotExist(self::ADMIN_CSS_SHORTCODE, self::ADMIN_CSS_SHORTCODE);
+        ShortCode::createNewShortCodeIfNotExist(self::ADMIN_JS_SHORTCODE, self::ADMIN_JS_SHORTCODE);
+        ShortCode::createNewShortCodeIfNotExist(self::CATEGORY_LINK, self::CATEGORY_LINK);
+        ShortCode::createNewShortCodeIfNotExist(self::PRODUCT_LINK, self::PRODUCT_LINK);
+        ShortCode::createNewShortCodeIfNotExist(self::FOLDER_LINK, self::FOLDER_LINK);
+        ShortCode::createNewShortCodeIfNotExist(self::CONTENT_LINK, self::CONTENT_LINK);
     }
 }

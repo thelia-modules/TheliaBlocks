@@ -1,0 +1,28 @@
+{extends file="admin-layout.tpl"}
+
+{block name="no-return-functions"}
+    {$admin_current_location = 'tools'}
+{/block}
+
+{block name="page-title"}{intl l='Thelia blocks'}{/block}
+
+{block name="check-resource"}admin.content{/block}
+{block name="check-access"}view{/block}
+
+{block name="main-content"}
+    <div id="thelia-blocks-root-new" class="thelia-blocks-ui"></div>
+{/block}
+
+{block name="javascript-last-call"}
+    {literal}
+    <script type="module">
+        let CONTAINER = document.getElementById("thelia-blocks-root-new");
+        ReactDOM.render(React.createElement(TheliaBlocks.BlocksEditor, {
+            apiUrl: window.THELIA_BLOCKS_API_ROOT,
+            containerId: containerId,
+            groupId: null,
+            locales: window.THELIA_BLOCKS_LOCALES
+        }, null), CONTAINER)
+    </script>
+    {/literal}
+{/block}
