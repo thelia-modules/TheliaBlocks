@@ -545,6 +545,12 @@ select:focus {
 .mb-8 {
   margin-bottom: 2rem;
 }
+.ml-auto {
+  margin-left: auto;
+}
+.ml-6 {
+  margin-left: 1.5rem;
+}
 .block {
   display: block;
 }
@@ -553,6 +559,9 @@ select:focus {
 }
 .table {
   display: table;
+}
+.w-1\/4 {
+  width: 25%;
 }
 .w-full {
   width: 100%;
@@ -583,6 +592,9 @@ select:focus {
 }
 .resize {
   resize: both;
+}
+.flex-col {
+  flex-direction: column;
 }
 .items-center {
   align-items: center;
@@ -733,6 +745,10 @@ select:focus {
 .bg-red {
   --tw-bg-opacity: 1;
   background-color: rgb(210 25 25 / var(--tw-bg-opacity));
+}
+.bg-pearlMedium {
+  --tw-bg-opacity: 1;
+  background-color: rgb(235 235 235 / var(--tw-bg-opacity));
 }
 .p-8 {
   padding: 2rem;
