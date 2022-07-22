@@ -1,4 +1,5 @@
 {$containerId = "thelia-blocks-root-edit"|cat:bin2hex(random_bytes(5))}
+<div id="{$containerId}-linking" class="thelia-blocks-link-content"></div>
 <div id="{$containerId}" class="thelia-blocks-ui"></div>
 
 {block name="javascript-last-call"}
@@ -8,20 +9,30 @@
             let itemId = "{$itemId|default:null}";
             let itemType = "{$itemType|default:null}";
             let containerId = "{$containerId}";
+            let containerLinkingId = "{$containerId}-linking";
 
             {literal}
-                let locales = [{id:0, title: 'en_US',code: 'en_US', active: true}, {id:1, title: 'fr_FR', code: 'fr_FR', active: false}];
-                let CONTAINER = document.getElementById(containerId);
+
+
+                ReactDOM.render(React.createElement(TheliaBlocks.LinkBlockToItem, {
+                    apiUrl: API_ROOT,
+                    groupId,
+                    itemId,
+                    itemType,
+                    containerLinkingId
+                }, null), document.getElementById(containerLinkingId))
+
+
                 ReactDOM.render(React.createElement(TheliaBlocks.BlocksEditor, {
                     apiUrl: API_ROOT,
                     containerId: containerId,
                     groupId,
                     itemId,
                     itemType,
-                    locales,
+                    locales: window.THELIA_BLOCKS_LOCALES,
                     backlink: false,
                     noRedirect: true
-                }, null), CONTAINER)
+                }, null), document.getElementById(containerId))
             {/literal}
         </script>
 {/block}
