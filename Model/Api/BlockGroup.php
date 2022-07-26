@@ -12,6 +12,8 @@ use Propel\Runtime\ActiveQuery\Criteria;
 use Thelia\Core\Translation\Translator;
 use Thelia\Model\Base\ProductCategory;
 use Thelia\Model\FeatureProduct;
+use Thelia\Model\LangQuery;
+use TheliaBlocks\Model\BlockGroupI18nQuery;
 use TheliaBlocks\Model\BlockGroupQuery;
 
 /**
@@ -77,6 +79,14 @@ class BlockGroup extends BaseApiModel
      * )
      */
     protected $jsonContent;
+
+    /**
+     * @var array
+     * @OA\Property(
+     *    type="array",
+     * )
+     */
+    protected $locales;
 
     /**
      * @param $groups
@@ -232,8 +242,37 @@ class BlockGroup extends BaseApiModel
         return $this;
     }
 
+    public function getLocales(): array | null
+    {
+        return $this->locales;
+    }
+
+    public function setLocales(array $locales): self
+    {
+        $this->locales = $locales;
+
+        return $this;
+    }
+
     protected function getTheliaModel($propelModelName = null)
     {
         return parent::getTheliaModel(\TheliaBlocks\Model\BlockGroup::class);
+    }
+
+    public function createFromTheliaModel($theliaModel, $locale = null): void
+    {
+        parent::createFromTheliaModel($theliaModel, $locale);
+
+        $locales = array_map(
+            function ($item) {
+                return LangQuery::create()->findOneByLocale($item['Locale'])->getCode();
+            },
+            BlockGroupI18nQuery::create()
+                ->filterById($this->getId())
+                ->find()
+                ->toArray()
+        );
+
+        $this->setLocales($locales);
     }
 }

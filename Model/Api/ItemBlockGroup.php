@@ -15,6 +15,7 @@ namespace TheliaBlocks\Model\Api;
 use OpenApi\Annotations as OA;
 use OpenApi\Constraint;
 use OpenApi\Model\Api\BaseApiModel;
+use Thelia\Tools\URL;
 use TheliaMain\PropelResolver;
 
 /**
@@ -176,7 +177,7 @@ class ItemBlockGroup extends BaseApiModel
             }
 
             $tableMap = new $tableMapClass();
-            $queryClass = $tableMap->getClassName().'Query';
+            $queryClass = $tableMap->getClassName() . 'Query';
 
             if (!class_exists($queryClass)) {
                 return $this;
@@ -197,8 +198,28 @@ class ItemBlockGroup extends BaseApiModel
             if (method_exists($item, 'getTitle')) {
                 $this->setItemTitle($item->getTitle());
             }
-            if (method_exists($item, 'getUrl')) {
-                $this->setItemUrl($item->getUrl());
+
+            switch ($this->getItemType()) {
+                case 'product':
+                    $this->setItemUrl(URL::getInstance()->absoluteUrl("/admin/products/update?product_id={$this->getItemId()}"));
+                    break;
+                case 'category':
+                    $this->setItemUrl(URL::getInstance()->absoluteUrl("/admin/categories/update?category_id={$this->getItemId()}"));
+                    break;
+                case 'content':
+                    $this->setItemUrl(URL::getInstance()->absoluteUrl("/admin/contents/update/{$this->getItemId()}"));
+                    break;
+                case 'brand':
+                    $this->setItemUrl(URL::getInstance()->absoluteUrl("/admin/brands/update/{$this->getItemId()}"));
+                    break;
+                case 'folder':
+                    $this->setItemUrl(URL::getInstance()->absoluteUrl("/admin/folders/update/{$this->getItemId()}"));
+                    break;
+                default:
+                    if (method_exists($item, 'getUrl')) {
+                        $this->setItemUrl($item->getUrl());
+                    }
+                    break;
             }
         } catch (\Throwable $th) {
             // throw $th;
