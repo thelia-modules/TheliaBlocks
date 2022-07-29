@@ -18,7 +18,8 @@
     <script>
         {literal}
         let CONTAINER = document.getElementById('thelia-blocks-root');
-            ReactDOM.render(React.createElement(TheliaBlocks.BlocksList, {
+        ReactDOM.render(React.createElement(TheliaBlocks.BlocksList, {
+            containerId: "thelia-blocks-root",
             apiUrl: window.THELIA_BLOCKS_API_ROOT
         }, null), CONTAINER)
         {/literal}
