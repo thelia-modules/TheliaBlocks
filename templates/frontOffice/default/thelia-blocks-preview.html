@@ -1,21 +1,29 @@
 {extends file="layout.tpl"}
 
-{block name="page-title"}{intl l='Thelia blocks'}{/block}
+{* Body Class *}
+{block name="body-class"}page-home{/block}
 
-{block name="header"}{/block}
+{* Page Title *}
+{block name='no-return-functions' append}
+    {$page_title = {config key="store_name"}}
+{/block}
 
-{block name="navigation"}{/block}
+{* Hide breadcrumb *}
+{block name='breadcrumb'}{/block}
 
+{* Main content *}
 {block name="main-content"}
     {json_block_render json=$json}
 {/block}
 
-{block name="footer"}{/block}
+{block name="stylesheet"}
 
-{block name="javascript-data"}{/block}
+{/block}
 
-{block name="minicart"}{/block}
-{block name="minilogin"}{/block}
-{block name="search"}{/block}
+{block name="after-javascript-include"}
 
-{block name="modals"}{/block}
+{/block}
+
+{block name="javascript-initialization"}
+
+{/block}

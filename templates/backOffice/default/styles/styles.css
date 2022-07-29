@@ -59,6 +59,18 @@ div#page-wrapper {
   padding: 0 15px 0 15px;
 }
 
+a:hover {
+  color: inherit;
+}
+
+a:focus {
+  color: inherit;
+}
+
+label {
+  font-weight: 400;
+}
+
 /*
 Remove the default font size and weight for headings.
 */

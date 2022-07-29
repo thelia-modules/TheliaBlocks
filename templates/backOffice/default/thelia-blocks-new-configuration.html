@@ -19,7 +19,7 @@
         let CONTAINER = document.getElementById("thelia-blocks-root-new");
         ReactDOM.render(React.createElement(TheliaBlocks.BlocksEditor, {
             apiUrl: window.THELIA_BLOCKS_API_ROOT,
-            containerId: containerId,
+            containerId: "thelia-blocks-root-new",
             groupId: null,
             locales: window.THELIA_BLOCKS_LOCALES
         }, null), CONTAINER)

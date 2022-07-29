@@ -84,6 +84,7 @@ class BlockGroup extends BaseApiModel
      * @var array
      * @OA\Property(
      *    type="array",
+     *    @OA\Items()
      * )
      */
     protected $locales;
