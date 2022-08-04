@@ -14,13 +14,13 @@
             {literal}
 
 
-                ReactDOM.render(React.createElement(TheliaBlocks.LinkBlockToItem, {
+                /* ReactDOM.render(React.createElement(TheliaBlocks.LinkBlockToItem, {
                     apiUrl: API_ROOT,
                     groupId,
                     itemId,
                     itemType,
                     containerLinkingId
-                }, null), document.getElementById(containerLinkingId))
+                }, null), document.getElementById(containerLinkingId)) */
 
 
                 ReactDOM.render(React.createElement(TheliaBlocks.BlocksEditor, {
@@ -30,6 +30,7 @@
                     itemId,
                     itemType,
                     locales: window.THELIA_BLOCKS_LOCALES,
+                    itemConfiguration: true,
                     backlink: false,
                     noRedirect: true
                 }, null), document.getElementById(containerId))

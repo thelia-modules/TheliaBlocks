@@ -2,7 +2,8 @@
   {foreach $data as $column name="colloop"}
     {$columnContain = []}
     {$renderTemplates = []}
-    {foreach $column["group"]["data"] as $block}
+    
+    {foreach $column as $block}
         {if $block['type']['id']}
             {$columnContain[] = $block['type']['id']}
 

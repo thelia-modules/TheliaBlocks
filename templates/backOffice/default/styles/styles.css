@@ -59,11 +59,11 @@ div#page-wrapper {
   padding: 0 15px 0 15px;
 }
 
-a:hover {
-  color: inherit;
+a {
+  transition: none;
 }
 
-a:focus {
+a:hover {
   color: inherit;
 }
 
