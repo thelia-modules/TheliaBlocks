@@ -1,0 +1,39 @@
+{$containerId = "thelia-blocks-root-edit"|cat:bin2hex(random_bytes(5))}
+<div id="{$containerId}-linking" class="thelia-blocks-link-content"></div>
+<div id="{$containerId}" class="thelia-blocks-ui"></div>
+
+{block name="javascript-last-call"}
+        <script type="module">
+            let API_ROOT = "{navigate to='index'}/open_api"
+            let groupId = "{$groupId|default:null}";
+            let itemId = "{$itemId|default:null}";
+            let itemType = "{$itemType|default:null}";
+            let containerId = "{$containerId}";
+            let containerLinkingId = "{$containerId}-linking";
+
+            {literal}
+
+
+                /* ReactDOM.render(React.createElement(TheliaBlocks.LinkBlockToItem, {
+                    apiUrl: API_ROOT,
+                    groupId,
+                    itemId,
+                    itemType,
+                    containerLinkingId
+                }, null), document.getElementById(containerLinkingId)) */
+
+
+                ReactDOM.render(React.createElement(TheliaBlocks.BlocksEditor, {
+                    apiUrl: API_ROOT,
+                    containerId: containerId,
+                    groupId,
+                    itemId,
+                    itemType,
+                    locales: window.THELIA_BLOCKS_LOCALES,
+                    itemConfiguration: true,
+                    backlink: false,
+                    noRedirect: true
+                }, null), document.getElementById(containerId))
+            {/literal}
+        </script>
+{/block}

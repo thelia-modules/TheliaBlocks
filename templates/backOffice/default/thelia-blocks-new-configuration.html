@@ -10,19 +10,19 @@
 {block name="check-access"}view{/block}
 
 {block name="main-content"}
-
-    <div id="thelia-blocks-root" class="thelia-blocks-ui"></div>
+    <div id="thelia-blocks-root-new" class="thelia-blocks-ui"></div>
 {/block}
 
 {block name="javascript-last-call"}
-    <script>
-        {literal}
-        let CONTAINER = document.getElementById('thelia-blocks-root');
-        ReactDOM.render(React.createElement(TheliaBlocks.BlocksList, {
-            containerId: "thelia-blocks-root",
+    {literal}
+    <script type="module">
+        let CONTAINER = document.getElementById("thelia-blocks-root-new");
+        ReactDOM.render(React.createElement(TheliaBlocks.BlocksEditor, {
             apiUrl: window.THELIA_BLOCKS_API_ROOT,
-            isEditing: true
+            containerId: "thelia-blocks-root-new",
+            groupId: null,
+            locales: window.THELIA_BLOCKS_LOCALES
         }, null), CONTAINER)
-        {/literal}
     </script>
+    {/literal}
 {/block}

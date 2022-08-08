@@ -1,0 +1,29 @@
+{extends file="layout.tpl"}
+
+{* Body Class *}
+{block name="body-class"}page-home{/block}
+
+{* Page Title *}
+{block name='no-return-functions' append}
+    {$page_title = {config key="store_name"}}
+{/block}
+
+{* Hide breadcrumb *}
+{block name='breadcrumb'}{/block}
+
+{* Main content *}
+{block name="main-content"}
+    {json_block_render json=$json}
+{/block}
+
+{block name="stylesheet"}
+
+{/block}
+
+{block name="after-javascript-include"}
+
+{/block}
+
+{block name="javascript-initialization"}
+
+{/block}

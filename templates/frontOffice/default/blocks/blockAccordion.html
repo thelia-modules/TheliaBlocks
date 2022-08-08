@@ -1,21 +1,24 @@
 <div class="block-{$type['id']} mb-4">
-    {foreach $data as $item}
-      {$itemContain = []}
-      {$renderTemplates = []}
-      {foreach $item["group"]["data"] as $block}
-          {if $block['type']['id']}
-              {$itemContain[] = $block['type']['id']}
+    {foreach $data["content"] as $item}
+        {$itemContain = []}
+        {$renderTemplates = []}
 
-              {$templateFileName = "blocks/"|cat:$block['type']['id']|cat:".html"}
-              {capture name="catpure-renderTemplates" append="renderTemplates"}
+        {foreach $item as $block}
+            {if $block['type']['id']}
+                {$itemContain[] = $block['type']['id']}
 
-                  {include file=$templateFileName data=$block['data'] type=$block['type']}
-              {/capture}
-          {/if}
-      {/foreach}
-      <h3>{$item['title']}</h3>
-      <div data-tb-contain="{$itemContain|implode:' '}">
-          {$renderTemplates|implode:' ' nofilter}
-      </div>
+                {$templateFileName = "blocks/"|cat:$block['type']['id']|cat:".html"}
+                {capture name="catpure-renderTemplates" append="renderTemplates"}
+                    {include file=$templateFileName data=$block['data'] type=$block['type']}
+                {/capture}
+            {/if}
+        {/foreach}
+
+        <details>
+            <summary>{$data['title']}</summary>
+            <div data-tb-contain="{$itemContain|implode:' '}">
+            {$renderTemplates|implode:' ' nofilter}
+            </div>
+        </details>
     {/foreach}
-  </div>
+</div>

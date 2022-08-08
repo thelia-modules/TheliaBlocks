@@ -1,20 +1,26 @@
 <?php
 
+/*
+ * This file is part of the Thelia package.
+ * http://www.thelia.net
+ *
+ * (c) OpenStudio <info@thelia.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace TheliaBlocks\Model\Api;
 
 use OpenApi\Annotations as OA;
-use OpenApi\Exception\OpenApiException;
+use OpenApi\Constraint;
 use OpenApi\Model\Api\BaseApiModel;
-use OpenApi\Constraint as Constraint;
-use OpenApi\Model\Api\Error;
-use OpenApi\OpenApi;
-use Propel\Runtime\ActiveQuery\Criteria;
-use Thelia\Core\Translation\Translator;
-use TheliaBlocks\Model\BlockGroupQuery;
+use Thelia\Tools\URL;
+use TheliaMain\PropelResolver;
 
 /**
- * Class ItemBlockGroup
- * @package OpenApi\Model\Api
+ * Class ItemBlockGroup.
+ *
  * @OA\Schema(
  *     schema="ItemBlockGroup",
  *     title="ItemBlockGroup",
@@ -23,7 +29,7 @@ use TheliaBlocks\Model\BlockGroupQuery;
 class ItemBlockGroup extends BaseApiModel
 {
     /**
-     * @var integer
+     * @var int
      * @OA\Property(
      *     type="integer",
      * )
@@ -39,7 +45,7 @@ class ItemBlockGroup extends BaseApiModel
     protected $itemType;
 
     /**
-     * @var integer
+     * @var int
      * @OA\Property(
      *    type="integer",
      * )
@@ -48,7 +54,23 @@ class ItemBlockGroup extends BaseApiModel
     protected $itemId;
 
     /**
-     * @var integer
+     * @var string
+     * @OA\Property(
+     *    type="string",
+     * )
+     */
+    protected $itemTitle;
+
+    /**
+     * @var string
+     * @OA\Property(
+     *    type="string",
+     * )
+     */
+    protected $itemUrl;
+
+    /**
+     * @var int
      * @OA\Property(
      *    type="integer",
      * )
@@ -64,49 +86,34 @@ class ItemBlockGroup extends BaseApiModel
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     * @return ItemBlockGroup
-     */
-    public function setId(int $id): ItemBlockGroup
+    public function setId(int $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getItemType(): string
     {
         return $this->itemType;
     }
 
-    /**
-     * @param string $itemType
-     * @return ItemBlockGroup
-     */
-    public function setItemType(string $itemType): ItemBlockGroup
+    public function setItemType(string $itemType): self
     {
         $this->itemType = $itemType;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getItemId(): int
     {
         return $this->itemId;
     }
 
-    /**
-     * @param int $itemId
-     * @return ItemBlockGroup
-     */
-    public function setItemId(int $itemId): ItemBlockGroup
+    public function setItemId(int $itemId): self
     {
         $this->itemId = $itemId;
+
         return $this;
     }
 
@@ -118,18 +125,104 @@ class ItemBlockGroup extends BaseApiModel
         return $this->blockGroupId;
     }
 
-    /**
-     * @param int $blockGroupId
-     * @return ItemBlockGroup
-     */
-    public function setBlockGroupId(int $blockGroupId): ItemBlockGroup
+    public function setBlockGroupId(int $blockGroupId): self
     {
         $this->blockGroupId = $blockGroupId;
+
+        return $this;
+    }
+
+    public function getItemTitle(): string
+    {
+        return $this->itemTitle;
+    }
+
+    public function setItemTitle(string $itemTitle): self
+    {
+        $this->itemTitle = $itemTitle;
+
+        return $this;
+    }
+
+    public function getItemUrl(): string
+    {
+        return $this->itemUrl;
+    }
+
+    public function setItemUrl(string $itemUrl): self
+    {
+        $this->itemUrl = $itemUrl;
+
         return $this;
     }
 
     protected function getTheliaModel($propelModelName = null)
     {
         return parent::getTheliaModel(\TheliaBlocks\Model\ItemBlockGroup::class);
+    }
+
+    public function createFromTheliaModel($theliaModel, $locale = null)
+    {
+        parent::createFromTheliaModel($theliaModel, $locale);
+
+        if (!$this->getItemType()) {
+            return $this;
+        }
+
+        try {
+            $tableMapClass = PropelResolver::getTableMapByTableName($this->getItemType());
+
+            if (!$tableMapClass) {
+                return $this;
+            }
+
+            $tableMap = new $tableMapClass();
+            $queryClass = $tableMap->getClassName() . 'Query';
+
+            if (!class_exists($queryClass)) {
+                return $this;
+            }
+
+            $query = $queryClass::create();
+
+            if (null === $query) {
+                return $this;
+            }
+
+            $item = $query->findOneById($this->getItemId());
+
+            if ($item === null) {
+                return $this;
+            }
+
+            if (method_exists($item, 'getTitle')) {
+                $this->setItemTitle($item->getTitle());
+            }
+
+            switch ($this->getItemType()) {
+                case 'product':
+                    $this->setItemUrl(URL::getInstance()->absoluteUrl("/admin/products/update?product_id={$this->getItemId()}"));
+                    break;
+                case 'category':
+                    $this->setItemUrl(URL::getInstance()->absoluteUrl("/admin/categories/update?category_id={$this->getItemId()}"));
+                    break;
+                case 'content':
+                    $this->setItemUrl(URL::getInstance()->absoluteUrl("/admin/contents/update/{$this->getItemId()}"));
+                    break;
+                case 'brand':
+                    $this->setItemUrl(URL::getInstance()->absoluteUrl("/admin/brands/update/{$this->getItemId()}"));
+                    break;
+                case 'folder':
+                    $this->setItemUrl(URL::getInstance()->absoluteUrl("/admin/folders/update/{$this->getItemId()}"));
+                    break;
+                default:
+                    if (method_exists($item, 'getUrl')) {
+                        $this->setItemUrl($item->getUrl());
+                    }
+                    break;
+            }
+        } catch (\Throwable $th) {
+            // throw $th;
+        }
     }
 }
