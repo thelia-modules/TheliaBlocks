@@ -1,0 +1,41 @@
+<div class="block-{$type['id']} mb-4">
+  {foreach $data["productList"] as $productId}
+    {loop type="product" name="product_list" id=$productId}
+      {$product_id = $ID}
+      {$width = 150}
+      {$height = 150}
+      {$productTitle = ""}
+
+      <a href="{$URL}">
+        <div>
+          <figure tabindex="-1">
+            {loop name="product_thumbnail" type="image" product=$product_id width=$width height=$height resize_mode="borders" limit="1"}
+                <img src="{$IMAGE_URL}" alt="{$productTitle}" loading="lazy" width="{$width}" height="{$height}">
+            {/loop}
+            {elseloop rel="product_thumbnail"}
+                <img src="//placehold.it/{$width}x{$height}" alt="{$productTitle}" loading="lazy" width="{$width}" height="{$height}">
+            {/elseloop}
+          </figure>
+
+          <div>
+              <div>{$productTitle|default:$TITLE}</div>
+              {if $CHAPO}<div>{$CHAPO nofilter}</div>{/if}
+          </div>
+
+          <div>
+              {if $IS_PROMO }
+                  <span><span>{intl l="Special Price:"} </span>{format_money number=$TAXED_PROMO_PRICE symbol={currency attr="symbol"}}</span>
+                  <span><span>{intl l="Regular Price:"} </span>{format_money number=$TAXED_PRICE symbol={currency attr="symbol"}}</span>
+              {else}
+                  <span>{format_money number=$BEST_TAXED_PRICE symbol={currency attr="symbol"}}</span>
+              {/if}
+          </div>
+        </div>
+
+        {if $IS_PROMO }
+          <span>-{((($TAXED_PRICE - $TAXED_PROMO_PRICE) / $TAXED_PRICE) * 100)|round:0} %</span>
+        {/if}
+      </a>
+    {/loop}
+  {/foreach}
+</div>
