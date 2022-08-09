@@ -177,7 +177,7 @@ class ItemBlockGroup extends BaseApiModel
             }
 
             $tableMap = new $tableMapClass();
-            $queryClass = $tableMap->getClassName() . 'Query';
+            $queryClass = $tableMap->getClassName().'Query';
 
             if (!class_exists($queryClass)) {
                 return $this;
@@ -207,7 +207,7 @@ class ItemBlockGroup extends BaseApiModel
                     $this->setItemUrl(URL::getInstance()->absoluteUrl("/admin/categories/update?category_id={$this->getItemId()}"));
                     break;
                 case 'content':
-                    $this->setItemUrl(URL::getInstance()->absoluteUrl("/admin/contents/update/{$this->getItemId()}"));
+                    $this->setItemUrl(URL::getInstance()->absoluteUrl("/admin/content/update/{$this->getItemId()}"));
                     break;
                 case 'brand':
                     $this->setItemUrl(URL::getInstance()->absoluteUrl("/admin/brands/update/{$this->getItemId()}"));
