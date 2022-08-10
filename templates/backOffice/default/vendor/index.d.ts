@@ -1,11 +1,6 @@
-import { QueryClient } from 'react-query';
-import { AxiosRequestConfig } from 'axios';
 import { Locale } from './types/types.js';
 export { BlockModuleComponentProps, BlockPluginDefinition } from './types/types.js';
 import 'react';
-
-declare function fetcher<T>(url: string, config?: AxiosRequestConfig): Promise<any>;
-declare const queryClient: QueryClient;
 
 interface IBlocksEditorProps {
     apiUrl: string;
@@ -36,4 +31,4 @@ declare const LinkBlockToItem: ({ groupId, itemId, itemType, }: Partial<ILinkBlo
 
 declare function registerPlugin(plugin: any): void;
 
-export { BlocksEditor, BlocksList, LinkBlockToItem, fetcher, queryClient, registerPlugin };
+export { BlocksEditor, BlocksList, LinkBlockToItem, registerPlugin };
