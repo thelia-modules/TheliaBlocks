@@ -11,6 +11,8 @@ Celui ci devra afficher un champ pour indiquer le nom de l'auteur, et un second 
 Commençons par définir les données initiales du plugin :
 
 ```js
+// ./templates/backOffice/[votre_template]/src/blocks/Citation/Citation.jsx
+
 const initialData = {
   author: "",
   quote: "",
@@ -29,6 +31,8 @@ Un plugin Thelia Blocks prends toujours deux `props` :
 Exemple :
 
 ```jsx
+// ./templates/backOffice/[votre_template]/src/blocks/Citation/Citation.jsx
+
 const BlockQuoteComponent = ({ data, onUpdate }) => {
   return (
     <div className="BlockQuote">
@@ -67,6 +71,8 @@ Celui ci embarque déjà un système rich-text et d'autres fonctionnalités qui 
 Voyons comment l'utiliser dans notre plugin de citations :
 
 ```js
+// ./templates/backOffice/[votre_template]/src/blocks/Citation/Citation.jsx
+
 // import de la liste des plugins
 import { blocks } from "../..";
 
@@ -76,6 +82,8 @@ const { Text } = blocks; // Récupération du plugin Text
 Nous pouvons désormais nous servir de `Text` dans le plugin Citation :
 
 ```jsx
+// ./templates/backOffice/[votre_template]/src/blocks/Citation/Citation.jsx
+
 const BlockQuoteComponent = ({ data, onUpdate }) => {
   return (
     <div className="BlockQuote">
@@ -104,6 +112,8 @@ const BlockQuoteComponent = ({ data, onUpdate }) => {
 
 Notre plugin Citation utilise désormais `Text` pour fonctionner.
 
+:warning: Attention : un plugin doit obligatoirement avoir un composant React ou hériter d'un autre plugin
+
 ### 3 - Définition de la structure de votre plugin
 
 Chaque plugin est représenté par un objet. Celui ci regroupe toutes les informations nécessaires à son bon fonctionnement.
@@ -120,6 +130,8 @@ Chaque plugin est représenté par un objet. Celui ci regroupe toutes les inform
 Exemple :
 
 ```js
+// ./templates/backOffice/[votre_template]/src/blocks/Citation/Citation.jsx
+
 const blockQuote = {
   type: { id: "blockQuote" },
   component: BlockQuoteComponent,
@@ -137,40 +149,116 @@ const blockQuote = {
   },
 };
 
-// N'oubliez pas d'exporter votre plugin :
 export default blockQuote;
 ```
 
-### 4 - Ajout du plugin à Thelia Blocks
+Pour finir, n'oubliez pas d'exporter votre plugin :
+
+```js
+// ./templates/backOffice/[votre_template]/src/blocks/index.js
+
+export { default } from "./Citation";
+```
+
+### 4 - Configuration du plugin avec Thelia
+
+#### 4.1 - Ajout du plugin dans Thelia Blocks
 
 Votre plugin doit maintenant être ajouté à Thelia Blocks pour être disponible lors de la création d'un nouveau Block.
 
-Rendez vous dans le fichier `"hooks/usePlugins.tsx"`.
+La fonction `"registerPlugin"` se charge de l'ajout de la liste des plugins dans Thelia Blocks.
 
-Le hook `"usePlugins"` se charge de l'ajout de la liste des plugins dans Thelia Blocks.
+Celle ci est exportée par le package `@openstudio/blocks-editor`
 
-Voyons comment y ajouter notre plugin de citations :
+Exemple :
 
 ```js
-import { Text, ..., Citation } from  "../blocks";
+// ./templates/backOffice/[votre_template]/index.js
 
-export const TB_DEFAULT_PLUGINS = [
-	{ id: nanoid(), ...Text },
-	{ id: nanoid(), ...Citation }, // Ajout du block Citation à la liste
-];
+import { registerPlugin } from "@openstudio/blocks-editor";
+import { Citation } from "./blocks";
+
+registerPlugin(Citation);
+```
+
+#### 4.2 - Génération du bundle
+
+:warning: L'exemple ci-dessous décrit une utilisation avec le bundler [tsup](https://github.com/egoist/tsup), vous pouvez évidemment utiliser n'importe quel autre bundler.
+
+```js
+// ./templates/backOffice/[votre_template]/tsup.config.js
+
+import { defineConfig } from "tsup";
+
+export default defineConfig([
+  {
+    entry: ["./src/index.js"],
+    clean: false,
+    dts: {
+      entry: ["./src/index.js"],
+    },
+    sourcemap: true,
+    platform: "browser",
+    globalName: "MonModule",
+    target: "es2020",
+  },
+]);
+```
+
+#### 4.3 - Création des template Smarty
+
+```smarty
+<!-- ./templates/backOffice/[votre_template]/import-plugin.html -->
+
+<script src="{encore_module_asset file='monModule/dist/index.global.js' module="MonModule"}"></script>
+```
+
+```smarty
+<!-- ./templates/backOffice/[votre_template]/import-styles.css -->
+
+<link rel="stylesheet" href="{encore_module_asset file='monModule/dist/index.css' module="MonModule"}" />
+```
+
+#### 4.4 - Rendu des templates avec les hooks Thelia
+
+Création des méthodes de rendu des templates :
+
+```php
+// ./Hook/BackHook.php
+
+public function importPlugins(HookRenderEvent $event): void {
+	$event->add($this->render('monModule/import-plugins.html'));
+}
+
+public function imporCSS(HookRenderEvent $event): void {
+	$event->add($this->render('monModule/import-styles.html'));
+}
+```
+
+Binding des methodes sur les events Thelia Blocks :
+
+```xml
+<!-- ./Config/config.xml -->
+
+<hooks>
+	<hook id="monmodule.hook" class="MonModule\Hook\BackHook">
+		<tag name="hook.event_listener" event="thelia.blocks.plugins" type="back" method="importPlugins" />
+		<tag name="hook.event_listener" event="thelia.blocks.plugincss" type="back" method="importCSS" />
+	</hook>
+</hooks>
 ```
 
 ### 5 - Création du rendu Smarty
 
 Votre plugin est disponible dans Thelia Blocks, la dernière étape consiste à définir l'HTML qu'il doit générer une fois que Thelia l'affichera sur votre site.
 
-Rendez vous dans le dossier `"local/modules/TheliaBlocks/templates/[votre_template]/blocks/"` sur votre Thelia.
+Rendez vous dans le dossier `"local/modules/[VotreModule]/templates/frontOffice/[votre_template]/blocks/"` de votre Thelia.
 
 #### 5.1 - Création de votre rendu :
 
 Pour commencer, créez un fichier nommé `"[id_de_votre_plugin].html"`
 
-L'id a été défini dans la structure du plugin, il est important que votre fichier ai exactement le même nom que l'id, sinon Thelia ne trouvera pas votre plugin et rien ne sera affiché.
+L'ID a été défini dans la structure du plugin, il est important que votre fichier ai exactement le même nom que l'id, sinon Thelia ne trouvera pas votre plugin et rien ne sera affiché.
 
 Exemple :
 
@@ -186,6 +274,7 @@ Exemple :
 #### 6.1 - Traductions
 
 Vous pouvez traduire vos plugins sans soucis, Thelia Blocks utilise `react-intl` pour les traductions.
+
 La configuration des traductions sont disponibles dans le fichier `src/utils/intl.ts`.
 Plus d'informations sur la [documentation](https://formatjs.io/docs/getting-started/installation/) de `react-intl`
 
@@ -194,4 +283,5 @@ La traduction du titre et de la description du plugin se fait directement dans s
 #### 6.2 - TypeScript
 
 Les plugins de base de Thelia Blocks sont rédigés avec TypeScript, cependant, rien ne vous empêche de les rédiger en JavaScript classique.
+
 Des exemples d'intégration avec TypeScript sont disponibles [ici](https://github.com/thelia-modules/TheliaBlocks/example/)
