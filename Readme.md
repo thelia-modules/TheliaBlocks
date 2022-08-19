@@ -121,18 +121,16 @@ Exemple :
 
 ```js
 const blockQuote = {
-  type: { id: "blockQuote" }, // id du plugin (requis)
-  component: BlockQuoteComponent, // composant (requis)
-  initialData, // Les données initiales du plugin (requis)
-  icon: Icon, // Vous pouvez ajouter une icone SVG à votre plugin.
+  type: { id: "blockQuote" },
+  component: BlockQuoteComponent,
+  initialData,
+  icon: Icon,
   title: {
-    // Le titre du plugin avec ses traductions (requis)
     default: "Quote",
     fr: "Citation",
     en: "Quote",
   },
   description: {
-    // La description du plugin avec ses traductions (requis)
     default: "Display a quote",
     fr: "Affiche une citation",
     en: "Display a quote",
