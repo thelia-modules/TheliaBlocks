@@ -5,13 +5,17 @@
   "type": "thelia-module",
   "require": {
     "thelia/installer": "~1.1",
-    "thelia/short-code-module": "dev-main",
-    "thelia/open-api-module": "dev-main"
+    "thelia/short-code-module": "2.0.0",
+    "thelia/open-api-module": "2.1.1"
   },
   "extra": {
     "installer-name": "TheliaBlocks"
   },
-  "scripts": {
-      "post-update-cmd": "cd ../../.. && rm -rf web/assets/backOffice/default/TheliaBlocks"
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "config": {
+    "allow-plugins": {
+      "thelia/installer": true
+    }
   }
 }
