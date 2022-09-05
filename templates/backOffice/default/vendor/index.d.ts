@@ -34,9 +34,14 @@ declare const LinkBlockToItem: ({ groupId, itemId, itemType, }: Partial<ILinkBlo
 declare function registerPlugin(plugin: any): void;
 
 declare type AccordionContentData = IBlock[];
+declare type AccordionItem = {
+    id: string;
+    title: string;
+    content: AccordionContentData;
+};
 declare type AccordionData = {
     title: string;
-    content: AccordionContentData[];
+    group: AccordionItem[];
 };
 declare const Accordion: {
     type: {
@@ -44,13 +49,6 @@ declare const Accordion: {
     };
     component: ({ data, onUpdate, }: BlockModuleComponentProps<AccordionData>) => JSX.Element;
     initialData: AccordionData;
-    layout: {
-        default: string;
-        fr: string;
-        en: string;
-        es: string;
-        it: string;
-    };
     title: {
         default: string;
         fr: string;
@@ -147,6 +145,35 @@ declare type BlockListData = {
     values: string[];
 };
 declare const BlockList: BlockPluginDefinition<BlockListData>;
+
+declare type GroupContentData = IBlock[];
+declare type GroupData = {
+    content: GroupContentData[];
+};
+declare const Group: {
+    type: {
+        id: string;
+    };
+    component: ({ data, onUpdate }: BlockModuleComponentProps<GroupData>) => JSX.Element;
+    initialData: GroupData;
+    title: {
+        default: string;
+        fr: string;
+        en: string;
+        es: string;
+        it: string;
+    };
+    description: {
+        default: string;
+        fr: string;
+        en: string;
+        es: string;
+        it: string;
+    };
+    image: {
+        default: string;
+    };
+};
 
 declare const Columns: {
     TwoColumns: {
@@ -328,6 +355,7 @@ declare const Columns: {
 
 declare const index_Columns: typeof Columns;
 declare const index_Accordion: typeof Accordion;
+declare const index_Group: typeof Group;
 declare namespace index {
   export {
     blockRaw as Raw,
@@ -340,6 +368,7 @@ declare namespace index {
     index_Accordion as Accordion,
     blockProduct as Product,
     BlockList as List,
+    index_Group as Group,
   };
 }
 
