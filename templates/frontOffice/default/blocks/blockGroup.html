@@ -1,8 +1,22 @@
-<div class="tb-{$type['id']}">
-    {foreach $data as $block}
-        {if $block['type']['id']}
-            {$templateFileName = "blocks/"|cat:$block['type']['id']|cat:".html"}
-            {include file=$templateFileName data=$block['data'] type=$block['type']}
-        {/if}
+<div class="block-{$type['id']}">
+    {foreach $data["content"] as $item}
+        {$itemContain = []}
+        {$renderTemplates = []}
+
+        {foreach $item as $block}
+            {if $block['type']['id']}
+                {$itemContain[] = $block['type']['id']}
+
+                {$templateFileName = "blocks/"|cat:$block['type']['id']|cat:".html"}
+                {capture name="catpure-renderTemplates" append="renderTemplates"}
+                    {include file=$templateFileName data=$block['data'] type=$block['type']}
+                {/capture}
+            {/if}
+        {/foreach}
+
+
+    <div data-tb-contain="{$itemContain|implode:' '}">
+        {$renderTemplates|implode:' ' nofilter}
+    </div>
     {/foreach}
 </div>
