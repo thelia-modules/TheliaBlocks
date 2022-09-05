@@ -1,9 +1,11 @@
 <div class="block-{$type['id']} mb-4">
-    {foreach $data["content"] as $item}
+    <div>{$data["title"]}</div>
+    {foreach $data["group"] as $item}
         {$itemContain = []}
         {$renderTemplates = []}
+        {$accordionTitle = $item["title"]}
 
-        {foreach $item as $block}
+        {foreach $item["content"] as $block}
             {if $block['type']['id']}
                 {$itemContain[] = $block['type']['id']}
 
@@ -15,9 +17,9 @@
         {/foreach}
 
         <details>
-            <summary>{$data['title']}</summary>
+            <summary>{$accordionTitle}</summary>
             <div data-tb-contain="{$itemContain|implode:' '}">
-            {$renderTemplates|implode:' ' nofilter}
+                {$renderTemplates|implode:' ' nofilter}
             </div>
         </details>
     {/foreach}
