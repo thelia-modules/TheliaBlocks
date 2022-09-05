@@ -71,6 +71,30 @@ class ValidateJsonContent extends ContainerAwareCommand
             "group" => $group
           ];
         }
+
+        if ($value["type"]["id"] === "multiColumns") {
+          $oldData = $decodedJson[$key]["data"];
+
+          $itemsFromGroupsInCol = array_map(function ($item) {
+            if (isset($item["group"])) {
+              return $item["group"]["data"];
+            }
+
+            return $item;
+          }, $oldData);
+
+          $oldData = $itemsFromGroupsInCol;
+
+          $decodedJson[$key]["title"] = [
+            "default" => count($itemsFromGroupsInCol) . " Columns",
+            "fr" => count($itemsFromGroupsInCol) . " Colonnes",
+            "en" => count($itemsFromGroupsInCol) . " Columns",
+            "es" => count($itemsFromGroupsInCol) . " Columnas",
+            "it" => count($itemsFromGroupsInCol) . " Colonne"
+          ];
+
+          $decodedJson[$key]["data"] = $oldData;
+        }
       }
 
 
