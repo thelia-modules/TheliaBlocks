@@ -3,17 +3,17 @@
 namespace TheliaBlocks\Hook;
 
 use Thelia\Core\Event\Hook\HookRenderBlockEvent;
+use Thelia\Core\Event\Hook\HookRenderEvent;
 use Thelia\Core\Hook\BaseHook;
 use Thelia\Tools\URL;
 use TheliaBlocks\TheliaBlocks;
 
 class TheliaBlocksMenuHook extends BaseHook
 {
-    public function onMainTopMenuTools(HookRenderBlockEvent $event): void
+    public function onMainInTopMenuItems(HookRenderEvent $event): void
     {
-        $event->add([
-            'url' => URL::getInstance()->absoluteUrl('/admin/TheliaBlocks'),
-            'title' => $this->trans('Thelia Blocks', [], TheliaBlocks::DOMAIN_NAME),
-        ]);
+        $event->add(
+            $this->render('hook-in-top-menu-item.html', $event->getTemplateVars())
+        );
     }
 }

@@ -11,7 +11,7 @@
 
     <hooks>
         <hook id="theliablocks.hook.menu" class="TheliaBlocks\Hook\TheliaBlocksMenuHook" scope="request">
-            <tag name="hook.event_listener" event="main.top-menu-tools" type="back" method="onMainTopMenuTools"/>
+            <tag name="hook.event_listener" event="main.in-top-menu-items" type="back" method="onMainInTopMenuItems"/>
         </hook>
         <hook id="theliablocks.hook" class="TheliaBlocks\Hook\TheliaBlocksBackHook">
             <tag name="hook.event_listener" event="thelia.blocks.item.configuration" type="backoffice" method="onBlockItemConfiguration"/>
