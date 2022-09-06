@@ -158,3 +158,21 @@ textarea {
 .min-h-screen {
   min-height: 100vh;
 }
+
+.btn-success {
+  color: #fff;
+  background-color: #5cb85c;
+  border-color: #4cae4c;
+}
+
+.btn-info {
+  color: #fff;
+  background-color: #5bc0de;
+  border-color: #46b8da;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #f39922;
+  border-color: #ef8d0d;
+}

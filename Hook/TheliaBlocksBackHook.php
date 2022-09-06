@@ -100,7 +100,7 @@ class TheliaBlocksBackHook extends BaseHook
         $event->add(
             [
                 'id' => 'theliablocks_item_details',
-                'title' => $this->trans('Thelia Blocks', [], TheliaBlocks::DOMAIN_NAME),
+                'title' => $this->trans('Blocs de contenus', [], TheliaBlocks::DOMAIN_NAME),
                 'content' => $this->getConfigurationRender($itemType, $itemId, $groupId),
             ]
         );
