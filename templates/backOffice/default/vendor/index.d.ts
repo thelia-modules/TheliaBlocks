@@ -175,6 +175,37 @@ declare const Group: {
     };
 };
 
+declare type BlockHighlightData = {
+    value: string;
+};
+declare function BlockHighlightComponent({ data, onUpdate, }: BlockModuleComponentProps<BlockHighlightData>): JSX.Element;
+declare const BlockHighlight: {
+    type: {
+        id: string;
+    };
+    component: typeof BlockHighlightComponent;
+    initialData: {
+        value: string;
+    };
+    title: {
+        default: string;
+        fr: string;
+        en: string;
+        es: string;
+        it: string;
+    };
+    description: {
+        default: string;
+        fr: string;
+        en: string;
+        es: string;
+        it: string;
+    };
+    image: {
+        default: string;
+    };
+};
+
 declare const Columns: {
     TwoColumns: {
         component: ({ data, onUpdate, }: BlockModuleComponentProps<IBlock[][]>) => JSX.Element;
@@ -369,6 +400,7 @@ declare namespace index {
     blockProduct as Product,
     BlockList as List,
     index_Group as Group,
+    BlockHighlight as Highlight,
   };
 }
 
