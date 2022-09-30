@@ -1,24 +1,32 @@
 <?php
 
+/*
+ * This file is part of the Thelia package.
+ * http://www.thelia.net
+ *
+ * (c) OpenStudio <info@thelia.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace TheliaBlocks\Model\Api;
 
 use OpenApi\Annotations as OA;
+use OpenApi\Constraint;
 use OpenApi\Exception\OpenApiException;
 use OpenApi\Model\Api\BaseApiModel;
-use OpenApi\Constraint as Constraint;
 use OpenApi\Model\Api\Error;
 use OpenApi\OpenApi;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Thelia\Core\Translation\Translator;
-use Thelia\Model\Base\ProductCategory;
-use Thelia\Model\FeatureProduct;
 use Thelia\Model\LangQuery;
 use TheliaBlocks\Model\BlockGroupI18nQuery;
 use TheliaBlocks\Model\BlockGroupQuery;
 
 /**
- * Class BlockGroup
- * @package OpenApi\Model\Api
+ * Class BlockGroup.
+ *
  * @OA\Schema(
  *     schema="BlockGroup",
  *     title="BlockGroup",
@@ -27,7 +35,7 @@ use TheliaBlocks\Model\BlockGroupQuery;
 class BlockGroup extends BaseApiModel
 {
     /**
-     * @var integer
+     * @var int
      * @OA\Property(
      *    type="integer",
      * )
@@ -36,7 +44,7 @@ class BlockGroup extends BaseApiModel
     protected $id;
 
     /**
-     * @var boolean
+     * @var bool
      * @OA\Property(
      *     type="boolean",
      * )
@@ -92,8 +100,9 @@ class BlockGroup extends BaseApiModel
     /**
      * @param $groups
      *
-     * @return BlockGroup
      * @throws OpenApiException
+     *
+     * @return BlockGroup
      */
     public function validate($groups, $recursively = true)
     {
@@ -114,7 +123,7 @@ class BlockGroup extends BaseApiModel
                     'SchemaViolation',
                     [
                         'key' => 'slug',
-                        'error' => Translator::getInstance()->trans('Slug must be unique', [], OpenApi::DOMAIN_NAME)
+                        'error' => Translator::getInstance()->trans('Slug must be unique', [], OpenApi::DOMAIN_NAME),
                     ]
                 );
             }
@@ -143,31 +152,22 @@ class BlockGroup extends BaseApiModel
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     * @return BlockGroup
-     */
-    public function setId(int $id): BlockGroup
+    public function setId(int $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isVisible(): bool
     {
         return $this->visible;
     }
 
-    /**
-     * @param bool $visible
-     * @return BlockGroup
-     */
-    public function setVisible(bool $visible): BlockGroup
+    public function setVisible(bool $visible): self
     {
         $this->visible = $visible;
+
         return $this;
     }
 
@@ -181,11 +181,11 @@ class BlockGroup extends BaseApiModel
 
     /**
      * @param string $title
-     * @return BlockGroup
      */
-    public function setTitle(?string $title): BlockGroup
+    public function setTitle(?string $title): self
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -199,11 +199,11 @@ class BlockGroup extends BaseApiModel
 
     /**
      * @param string $slug
-     * @return BlockGroup
      */
-    public function setSlug(?string $slug): BlockGroup
+    public function setSlug(?string $slug): self
     {
         $this->slug = $slug;
+
         return $this;
     }
 
@@ -215,35 +215,26 @@ class BlockGroup extends BaseApiModel
         return $this->jsonContent;
     }
 
-    /**
-     * @param string|null $jsonContent
-     * @return BlockGroup
-     */
-    public function setJsonContent(?string $jsonContent): BlockGroup
+    public function setJsonContent(?string $jsonContent): self
     {
         $this->jsonContent = $jsonContent;
+
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getItemBlockGroups(): array
     {
         return $this->itemBlockGroups;
     }
 
-    /**
-     * @param array $itemBlockGroups
-     * @return BlockGroup
-     */
-    public function setItemBlockGroups(array $itemBlockGroups): BlockGroup
+    public function setItemBlockGroups(array $itemBlockGroups): self
     {
         $this->itemBlockGroups = $itemBlockGroups;
+
         return $this;
     }
 
-    public function getLocales(): array | null
+    public function getLocales(): array|null
     {
         return $this->locales;
     }

@@ -177,7 +177,7 @@ class ItemBlockGroup extends BaseApiModel
             }
 
             $tableMap = new $tableMapClass();
-            $queryClass = $tableMap->getClassName() . 'Query';
+            $queryClass = $tableMap->getClassName().'Query';
 
             if (!class_exists($queryClass)) {
                 return $this;

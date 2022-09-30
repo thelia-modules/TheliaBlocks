@@ -27,8 +27,6 @@ class TheliaBlocks extends BaseModule
 
     public const BLOCK_GROUP_SHORT_CODE = 'block_group';
 
-
-
     public static bool $pageNeedTheliaBlockAssets = false;
 
     public const ADMIN_CSS_SHORTCODE = 'block_group_admin_css';

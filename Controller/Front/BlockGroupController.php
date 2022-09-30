@@ -1,15 +1,25 @@
 <?php
 
+/*
+ * This file is part of the Thelia package.
+ * http://www.thelia.net
+ *
+ * (c) OpenStudio <info@thelia.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace TheliaBlocks\Controller\Front;
 
+use OpenApi\Annotations as OA;
 use OpenApi\Controller\Front\BaseFrontOpenApiController;
 use OpenApi\Model\Api\ModelFactory;
 use OpenApi\Service\OpenApiService;
 use Propel\Runtime\ActiveQuery\Criteria;
+use Symfony\Component\Routing\Annotation\Route;
 use Thelia\Core\HttpFoundation\Request;
 use TheliaBlocks\Model\BlockGroupQuery;
-use OpenApi\Annotations as OA;
-use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/open_api/block_group", name="block_group")

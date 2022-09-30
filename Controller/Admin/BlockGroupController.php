@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * This file is part of the Thelia package.
+ * http://www.thelia.net
+ *
+ * (c) OpenStudio <info@thelia.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace TheliaBlocks\Controller\Admin;
 
 use OpenApi\Annotations as OA;
@@ -67,7 +77,7 @@ class BlockGroupController extends BaseAdminOpenApiController
         $openApiBlockGroup = $modelFactory->buildModel('BlockGroup', $data['blockGroup']);
         $openApiBlockGroup->validate(self::GROUP_CREATE);
 
-        if(!isset($data['locale'])){
+        if (!isset($data['locale'])) {
             $data['locale'] = $request->getSession()->getAdminLang()->getLocale();
         }
 
@@ -132,7 +142,7 @@ class BlockGroupController extends BaseAdminOpenApiController
         $openApiBlockGroup = $modelFactory->buildModel('BlockGroup', $data['blockGroup']);
         $openApiBlockGroup->validate(self::GROUP_UPDATE);
 
-        if(!isset($data['locale'])){
+        if (!isset($data['locale'])) {
             $data['locale'] = $request->getSession()->getAdminLang()->getLocale();
         }
 

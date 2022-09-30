@@ -1,18 +1,25 @@
 <?php
 
+/*
+ * This file is part of the Thelia package.
+ * http://www.thelia.net
+ *
+ * (c) OpenStudio <info@thelia.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace TheliaBlocks\Controller\Admin;
 
+use OpenApi\Annotations as OA;
 use OpenApi\Controller\Admin\BaseAdminOpenApiController;
 use OpenApi\Model\Api\ModelFactory;
-use OpenApi\Annotations as OA;
 use OpenApi\Service\OpenApiService;
 use Symfony\Component\Routing\Annotation\Route;
 use Thelia\Core\HttpFoundation\JsonResponse;
 use Thelia\Core\HttpFoundation\Request;
 use TheliaBlocks\Model\BlockGroup;
-use TheliaBlocks\Model\BlockGroupQuery;
-use TheliaBlocks\Model\BlockGroupI18n;
-use TheliaBlocks\Model\BlockGroupI18nQuery;
 use TheliaBlocks\Model\ItemBlockGroup;
 use TheliaBlocks\Model\ItemBlockGroupQuery;
 
@@ -111,6 +118,6 @@ class ItemBlockGroupController extends BaseAdminOpenApiController
             $itemBlockGroup->delete();
         }
 
-        return new JsonResponse("Success", 204);
+        return new JsonResponse('Success', 204);
     }
 }
