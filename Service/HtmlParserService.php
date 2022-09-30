@@ -287,12 +287,12 @@ class HtmlParserService
                 [
                     'type' => ['id' => 'blockImage'],
                     'data' => array_merge(
-                            $imgData,
-                            [
-                                'src' => $tag['src'],
-                                'alt' => $alt,
-                            ]
-                        ),
+                        $imgData,
+                        [
+                            'src' => $tag['src'],
+                            'alt' => $alt,
+                        ]
+                    ),
                 ]
             );
         }
