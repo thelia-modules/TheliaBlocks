@@ -28,8 +28,8 @@ class ValidateJsonContent extends ContainerAwareCommand
     protected function configure(): void
     {
         $this
-          ->setName('thelia_blocks:blocks:validate')
-          ->setDescription('Validate & update json_content structure');
+            ->setName('thelia_blocks:blocks:validate')
+            ->setDescription('Validate & update json_content structure');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -47,9 +47,6 @@ class ValidateJsonContent extends ContainerAwareCommand
             $decodedJson = json_decode($content, true);
 
             foreach ($decodedJson as $key => $value) {
-                $output->writeln('-');
-                $output->writeln($value['type']['id']);
-
                 if ($value['type']['id'] === 'blockAccordion') {
                     $oldData = $decodedJson[$key]['data'];
 
@@ -67,8 +64,20 @@ class ValidateJsonContent extends ContainerAwareCommand
                     }, $oldData);
 
                     $decodedJson[$key]['data'] = [
-                      'title' => '',
-                      'group' => $group,
+                        'title' => '',
+                        'group' => $group,
+                    ];
+                }
+
+                if ($value['type']['id'] === 'blockGroup') {
+                    $oldData = $decodedJson[$key]['data'];
+
+                    $itemsFromData = array_map(function ($item) {
+                        return $item;
+                    }, $oldData);
+
+                    $decodedJson[$key]['data'] = [
+                        'content' => [$itemsFromData],
                     ];
                 }
 
@@ -86,11 +95,11 @@ class ValidateJsonContent extends ContainerAwareCommand
                     $oldData = $itemsFromGroupsInCol;
 
                     $decodedJson[$key]['title'] = [
-                      'default' => \count($itemsFromGroupsInCol).' Columns',
-                      'fr' => \count($itemsFromGroupsInCol).' Colonnes',
-                      'en' => \count($itemsFromGroupsInCol).' Columns',
-                      'es' => \count($itemsFromGroupsInCol).' Columnas',
-                      'it' => \count($itemsFromGroupsInCol).' Colonne',
+                        'default' => \count($itemsFromGroupsInCol) . ' Columns',
+                        'fr' => \count($itemsFromGroupsInCol) . ' Colonnes',
+                        'en' => \count($itemsFromGroupsInCol) . ' Columns',
+                        'es' => \count($itemsFromGroupsInCol) . ' Columnas',
+                        'it' => \count($itemsFromGroupsInCol) . ' Colonne',
                     ];
 
                     $decodedJson[$key]['data'] = $oldData;
