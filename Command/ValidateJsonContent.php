@@ -47,7 +47,7 @@ class ValidateJsonContent extends ContainerAwareCommand
             $decodedJson = json_decode($content, true);
 
             foreach ($decodedJson as $key => $value) {
-                if ($value['type']['id'] === 'blockAccordion') {
+                /* if ($value['type']['id'] === 'blockAccordion') {
                     $oldData = $decodedJson[$key]['data'];
 
                     $group = array_map(function ($item) {
@@ -66,6 +66,16 @@ class ValidateJsonContent extends ContainerAwareCommand
                     $decodedJson[$key]['data'] = [
                         'title' => '',
                         'group' => $group,
+                    ];
+                } */
+
+                if ($value['type']['id'] === "blockAccordion") {
+                    $accordionTitle = $decodedJson[$key]['data']['group']['title'];
+                    $accordionContent = $decodedJson[$key]['data']['group']['group'];
+
+                    $decodedJson[$key]['data'] = [
+                        'title' => $accordionTitle,
+                        'group' => $accordionContent,
                     ];
                 }
 
