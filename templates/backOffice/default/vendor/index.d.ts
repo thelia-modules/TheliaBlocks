@@ -154,7 +154,9 @@ declare const Group: {
     type: {
         id: string;
     };
-    component: ({ data, onUpdate }: BlockModuleComponentProps<GroupData>) => JSX.Element;
+    component: ({ data, onUpdate, noExclude, }: BlockModuleComponentProps<GroupData> & {
+        noExclude?: boolean | undefined;
+    }) => JSX.Element;
     initialData: GroupData;
     title: {
         default: string;
@@ -244,9 +246,6 @@ declare const Columns: {
     };
     ThreeColumns: {
         component: ({ data, onUpdate, }: BlockModuleComponentProps<IBlock[][]>) => JSX.Element;
-        type: {
-            id: string;
-        };
         layout: {
             default: string;
             fr: string;
@@ -263,6 +262,9 @@ declare const Columns: {
         };
         initialData: never[][];
         customIcon: JSX.Element;
+        type: {
+            id: string;
+        };
         icon: react.FunctionComponent<react.SVGProps<SVGSVGElement> & {
             title?: string | undefined;
         }>;
