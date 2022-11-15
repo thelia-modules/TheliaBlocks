@@ -19,6 +19,9 @@ use OpenApi\Service\OpenApiService;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Symfony\Component\Routing\Annotation\Route;
 use Thelia\Core\HttpFoundation\Request;
+use Thelia\Model\Lang;
+use TheliaBlocks\Model\Api\BlockGroup;
+use TheliaBlocks\Model\BlockGroupI18nQuery;
 use TheliaBlocks\Model\BlockGroupQuery;
 
 /**
@@ -100,7 +103,31 @@ class BlockGroupController extends BaseFrontOpenApiController
             return OpenApiService::jsonResponse(null, 404);
         }
 
+        /** @var BlockGroup $blockGroup */
         $blockGroup = $modelFactory->buildModel('BlockGroup', $propelBlockGroup, $request->get('locale'));
+
+        if (null !== $blockGroup && empty($blockGroup->getJsonContent())) {
+            $requestLocale = $request->get('locale');
+
+            if (! in_array($requestLocale, $blockGroup->getLocales())) {
+                // Copy default locale JSON content
+                $defaultLocale = Lang::getDefaultLanguage()->getLocale();
+
+                $copyLocale = $blockGroup->getLocales()[0];
+
+                if (in_array($defaultLocale, $blockGroup->getLocales())) {
+                    $copyLocale = $defaultLocale;
+                }
+
+                if (null !== $copyGroup = BlockGroupI18nQuery::create()
+                    ->filterById($blockGroup->getId())
+                    ->filterByLocale($copyLocale)
+                    ->findOne()
+                ) {
+                    $blockGroup->setJsonContent($copyGroup->getJsonContent());
+                }
+            }
+        }
 
         return OpenApiService::jsonResponse($blockGroup);
     }

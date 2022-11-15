@@ -257,7 +257,7 @@ class BlockGroup extends BaseApiModel
 
         $locales = array_map(
             function ($item) {
-                return LangQuery::create()->findOneByLocale($item['Locale'])->getCode();
+                return LangQuery::create()->findOneByLocale($item['Locale'])->getLocale();
             },
             BlockGroupI18nQuery::create()
                 ->filterById($this->getId())
