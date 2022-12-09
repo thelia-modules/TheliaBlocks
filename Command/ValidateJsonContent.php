@@ -96,7 +96,13 @@ class ValidateJsonContent extends ContainerAwareCommand
 
                     $itemsFromGroupsInCol = array_map(function ($item) {
                         if (isset($item['group'])) {
-                            return $item['group']['data'];
+                            $item = $item['group']['data'];
+                        }
+
+                        foreach ($item as $index => $column){
+                            if (null === $column['type']['id'] || empty($column['type']['id'])) {
+                                unset($item[$index]);
+                            }
                         }
 
                         return $item;
