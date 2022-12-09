@@ -4,7 +4,7 @@
     {$renderTemplates = []}
     
     {foreach $column as $block}
-        {if isset($block['type']['id'])}
+        {if isset($block['type']['id']) && !empty($block['type']['id'])}
             {$columnContain[] = $block['type']['id']}
 
             {$templateFileName = "blocks/"|cat:$block['type']['id']|cat:".html"}
