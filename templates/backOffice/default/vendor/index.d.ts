@@ -83,6 +83,32 @@ declare type BlockProductData = {
 };
 declare const blockProduct: BlockPluginDefinition<BlockProductData>;
 
+declare type BlockCategoryData = {
+    categoryList: string[];
+};
+declare const blockCategory: BlockPluginDefinition<BlockCategoryData>;
+
+declare type ColLink = {
+    type: "link";
+    value: {
+        link: string;
+        label: string;
+    };
+};
+declare type ColText = {
+    type: "text";
+    value: string;
+};
+declare type Col = ColLink | ColText;
+declare type BlockTableData = {
+    rowAmount: number;
+    colAmount: number;
+    headers: string[];
+    rows: Col[][];
+};
+
+declare const blockTable: BlockPluginDefinition<BlockTableData>;
+
 declare type BlockRawData = {
     value: string;
 };
@@ -400,6 +426,8 @@ declare namespace index {
     blockButton as Button,
     index_Accordion as Accordion,
     blockProduct as Product,
+    blockCategory as Category,
+    blockTable as Table,
     BlockList as List,
     index_Group as Group,
     BlockHighlight as Highlight,
