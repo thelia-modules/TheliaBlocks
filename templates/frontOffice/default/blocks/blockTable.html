@@ -1,0 +1,26 @@
+<div class="tb-{$type.id}">
+  <table>
+    <thead>
+      <tr>
+        {foreach $data.headers as $header}
+          <th>{$header}</th>
+        {/foreach}
+      </tr>
+    </thead>
+    <tbody>
+      {foreach $data.rows as $row}
+        <tr>
+          {foreach $row as $item}
+          <td>
+            {if $item.type === "link"}
+              <a href="{$item.value.link}">{$item.value.label}</a>
+            {else}
+              {$item.value}
+            {/if}
+          </td>
+          {/foreach}
+        </tr>
+      {/foreach}
+    </tbody>
+  </table>
+</div>

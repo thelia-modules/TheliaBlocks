@@ -1,0 +1,25 @@
+<div class="block-{$type['id']}">
+  {foreach $data["categoryList"] as $categoryId}
+    {loop type="category" name="category_list" id=$categoryId}
+      {$category_id = $ID}
+      {$width = 150}
+      {$height = 150}
+      {$categoryTitle = ""}
+
+      <a href="{$URL}">
+        <div>
+          <figure tabindex="-1">
+            {loop name="category_thumbnail" type="image" category=$category_id width=$width height=$height resize_mode="borders" limit="1"}
+                <img src="{$IMAGE_URL}" alt="{$categoryTitle}" loading="lazy" width="{$width}" height="{$height}">
+            {/loop}
+            {elseloop rel="category_thumbnail"}
+                <img src="//place-hold.it/{$width}x{$height}" alt="{$categoryTitle}" loading="lazy" width="{$width}" height="{$height}">
+            {/elseloop}
+          </figure>
+
+          <div>{$categoryTitle|default:$TITLE}</div>
+        </div>
+      </a>
+    {/loop}
+  {/foreach}
+</div>
