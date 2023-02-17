@@ -88,6 +88,13 @@ class TheliaBlocks extends BaseModule
             ],
             [
                 'type' => TemplateDefinition::BACK_OFFICE,
+                'code' => 'thelia.blocks.variables',
+                'title' => 'Hook blocks variables',
+                'description' => 'Hook to add or override thelia blocks variable defined in window object',
+                'active' => true,
+            ],
+            [
+                'type' => TemplateDefinition::BACK_OFFICE,
                 'code' => 'thelia.blocks.item.configuration',
                 'title' => 'Hook blocks item configuration',
                 'description' => 'Hook to add a configuration page for any items',
@@ -101,8 +108,8 @@ class TheliaBlocks extends BaseModule
      */
     public static function configureServices(ServicesConfigurator $servicesConfigurator): void
     {
-        $servicesConfigurator->load(self::getModuleCode().'\\', __DIR__)
-            ->exclude([THELIA_MODULE_DIR.ucfirst(self::getModuleCode()).'/I18n/*'])
+        $servicesConfigurator->load(self::getModuleCode() . '\\', __DIR__)
+            ->exclude([THELIA_MODULE_DIR . ucfirst(self::getModuleCode()) . '/I18n/*'])
             ->autowire(true)
             ->autoconfigure(true);
     }

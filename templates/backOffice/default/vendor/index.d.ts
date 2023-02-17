@@ -10,17 +10,19 @@ interface IBlocksEditorProps {
     groupId?: number;
     itemId?: number;
     itemType?: string;
+    urlPrefix: string;
     itemConfiguration?: boolean;
     isEditing?: boolean;
     backlink: boolean;
     noRedirect: boolean;
 }
-declare function BlocksEditor({ apiUrl, containerId, groupId, itemId, itemType, locales, itemConfiguration, isEditing, backlink, noRedirect, }: IBlocksEditorProps): JSX.Element | null;
+declare function BlocksEditor({ apiUrl, containerId, groupId, itemId, itemType, locales, urlPrefix, itemConfiguration, isEditing, backlink, noRedirect, }: IBlocksEditorProps): JSX.Element | null;
 
-declare const BlocksList: ({ apiUrl, containerId, locales, }: {
+declare const BlocksList: ({ apiUrl, containerId, locales, urlPrefix, }: {
     apiUrl: string;
     containerId: string;
     locales: Locale[];
+    urlPrefix: string;
 }) => JSX.Element | null;
 
 interface ILinkBlockToItemprops {
@@ -32,6 +34,14 @@ interface ILinkBlockToItemprops {
 declare const LinkBlockToItem: ({ groupId, itemId, itemType, }: Partial<ILinkBlockToItemprops>) => JSX.Element;
 
 declare function registerPlugin(plugin: any): void;
+
+declare const LocaleContext: react.Context<{
+    currentLocale: Locale["code"];
+    locales: Locale[];
+    prefix: string;
+    getUrlWithPrefix: (url: string, prefix?: string) => string;
+    setCurrentLocale: Function;
+}>;
 
 declare type AccordionContentData = IBlock[];
 declare type AccordionItem = {
@@ -434,4 +444,4 @@ declare namespace index {
   };
 }
 
-export { BlocksEditor, BlocksList, LinkBlockToItem, index as blocks, registerPlugin };
+export { BlocksEditor, BlocksList, LinkBlockToItem, LocaleContext, index as blocks, registerPlugin };
