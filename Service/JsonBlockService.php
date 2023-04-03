@@ -13,6 +13,7 @@
 namespace TheliaBlocks\Service;
 
 use TheliaSmarty\Template\SmartyParser;
+use Thelia\Log\Tlog;
 
 class JsonBlockService
 {
@@ -27,7 +28,15 @@ class JsonBlockService
     public function renderJsonBlocks($json): string
     {
         $blockRenders = array_map(function ($block) {
-            return $this->parser->render('blocks'.DS.$block['type']['id'].'.html', $block);
+
+            
+            try {
+                return $this->parser->render('blocks'.DS.$block['type']['id'].'.html', $block);
+            } catch (\Throwable $th) {
+                Tlog::getInstance()->warning("Block template at path : " . 'blocks'.DS.$block['type']['id'].'.html' . " not found");
+                return "";
+            }
+            
         }, json_decode($json, true));
 
         return implode(' ', $blockRenders);
