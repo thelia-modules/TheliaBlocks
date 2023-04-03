@@ -76,9 +76,6 @@ declare const Accordion: {
         es: string;
         it: string;
     };
-    image: {
-        default: string;
-    };
 };
 
 declare type BlockButtonData = {
@@ -154,9 +151,6 @@ declare const BlockSeparator: {
         es: string;
         it: string;
     };
-    image: {
-        default: string;
-    };
 };
 
 declare type BlockTextData = {
@@ -208,13 +202,13 @@ declare const Group: {
         es: string;
         it: string;
     };
-    image: {
-        default: string;
-    };
 };
 
 declare type BlockHighlightData = {
     value: string;
+    style: {
+        backgroundColor: string;
+    };
 };
 declare function BlockHighlightComponent({ data, onUpdate, }: BlockModuleComponentProps<BlockHighlightData>): JSX.Element;
 declare const BlockHighlight: {
@@ -224,6 +218,9 @@ declare const BlockHighlight: {
     component: typeof BlockHighlightComponent;
     initialData: {
         value: string;
+        style: {
+            backgroundColor: string;
+        };
     };
     title: {
         default: string;
@@ -238,9 +235,6 @@ declare const BlockHighlight: {
         en: string;
         es: string;
         it: string;
-    };
-    image: {
-        default: string;
     };
 };
 
@@ -276,9 +270,6 @@ declare const Columns: {
             es: string;
             it: string;
         };
-        image: {
-            default: string;
-        };
     };
     ThreeColumns: {
         component: ({ data, onUpdate, }: BlockModuleComponentProps<IBlock[][]>) => JSX.Element;
@@ -310,9 +301,6 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
-        };
-        image: {
-            default: string;
         };
     };
     FourColumns: {
@@ -346,9 +334,6 @@ declare const Columns: {
             es: string;
             it: string;
         };
-        image: {
-            default: string;
-        };
     };
     FiveColumns: {
         component: ({ data, onUpdate, }: BlockModuleComponentProps<IBlock[][]>) => JSX.Element;
@@ -381,9 +366,6 @@ declare const Columns: {
             es: string;
             it: string;
         };
-        image: {
-            default: string;
-        };
     };
     SixColumns: {
         component: ({ data, onUpdate, }: BlockModuleComponentProps<IBlock[][]>) => JSX.Element;
@@ -415,9 +397,6 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
-        };
-        image: {
-            default: string;
         };
     };
 };
