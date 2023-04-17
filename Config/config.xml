@@ -18,6 +18,7 @@
             <tag name="hook.event_listener" event="product.tab" type="backoffice" method="onProductTab"/>
             <tag name="hook.event_listener" event="category.tab" type="backoffice" method="onCategoryTab"/>
             <tag name="hook.event_listener" event="content.tab" type="backoffice" method="onContentTab"/>
+            <tag name="hook.event_listener" event="brand.tab" type="backoffice" method="onBrandTab"/>
             <tag name="hook.event_listener" event="folder.tab" type="backoffice" method="onFolderTab"/>
             <tag name="hook.event_listener" event="main.head-css" type="backoffice" method="onMainCss"/>
             <tag name="hook.event_listener" event="main.footer-js" type="backoffice" method="onMainJs"/>

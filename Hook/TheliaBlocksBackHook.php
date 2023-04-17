@@ -49,6 +49,19 @@ class TheliaBlocksBackHook extends BaseHook
         $this->addTheliaBlocksConfigurationTab($event, 'category', $formRedirectUrl);
     }
 
+    public function onBrandTab(HookRenderBlockEvent $event): void
+    {
+        $formRedirectUrl = URL::getInstance()
+            ->absoluteUrl(
+                '/admin/brand/update/'.$event->getArgument('id'),
+                [
+                    'current_tab' => 'theliablocks_item_details',
+                ]
+            );
+        $this->addTheliaBlocksConfigurationTab($event, 'brand', $formRedirectUrl);
+    }
+
+
     public function onContentTab(HookRenderBlockEvent $event): void
     {
         $formRedirectUrl = URL::getInstance()
