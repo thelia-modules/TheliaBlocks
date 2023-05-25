@@ -21,69 +21,29 @@ use TheliaBlocks\TheliaBlocks;
 
 class TheliaBlocksBackHook extends BaseHook
 {
-    protected $requestStack;
-
     public function onProductTab(HookRenderBlockEvent $event): void
     {
-        $formRedirectUrl = URL::getInstance()
-            ->absoluteUrl(
-                '/admin/products/update',
-                [
-                    'product_id' => $event->getArgument('id'),
-                    'current_tab' => 'theliablocks_item_details',
-                ]
-            );
-        $this->addTheliaBlocksConfigurationTab($event, 'product', $formRedirectUrl);
+        $this->addTheliaBlocksConfigurationTab($event, 'product');
     }
 
     public function onCategoryTab(HookRenderBlockEvent $event): void
     {
-        $formRedirectUrl = URL::getInstance()
-            ->absoluteUrl(
-                '/admin/categories/update',
-                [
-                    'category_id' => $event->getArgument('id'),
-                    'current_tab' => 'theliablocks_item_details',
-                ]
-            );
-        $this->addTheliaBlocksConfigurationTab($event, 'category', $formRedirectUrl);
+        $this->addTheliaBlocksConfigurationTab($event, 'category');
     }
 
     public function onBrandTab(HookRenderBlockEvent $event): void
     {
-        $formRedirectUrl = URL::getInstance()
-            ->absoluteUrl(
-                '/admin/brand/update/'.$event->getArgument('id'),
-                [
-                    'current_tab' => 'theliablocks_item_details',
-                ]
-            );
-        $this->addTheliaBlocksConfigurationTab($event, 'brand', $formRedirectUrl);
+        $this->addTheliaBlocksConfigurationTab($event, 'brand', $event->getArgument('brand_id'));
     }
-
 
     public function onContentTab(HookRenderBlockEvent $event): void
     {
-        $formRedirectUrl = URL::getInstance()
-            ->absoluteUrl(
-                '/admin/content/update/'.$event->getArgument('id'),
-                [
-                    'current_tab' => 'theliablocks_item_details',
-                ]
-            );
-        $this->addTheliaBlocksConfigurationTab($event, 'content', $formRedirectUrl);
+        $this->addTheliaBlocksConfigurationTab($event, 'content');
     }
 
     public function onFolderTab(HookRenderBlockEvent $event): void
     {
-        $formRedirectUrl = URL::getInstance()
-            ->absoluteUrl(
-                '/admin/folders/update/'.$event->getArgument('id'),
-                [
-                    'current_tab' => 'theliablocks_item_details',
-                ]
-            );
-        $this->addTheliaBlocksConfigurationTab($event, 'folder', $formRedirectUrl);
+        $this->addTheliaBlocksConfigurationTab($event, 'folder');
     }
 
     public function onBlockItemConfiguration(HookRenderEvent $event): void
@@ -105,9 +65,11 @@ class TheliaBlocksBackHook extends BaseHook
         $event->add('[block_group_admin_js]');
     }
 
-    protected function addTheliaBlocksConfigurationTab(HookRenderBlockEvent $event, $itemType, $formRedirectUrl): void
+    protected function addTheliaBlocksConfigurationTab(HookRenderBlockEvent $event, $itemType, $itemId = null): void
     {
-        $itemId = $event->getArgument('id');
+        if (null === $itemId) {
+            $itemId = $event->getArgument('id');
+        }
         $groupId = $event->getArgument('groupId');
 
         $event->add(
@@ -140,7 +102,7 @@ class TheliaBlocksBackHook extends BaseHook
             [
                 'itemId' => $itemId,
                 'itemType' => $itemType,
-                'groupId' => $group ? $group->getId() : null,
+                'groupId' => $group?->getId(),
             ]
         );
     }
