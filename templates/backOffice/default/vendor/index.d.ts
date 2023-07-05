@@ -1,7 +1,8 @@
-import { Locale, BlockModuleComponentProps, IBlock, BlockPluginDefinition, Video } from './types/types.js';
-export { BlockModuleComponentProps, BlockPluginDefinition, IBlock } from './types/types.js';
+import { Locale, BlockModuleComponentProps, IBlock, BlockPluginDefinition, Video } from './utils/types.js';
+export { BlockModuleComponentProps, BlockPluginDefinition, IBlock } from './utils/types.js';
 export { nanoid as generateId } from 'nanoid';
 import * as react from 'react';
+import { ReactElement } from 'react';
 
 interface IBlocksEditorProps {
     apiUrl: string;
@@ -42,6 +43,11 @@ declare const LocaleContext: react.Context<{
     getUrlWithPrefix: (url: string, prefix?: string) => string;
     setCurrentLocale: Function;
 }>;
+declare function LocaleProvider({ locales, prefix, children, }: {
+    locales: Locale[];
+    prefix: string;
+    children: ReactElement;
+}): JSX.Element;
 
 declare type AccordionContentData = IBlock[];
 declare type AccordionItem = {
@@ -188,6 +194,9 @@ declare const Group: {
         noExclude?: boolean | undefined;
     }) => JSX.Element;
     initialData: GroupData;
+    icon: react.FunctionComponent<react.SVGProps<SVGSVGElement> & {
+        title?: string | undefined;
+    }>;
     title: {
         default: string;
         fr: string;
@@ -222,6 +231,9 @@ declare const BlockHighlight: {
             backgroundColor: string;
         };
     };
+    icon: react.FunctionComponent<react.SVGProps<SVGSVGElement> & {
+        title?: string | undefined;
+    }>;
     title: {
         default: string;
         fr: string;
@@ -423,4 +435,4 @@ declare namespace index {
   };
 }
 
-export { BlocksEditor, BlocksList, LinkBlockToItem, LocaleContext, index as blocks, registerPlugin };
+export { BlocksEditor, BlocksList, LinkBlockToItem, LocaleContext, LocaleProvider, index as blocks, registerPlugin };
