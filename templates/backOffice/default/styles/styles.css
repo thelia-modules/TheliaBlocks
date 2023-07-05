@@ -49,17 +49,17 @@ body {
   Remove the Thelia module default banner.
 */
 
-div#page-wrapper > .row:first-child {
+/* div#page-wrapper > .row:first-child {
   display: none;
-}
+} */
 
 /*
   Adjust the Thelia wrapper default padding.
 */
 
-div#page-wrapper {
+/* div#page-wrapper {
   padding: 0 15px 0 15px;
-}
+} */
 
 a {
   transition: none;
@@ -77,7 +77,7 @@ label {
 Remove the default font size and weight for headings.
 */
 
-h1,
+/* h1,
 h2,
 h3,
 h4,
@@ -85,7 +85,7 @@ h5,
 h6 {
   font-size: inherit;
   font-weight: inherit;
-}
+} */
 
 /*
 Reset links to optimize for opt-in styling instead of opt-out (on Thelia Blocks only).
