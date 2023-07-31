@@ -19,6 +19,7 @@ use OpenApi\Service\OpenApiService;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Symfony\Component\Routing\Annotation\Route;
 use Thelia\Core\HttpFoundation\Request;
+use Thelia\Model\Base\LangQuery;
 use Thelia\Model\Lang;
 use TheliaBlocks\Model\Api\BlockGroup;
 use TheliaBlocks\Model\BlockGroupI18nQuery;
@@ -162,6 +163,23 @@ class BlockGroupController extends BaseFrontOpenApiController
      *          )
      *     ),
      *     @OA\Parameter(
+     *          name="title",
+     *          description="the name of the block group",
+     *          in="query",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *     ),
+     *     @OA\Parameter(
+     *          name="order",
+     *          description="slug use to sort block groups",
+     *          in="query",
+     *          @OA\Schema(
+     *              type="string",
+     *              enum={"id", "id_reverse", "title", "title_reverse", "updated_at", "updated_at_reverse"}
+     *          )
+     *     ),
+     *     @OA\Parameter(
      *          name="itemId",
      *          description="the id of an item linked to the block group (itemType has too be defined too)",
      *          in="query",
@@ -188,7 +206,42 @@ class BlockGroupController extends BaseFrontOpenApiController
      *     @OA\Response(
      *          response="200",
      *          description="Success",
-     *          @OA\JsonContent(ref="#/components/schemas/BlockGroup")
+     *          @OA\JsonContent(
+     *              @OA\Items(
+     *                  type="object",
+     *                  @OA\Property(
+     *                      property="items",
+     *                      type="array",
+     *                      @OA\Items(
+     *                          ref="#/components/schemas/BlockGroup"
+     *                      )
+     *                  ),
+     *                  @OA\Property(
+     *                      property="pagination_info",
+     *                      type="object",
+     *                      @OA\Property(
+     *                          property="countAllItems",
+     *                          type="integer"
+     *                      ),
+     *                      @OA\Property(
+     *                          property="limit",
+     *                          type="integer"
+     *                      ),
+     *                      @OA\Property(
+     *                          property="offset",
+     *                          type="integer"
+     *                      ),
+     *                      @OA\Property(
+     *                          property="currentPage",
+     *                          type="integer"
+     *                      ),
+     *                      @OA\Property(
+     *                          property="nbPages",
+     *                          type="integer"
+     *                      )
+     *                  )
+     *              )
+     *          )
      *     ),
      *     @OA\Response(
      *          response="400",
@@ -202,14 +255,6 @@ class BlockGroupController extends BaseFrontOpenApiController
         ModelFactory $modelFactory
     ) {
         $blockGroupQuery = BlockGroupQuery::create();
-
-        if (null !== $limit = $request->get('limit')) {
-            $blockGroupQuery->limit($limit);
-        }
-
-        if (null !== $offset = $request->get('offset')) {
-            $blockGroupQuery->offset($offset);
-        }
 
         if (null !== $itemType = $request->get('itemType')) {
             $itemBlockGroupQuery = $blockGroupQuery->useItemBlockGroupQuery()
@@ -227,6 +272,19 @@ class BlockGroupController extends BaseFrontOpenApiController
             $blockGroupQuery->filterByVisible($visible);
         }
 
+        if (null !== $title = $request->get('title')) {
+            $locale = $request->get('locale') ?? LangQuery::create()
+                ->filterByByDefault(1)
+                ->findOne()
+                ?->getLocale();
+
+            $blockGroupQuery->useBlockGroupI18nQuery()
+                ->filterByLocale($locale)
+                ->filterByTitle('%'.$title.'%', Criteria::LIKE)
+                ->endUse()
+            ;
+        }
+
         $order = $request->get('order');
 
         switch ($order) {
@@ -236,11 +294,40 @@ class BlockGroupController extends BaseFrontOpenApiController
             case 'id_reverse':
                 $blockGroupQuery->orderById(Criteria::DESC);
                 break;
+            case 'title':
+                $blockGroupQuery
+                    ->useBlockGroupI18nQuery()
+                    ->orderByTitle(Criteria::ASC)
+                    ->endUse();
+                break;
+            case 'title_reverse':
+                $blockGroupQuery
+                    ->useBlockGroupI18nQuery()
+                    ->orderByTitle(Criteria::DESC)
+                    ->endUse();
+                break;
+            case 'updated_at':
+                $blockGroupQuery->orderByUpdatedAt(Criteria::ASC);
+                break;
+            case 'updated_at_reverse':
+                $blockGroupQuery->orderByUpdatedAt(Criteria::DESC);
+                break;
             default:
                 $blockGroupQuery->orderById(Criteria::DESC);
         }
 
+        $countPropelTheliaBlocks = $blockGroupQuery->count();
+
+        if (null !== $limit = $request->get('limit')) {
+            $blockGroupQuery->limit($limit);
+        }
+
+        if (null !== $offset = $request->get('offset')) {
+            $blockGroupQuery->offset($offset);
+        }
+
         $propelTheliaBlocks = $blockGroupQuery->find();
+
 
         if (empty($propelTheliaBlocks)) {
             return OpenApiService::jsonResponse([], 404);
@@ -250,7 +337,20 @@ class BlockGroupController extends BaseFrontOpenApiController
             fn ($propelBlockGroup) => $modelFactory->buildModel('BlockGroup', $propelBlockGroup, $request->get('locale')),
             iterator_to_array($propelTheliaBlocks)
         );
+        $paginationInfo = [];
+        if (null !== $limit && null !== $offset) {
+            $paginationInfo = [
+                "countAllItems" => $countPropelTheliaBlocks,
+                "limit" => (int)$limit,
+                "offset" => (int)$offset,
+                "currentPage" => ((int)($offset/$limit))+1,
+                "nbPages" => ((int)($countPropelTheliaBlocks/$limit))+1
+            ];
+        }
 
-        return OpenApiService::jsonResponse($theliaBlocks);
+        return OpenApiService::jsonResponse([
+            "items" => $theliaBlocks,
+            "pagination_info" => $paginationInfo
+        ]);
     }
 }

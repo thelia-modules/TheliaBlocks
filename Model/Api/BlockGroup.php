@@ -98,6 +98,24 @@ class BlockGroup extends BaseApiModel
     protected $locales;
 
     /**
+     * @var \DateTime
+     * @OA\Property(
+     *     description="creation date",
+     *     type="string"
+     * )
+     */
+    protected $createdAt;
+
+    /**
+     * @var \DateTime
+     * @OA\Property(
+     *     description="last update date",
+     *     type="string"
+     * )
+     */
+    protected $updatedAt;
+
+    /**
      * @param $groups
      *
      * @throws OpenApiException
@@ -245,6 +263,31 @@ class BlockGroup extends BaseApiModel
 
         return $this;
     }
+
+    public function getCreatedAt(): string|null
+    {
+        return $this->createdAt->format('Y-m-d H:i:s');
+    }
+
+    public function setCreatedAt(\DateTime $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): string|null
+    {
+        return $this->updatedAt->format('Y-m-d H:i:s');
+    }
+
+    public function setUpdatedAt(\DateTime $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
 
     protected function getTheliaModel($propelModelName = null)
     {
