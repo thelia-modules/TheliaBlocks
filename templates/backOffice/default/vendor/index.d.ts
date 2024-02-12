@@ -71,6 +71,9 @@ declare const Accordion: {
         en: string;
         es: string;
         it: string;
+        cz: string;
+        pl: string;
+        de: string;
     };
     icon: react.FunctionComponent<react.SVGProps<SVGSVGElement> & {
         title?: string | undefined;
@@ -81,6 +84,9 @@ declare const Accordion: {
         en: string;
         es: string;
         it: string;
+        cz: string;
+        pl: string;
+        de: string;
     };
 };
 
@@ -146,6 +152,9 @@ declare const BlockSeparator: {
         en: string;
         es: string;
         it: string;
+        cz: string;
+        pl: string;
+        de: string;
     };
     icon: react.FunctionComponent<react.SVGProps<SVGSVGElement> & {
         title?: string | undefined;
@@ -156,6 +165,9 @@ declare const BlockSeparator: {
         en: string;
         es: string;
         it: string;
+        cz: string;
+        pl: string;
+        de: string;
     };
 };
 
@@ -203,6 +215,9 @@ declare const Group: {
         en: string;
         es: string;
         it: string;
+        cz: string;
+        pl: string;
+        de: string;
     };
     description: {
         default: string;
@@ -210,6 +225,9 @@ declare const Group: {
         en: string;
         es: string;
         it: string;
+        cz: string;
+        pl: string;
+        de: string;
     };
 };
 
@@ -240,6 +258,9 @@ declare const BlockHighlight: {
         en: string;
         es: string;
         it: string;
+        cz: string;
+        pl: string;
+        de: string;
     };
     description: {
         default: string;
@@ -247,6 +268,9 @@ declare const BlockHighlight: {
         en: string;
         es: string;
         it: string;
+        cz: string;
+        pl: string;
+        de: string;
     };
 };
 
@@ -259,6 +283,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
         layout: {
             default: string;
@@ -266,6 +293,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
         initialData: never[][];
         customIcon: JSX.Element;
@@ -281,6 +311,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
     };
     ThreeColumns: {
@@ -291,6 +324,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
         title: {
             default: string;
@@ -298,6 +334,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
         initialData: never[][];
         customIcon: JSX.Element;
@@ -313,6 +352,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
     };
     FourColumns: {
@@ -323,6 +365,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
         title: {
             default: string;
@@ -330,6 +375,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
         initialData: never[][];
         customIcon: JSX.Element;
@@ -345,6 +393,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
     };
     FiveColumns: {
@@ -355,6 +406,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
         title: {
             default: string;
@@ -362,6 +416,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
         initialData: never[][];
         customIcon: JSX.Element;
@@ -377,6 +434,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
     };
     SixColumns: {
@@ -387,6 +447,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
         title: {
             default: string;
@@ -394,6 +457,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
         initialData: never[][];
         customIcon: JSX.Element;
@@ -409,6 +475,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
     };
 };
