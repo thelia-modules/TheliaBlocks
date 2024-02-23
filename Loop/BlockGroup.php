@@ -93,6 +93,11 @@ class BlockGroup extends BaseI18nLoop implements PropelSearchLoopInterface
     {
         /** @var \TheliaBlocks\Model\BlockGroup $entry */
         foreach ($loopResult->getResultDataCollection() as $entry) {
+
+            if (!$entry->getVirtualColumn('i18n_JSON_CONTENT')) {
+                continue;
+            }
+
             $htmlRender = $this->container->get('theliablocks.json.block')->renderJsonBlocks($entry->getVirtualColumn('i18n_JSON_CONTENT'));
 
             $content = json_decode($entry->getVirtualColumn('i18n_JSON_CONTENT'), true);
