@@ -1,8 +1,8 @@
-import { Locale, BlockModuleComponentProps, IBlock, BlockPluginDefinition, Video } from './utils/types.js';
+import { Locale, BlockModuleComponentProps, IBlock, BlockPluginDefinition, Video, GroupTypeResponse } from './utils/types.js';
 export { BlockModuleComponentProps, BlockPluginDefinition, IBlock } from './utils/types.js';
 export { nanoid as generateId } from 'nanoid';
 import * as react from 'react';
-import { ReactElement } from 'react';
+import { ReactElement, ChangeEvent, ReactNode, InputHTMLAttributes } from 'react';
 
 interface IBlocksEditorProps {
     apiUrl: string;
@@ -71,6 +71,9 @@ declare const Accordion: {
         en: string;
         es: string;
         it: string;
+        cz: string;
+        pl: string;
+        de: string;
     };
     icon: react.FunctionComponent<react.SVGProps<SVGSVGElement> & {
         title?: string | undefined;
@@ -81,6 +84,9 @@ declare const Accordion: {
         en: string;
         es: string;
         it: string;
+        cz: string;
+        pl: string;
+        de: string;
     };
 };
 
@@ -88,6 +94,7 @@ declare type BlockButtonData = {
     label: string;
     url: string;
     type: string;
+    target: HTMLAnchorElement["target"];
 };
 declare const blockButton: BlockPluginDefinition<BlockButtonData>;
 
@@ -146,6 +153,9 @@ declare const BlockSeparator: {
         en: string;
         es: string;
         it: string;
+        cz: string;
+        pl: string;
+        de: string;
     };
     icon: react.FunctionComponent<react.SVGProps<SVGSVGElement> & {
         title?: string | undefined;
@@ -156,6 +166,9 @@ declare const BlockSeparator: {
         en: string;
         es: string;
         it: string;
+        cz: string;
+        pl: string;
+        de: string;
     };
 };
 
@@ -203,6 +216,9 @@ declare const Group: {
         en: string;
         es: string;
         it: string;
+        cz: string;
+        pl: string;
+        de: string;
     };
     description: {
         default: string;
@@ -210,6 +226,9 @@ declare const Group: {
         en: string;
         es: string;
         it: string;
+        cz: string;
+        pl: string;
+        de: string;
     };
 };
 
@@ -240,6 +259,9 @@ declare const BlockHighlight: {
         en: string;
         es: string;
         it: string;
+        cz: string;
+        pl: string;
+        de: string;
     };
     description: {
         default: string;
@@ -247,6 +269,9 @@ declare const BlockHighlight: {
         en: string;
         es: string;
         it: string;
+        cz: string;
+        pl: string;
+        de: string;
     };
 };
 
@@ -259,6 +284,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
         layout: {
             default: string;
@@ -266,6 +294,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
         initialData: never[][];
         customIcon: JSX.Element;
@@ -281,6 +312,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
     };
     ThreeColumns: {
@@ -291,6 +325,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
         title: {
             default: string;
@@ -298,6 +335,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
         initialData: never[][];
         customIcon: JSX.Element;
@@ -313,6 +353,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
     };
     FourColumns: {
@@ -323,6 +366,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
         title: {
             default: string;
@@ -330,6 +376,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
         initialData: never[][];
         customIcon: JSX.Element;
@@ -345,6 +394,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
     };
     FiveColumns: {
@@ -355,6 +407,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
         title: {
             default: string;
@@ -362,6 +417,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
         initialData: never[][];
         customIcon: JSX.Element;
@@ -377,6 +435,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
     };
     SixColumns: {
@@ -387,6 +448,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
         title: {
             default: string;
@@ -394,6 +458,9 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
         initialData: never[][];
         customIcon: JSX.Element;
@@ -409,30 +476,185 @@ declare const Columns: {
             en: string;
             es: string;
             it: string;
+            cz: string;
+            pl: string;
+            de: string;
         };
     };
 };
 
-declare const index_Columns: typeof Columns;
-declare const index_Accordion: typeof Accordion;
-declare const index_Group: typeof Group;
-declare namespace index {
+declare const index$1_Columns: typeof Columns;
+declare const index$1_Accordion: typeof Accordion;
+declare const index$1_Group: typeof Group;
+declare namespace index$1 {
   export {
     blockRaw as Raw,
     Blocktext as Text,
     BlockTitle as Title,
     blockVideo as Video,
-    index_Columns as Columns,
+    index$1_Columns as Columns,
     BlockSeparator as Separator,
     blockButton as Button,
-    index_Accordion as Accordion,
+    index$1_Accordion as Accordion,
     blockProduct as Product,
     blockCategory as Category,
     blockTable as Table,
     BlockList as List,
-    index_Group as Group,
+    index$1_Group as Group,
     BlockHighlight as Highlight,
   };
 }
 
-export { BlocksEditor, BlocksList, LinkBlockToItem, LocaleContext, LocaleProvider, index as blocks, registerPlugin };
+declare const AddBlocks: ({ excludeLayout, inLayout, }: {
+    excludeLayout?: boolean | undefined;
+    inLayout?: boolean | undefined;
+}) => JSX.Element;
+
+declare const Block: ({ block, inLayout, className, DndDragHandle, }: {
+    block: IBlock;
+    inLayout?: boolean | undefined;
+    className?: string | undefined;
+    DndDragHandle: () => JSX.Element;
+}) => JSX.Element;
+
+declare const BlockControls: ({ blockId, blockIndex, inLayout, DndDragHandle, }: {
+    blockId: string;
+    blockIndex: number;
+    inLayout?: boolean | undefined;
+    DndDragHandle: () => JSX.Element;
+}) => JSX.Element;
+
+declare function BlocksContent(): JSX.Element;
+
+declare const BlocksTable: () => JSX.Element;
+
+declare const BlockTooltip: ({ title, description, image, }: {
+    title: string;
+    description?: string | undefined;
+    image?: string | undefined;
+}) => JSX.Element;
+
+declare function GroupLocale(): JSX.Element;
+
+declare function GroupTitle({ isGroupLinkedToCurrentContent, onLink, isLinking, }: {
+    isGroupLinkedToCurrentContent: boolean;
+    onLink: () => void;
+    isLinking: boolean;
+}): JSX.Element;
+
+declare const Iframe: ({ content }: {
+    content: string;
+}) => JSX.Element;
+
+declare const Input: react.ForwardRefExoticComponent<{
+    value?: string | undefined;
+    onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    className?: string | undefined;
+    emphasize?: boolean | undefined;
+    placeholder?: string | undefined;
+    icon?: ReactNode;
+    iconAlignment?: "right" | "left" | undefined;
+    type?: "text" | "color" | "password" | "email" | undefined;
+    isValid?: boolean | undefined;
+    label?: string | undefined;
+    id: string;
+    info?: ReactNode;
+    error?: string | undefined;
+} & InputHTMLAttributes<HTMLInputElement> & react.RefAttributes<HTMLInputElement>>;
+
+declare const Select: react.ForwardRefExoticComponent<{
+    value: string;
+    onChange: (event: ChangeEvent<HTMLSelectElement>) => void;
+    className?: string | undefined;
+    label?: string | undefined;
+    id: string;
+    info?: ReactNode;
+    error?: string | undefined;
+    children: ReactNode;
+} & InputHTMLAttributes<HTMLSelectElement> & react.RefAttributes<HTMLSelectElement>>;
+
+declare const TextArea: react.ForwardRefExoticComponent<{
+    rows?: number | undefined;
+    id: string;
+    label?: string | undefined;
+    info?: ReactNode;
+    error?: string | undefined;
+    className?: string | undefined;
+} & InputHTMLAttributes<HTMLTextAreaElement> & react.RefAttributes<HTMLTextAreaElement>>;
+
+declare const LinkedContentTable: ({ linkedContents, setIsItemBlockModalOpen, }: {
+    linkedContents: GroupTypeResponse["itemBlockGroups"];
+    setIsItemBlockModalOpen: Function;
+}) => JSX.Element;
+
+declare const LayoutHeader: ({ title, icon, open, setOpen, onDelete, }: {
+    title: string;
+    icon?: ReactNode;
+    open: boolean;
+    setOpen: Function;
+    onDelete?: Function | undefined;
+}) => JSX.Element;
+
+declare const Modal: ({ modalClassName, isOpen, setIsOpen, title, children, }: {
+    modalClassName?: string | undefined;
+    isOpen: boolean;
+    setIsOpen: Function;
+    title: string;
+    children: React.ReactNode;
+}) => JSX.Element;
+
+declare function Preview({ isOpen, setIsOpen, setIsPreviewLoading, timestamp, data, }: {
+    isOpen: boolean;
+    setIsOpen: Function;
+    setIsPreviewLoading: Function;
+    timestamp: number;
+    data?: string;
+}): JSX.Element;
+
+declare const Sidebar: () => JSX.Element;
+
+declare const ToolBar: () => JSX.Element;
+
+declare const index_AddBlocks: typeof AddBlocks;
+declare const index_Block: typeof Block;
+declare const index_BlockControls: typeof BlockControls;
+declare const index_BlocksContent: typeof BlocksContent;
+declare const index_BlocksTable: typeof BlocksTable;
+declare const index_BlockTooltip: typeof BlockTooltip;
+declare const index_GroupLocale: typeof GroupLocale;
+declare const index_GroupTitle: typeof GroupTitle;
+declare const index_Iframe: typeof Iframe;
+declare const index_Input: typeof Input;
+declare const index_Select: typeof Select;
+declare const index_TextArea: typeof TextArea;
+declare const index_LayoutHeader: typeof LayoutHeader;
+declare const index_LinkBlockToItem: typeof LinkBlockToItem;
+declare const index_Modal: typeof Modal;
+declare const index_Preview: typeof Preview;
+declare const index_Sidebar: typeof Sidebar;
+declare const index_ToolBar: typeof ToolBar;
+declare namespace index {
+  export {
+    index_AddBlocks as AddBlocks,
+    index_Block as Block,
+    index_BlockControls as BlockControls,
+    index_BlocksContent as BlocksContent,
+    index_BlocksTable as BlocksTable,
+    index_BlockTooltip as BlockTooltip,
+    index_GroupLocale as GroupLocale,
+    index_GroupTitle as GroupTitle,
+    index_Iframe as Iframe,
+    index_Input as Input,
+    index_Select as Select,
+    index_TextArea as TextArea,
+    LinkedContentTable as ItemBlockGroupTable,
+    index_LayoutHeader as LayoutHeader,
+    index_LinkBlockToItem as LinkBlockToItem,
+    index_Modal as Modal,
+    index_Preview as Preview,
+    index_Sidebar as Sidebar,
+    index_ToolBar as ToolBar,
+  };
+}
+
+export { BlocksEditor, BlocksList, LinkBlockToItem, LocaleContext, LocaleProvider, index$1 as blocks, index as components, registerPlugin };
