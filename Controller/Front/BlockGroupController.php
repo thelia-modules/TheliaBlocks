@@ -109,7 +109,7 @@ class BlockGroupController extends BaseFrontOpenApiController
         if (null !== $blockGroup && empty($blockGroup->getJsonContent())) {
             $requestLocale = $request->get('locale');
 
-            if (! in_array($requestLocale, $blockGroup->getLocales())) {
+            if (!in_array($requestLocale, $blockGroup->getLocales())) {
                 // Copy default locale JSON content
                 $defaultLocale = Lang::getDefaultLanguage()->getLocale();
 
@@ -119,7 +119,8 @@ class BlockGroupController extends BaseFrontOpenApiController
                     $copyLocale = $defaultLocale;
                 }
 
-                if (null !== $copyGroup = BlockGroupI18nQuery::create()
+                if (
+                    null !== $copyGroup = BlockGroupI18nQuery::create()
                     ->filterById($blockGroup->getId())
                     ->filterByLocale($copyLocale)
                     ->findOne()
@@ -161,6 +162,13 @@ class BlockGroupController extends BaseFrontOpenApiController
      *              type="string"
      *          )
      *     ),
+     *     @OA\Parameter(
+     *         name="title",
+     *         in="query",
+     *         @OA\Schema(   
+     *             type="string"
+     *         ),
+     *    ),
      *     @OA\Parameter(
      *          name="itemId",
      *          description="the id of an item linked to the block group (itemType has too be defined too)",
@@ -209,6 +217,13 @@ class BlockGroupController extends BaseFrontOpenApiController
 
         if (null !== $offset = $request->get('offset')) {
             $blockGroupQuery->offset($offset);
+        }
+
+        if (null !== $title = $request->get('title')) {
+            $blockGroupQuery
+                ->useBlockGroupI18nQuery()
+                ->filterByTitle('%' . $title . '%', Criteria::LIKE)
+                ->endUse();
         }
 
         if (null !== $itemType = $request->get('itemType')) {
