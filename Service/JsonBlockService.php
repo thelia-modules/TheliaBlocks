@@ -12,32 +12,41 @@
 
 namespace TheliaBlocks\Service;
 
-use TheliaSmarty\Template\SmartyParser;
+use Thelia\Core\Template\Parser\ParserResolver;
+use Thelia\Core\Template\TemplateHelperInterface;
 use Thelia\Log\Tlog;
 
 class JsonBlockService
 {
-    /** @var SmartyParser */
-    private $parser;
-
-    public function __construct(SmartyParser $parser)
-    {
-        $this->parser = $parser;
+    public function __construct(
+        private ParserResolver $parserResolver,
+        private TemplateHelperInterface $templateHelper,
+    ) {
     }
 
+    /**
+     * @throws \Exception
+     */
     public function renderJsonBlocks($json): string
     {
-        $blockRenders = array_map(function ($block) {
+        $templateDefintion = $this->templateHelper->getActiveFrontTemplate();
+        try {
+            $blockRenders = array_map(function ($block) use ($templateDefintion) {
+                $parser = $this->parserResolver->getParser($templateDefintion->getAbsolutePath(), $block['type']['id']);
+                $parser->setTemplateDefinition($templateDefintion, true);
+                try {
+                    return $parser->render('blocks'.DS.$block['type']['id'].'.'.$parser->getFileExtension(), $block);
+                } catch (\Throwable $th) {
+                    Tlog::getInstance()->warning('Block template at path : blocks'.DS.$block['type']['id'].'.html not found');
 
-            
-            try {
-                return $this->parser->render('blocks'.DS.$block['type']['id'].'.html', $block);
-            } catch (\Throwable $th) {
-                Tlog::getInstance()->warning("Block template at path : " . 'blocks'.DS.$block['type']['id'].'.html' . " not found");
-                return "";
-            }
-            
-        }, json_decode($json, true));
+                    return '';
+                }
+            }, json_decode($json, true, 512, \JSON_THROW_ON_ERROR));
+        } catch (\JsonException $e) {
+            Tlog::getInstance()->error('Error while decoding json : '.$e->getMessage());
+
+            return '';
+        }
 
         return implode(' ', $blockRenders);
     }
