@@ -32,10 +32,10 @@ class JsonBlockService
         $templateDefintion = $this->templateHelper->getActiveFrontTemplate();
         try {
             $blockRenders = array_map(function ($block) use ($templateDefintion) {
-                $parser = $this->parserResolver->getParser($templateDefintion->getAbsolutePath(), $block['type']['id']);
+                $parser = $this->parserResolver->getParser($templateDefintion->getAbsolutePath().DS.'blocks', $block['type']['id']);
                 $parser->setTemplateDefinition($templateDefintion, true);
                 try {
-                    return $parser->render('blocks'.DS.$block['type']['id'].'.'.$parser->getFileExtension(), $block);
+                    return $parser->renderString('blocks'.DS.$block['type']['id'].'.'.$parser->getFileExtension(), $block);
                 } catch (\Throwable $th) {
                     Tlog::getInstance()->warning('Block template at path : blocks'.DS.$block['type']['id'].'.html not found');
 
