@@ -15,6 +15,7 @@ namespace TheliaBlocks\Service;
 use Thelia\Core\Template\Parser\ParserResolver;
 use Thelia\Core\Template\TemplateHelperInterface;
 use Thelia\Log\Tlog;
+use TwigEngine\Template\TwigParser;
 
 class JsonBlockService
 {
@@ -35,7 +36,11 @@ class JsonBlockService
                 $parser = $this->parserResolver->getParser($templateDefintion->getAbsolutePath().DS.'blocks', $block['type']['id']);
                 $parser->setTemplateDefinition($templateDefintion, true);
                 try {
-                    return $parser->renderString('blocks'.DS.$block['type']['id'].'.'.$parser->getFileExtension(), $block);
+                    if ($parser instanceof TwigParser) {
+                        return $parser->renderString('blocks'.DS.$block['type']['id'].'.'.$parser->getFileExtension(), $block);
+                    }
+
+                    return $parser->render('blocks'.DS.$block['type']['id'].'.'.$parser->getFileExtension(), $block);
                 } catch (\Throwable $th) {
                     Tlog::getInstance()->warning('Block template at path : blocks'.DS.$block['type']['id'].'.html not found');
 
