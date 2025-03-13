@@ -20,3 +20,9 @@
 {hook name="thelia.blocks.variables"}
 
 {hook name="thelia.blocks.plugins"}
+
+{plugins_render}
+
+{foreach from=$plugins key=moduleCode item=plugin}
+    <script type="text/javascript" src="{javascript file=$plugin['js'] source=$moduleCode}"></script>
+{/foreach}
