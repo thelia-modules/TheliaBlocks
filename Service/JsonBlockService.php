@@ -29,14 +29,13 @@ class JsonBlockService
     {
         $blockRenders = array_map(function ($block) {
 
-            
             try {
                 return $this->parser->render('blocks'.DS.$block['type']['id'].'.html', $block);
             } catch (\Throwable $th) {
-                Tlog::getInstance()->warning("Block template at path : " . 'blocks'.DS.$block['type']['id'].'.html' . " not found");
-                return "";
+                Tlog::getInstance()->warning($th->getMessage().' in '.$th->getFile().' L'.$th->getLine());
+                return $this->parser->render('thelia-block-error.html', ["error" => $th->getMessage()]);
             }
-            
+
         }, json_decode($json, true));
 
         return implode(' ', $blockRenders);
