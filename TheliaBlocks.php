@@ -56,7 +56,7 @@ class TheliaBlocks extends BaseModule
         }
     }
 
-    public function preActivation(ConnectionInterface $con = null)
+    public function preActivation(ConnectionInterface $con = null): bool
     {
         if (!$this->getConfigValue('is_initialized', false)) {
             $database = new Database($con);
@@ -69,7 +69,7 @@ class TheliaBlocks extends BaseModule
         return true;
     }
 
-    public function getHooks()
+    public function getHooks(): array
     {
         return [
             [
