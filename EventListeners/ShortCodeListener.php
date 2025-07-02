@@ -16,6 +16,7 @@ use ShortCode\Event\ShortCodeEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Thelia\Core\HttpFoundation\Request;
+use Thelia\Core\Template\Parser\ParserResolver;
 use Thelia\Core\Template\ParserInterface;
 use Thelia\Core\Template\TheliaTemplateHelper;
 use Thelia\Log\Tlog;
@@ -28,23 +29,22 @@ use TheliaBlocks\TheliaBlocks;
 
 class ShortCodeListener implements EventSubscriberInterface
 {
-    /** @var ParserInterface */
-    protected $parser;
+    protected ?Request $request = null;
 
-    /** @var Request */
-    protected $request;
-
-    /** @var TheliaTemplateHelper */
-    private $templateHelper;
-
-    public function __construct(RequestStack $requestStack, ParserInterface $parser, TheliaTemplateHelper $templateHelper)
+    /**
+     * @throws \Exception
+     */
+    public function __construct(
+        protected RequestStack $requestStack,
+        protected ParserInterface $parser,
+        protected ParserResolver $parserResolver
+    )
     {
         $this->request = $requestStack->getCurrentRequest();
-        $this->parser = $parser;
-        $this->templateHelper = $templateHelper;
+        $this->parser = $this->parserResolver->getParserByCurrentRequest();
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             TheliaBlocks::BLOCK_GROUP_SHORT_CODE => [['blockGroupShortCode']],
@@ -125,7 +125,69 @@ class ShortCodeListener implements EventSubscriberInterface
         $event->setResult($this->generateLink(ProductQuery::create(), $event));
     }
 
+    public function renderCategoryLink(ShortCodeEvent $event): void<?php
+        }
+
+        // Todo return the raw value of block group
+        $raw = isset($attributes['raw']) && (bool) json_decode(strtolower($attributes['raw'])) === true;
+
+        if ($raw) {
+            $event->setResult($this->parser->render('blocks/rawBlockGroup.html', compact('blocks')));
+
+            return;
+        }
+
+        $blockRenders = [];
+        foreach ($blocks as $block) {
+            $blockRenders[] = $this->parser->render('blocks'.DS.$block['type']['id'].'.html', $block);
+        }
+
+        $event->setResult(implode(' ', $blockRenders));
+    }
+
+    public function renderProductLink(ShortCodeEvent $event): void
+    {
+        $event->setResult($this->generateLink(ProductQuery::create(), $event));
+    }
+
     public function renderCategoryLink(ShortCodeEvent $event): void
+    {
+        $event->setResult($this->generateLink(CategoryQuery::create(), $event));
+    }
+
+    public function renderContentLink(ShortCodeEvent $event): void
+    {
+        $event->setResult($this->generateLink(ContentQuery::create(), $event));
+    }
+
+    public function renderFolderLink(ShortCodeEvent $event): void
+    {
+        $event->setResult($this->generateLink(FolderQuery::create(), $event));
+    }
+
+    public function generateLink(CategoryQuery|ProductQuery|ContentQuery|FolderQuery $query, ShortCodeEvent $event)
+    {
+        $attributes = $event->getAttributes();
+        $id = $attributes['id'];
+        $locale = $this->request->getSession()->getLang()->getLocale();
+
+        $item = $query
+        ->filterById($id)
+        ->findOne();
+
+        $url = $item->getUrl($locale);
+        $title = $attributes['title'] ?? $item->getTitle();
+        $link = $this->renderLinkTemplate($url, $title);
+
+        return $link;
+    }
+
+    private function renderLinkTemplate(string $url, string $title)
+    {
+        return '<a href="'.$url.'">'.$title.'</a>';
+    }
+}
+
     {
         $event->setResult($this->generateLink(CategoryQuery::create(), $event));
     }
