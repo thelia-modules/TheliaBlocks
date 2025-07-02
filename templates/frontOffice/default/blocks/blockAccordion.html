@@ -1,5 +1,11 @@
 <div class="block-{$type['id']} mb-4">
-    <div>{$data["title"]}</div>
+
+    {include
+        file="blocks/blockTitle.html"
+        data=$data["title"]
+        type=["id" => "blockTitle"]
+    }
+
     {foreach $data["group"] as $item}
         {$itemContain = []}
         {$renderTemplates = []}
