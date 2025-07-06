@@ -125,69 +125,7 @@ class ShortCodeListener implements EventSubscriberInterface
         $event->setResult($this->generateLink(ProductQuery::create(), $event));
     }
 
-    public function renderCategoryLink(ShortCodeEvent $event): void<?php
-        }
-
-        // Todo return the raw value of block group
-        $raw = isset($attributes['raw']) && (bool) json_decode(strtolower($attributes['raw'])) === true;
-
-        if ($raw) {
-            $event->setResult($this->parser->render('blocks/rawBlockGroup.html', compact('blocks')));
-
-            return;
-        }
-
-        $blockRenders = [];
-        foreach ($blocks as $block) {
-            $blockRenders[] = $this->parser->render('blocks'.DS.$block['type']['id'].'.html', $block);
-        }
-
-        $event->setResult(implode(' ', $blockRenders));
-    }
-
-    public function renderProductLink(ShortCodeEvent $event): void
-    {
-        $event->setResult($this->generateLink(ProductQuery::create(), $event));
-    }
-
     public function renderCategoryLink(ShortCodeEvent $event): void
-    {
-        $event->setResult($this->generateLink(CategoryQuery::create(), $event));
-    }
-
-    public function renderContentLink(ShortCodeEvent $event): void
-    {
-        $event->setResult($this->generateLink(ContentQuery::create(), $event));
-    }
-
-    public function renderFolderLink(ShortCodeEvent $event): void
-    {
-        $event->setResult($this->generateLink(FolderQuery::create(), $event));
-    }
-
-    public function generateLink(CategoryQuery|ProductQuery|ContentQuery|FolderQuery $query, ShortCodeEvent $event)
-    {
-        $attributes = $event->getAttributes();
-        $id = $attributes['id'];
-        $locale = $this->request->getSession()->getLang()->getLocale();
-
-        $item = $query
-        ->filterById($id)
-        ->findOne();
-
-        $url = $item->getUrl($locale);
-        $title = $attributes['title'] ?? $item->getTitle();
-        $link = $this->renderLinkTemplate($url, $title);
-
-        return $link;
-    }
-
-    private function renderLinkTemplate(string $url, string $title)
-    {
-        return '<a href="'.$url.'">'.$title.'</a>';
-    }
-}
-
     {
         $event->setResult($this->generateLink(CategoryQuery::create(), $event));
     }
