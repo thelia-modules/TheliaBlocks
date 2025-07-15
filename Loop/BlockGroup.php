@@ -13,6 +13,7 @@
 namespace TheliaBlocks\Loop;
 
 use Propel\Runtime\ActiveQuery\Criteria;
+use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Thelia\Core\Template\Element\BaseI18nLoop;
 use Thelia\Core\Template\Element\LoopResult;
 use Thelia\Core\Template\Element\LoopResultRow;
@@ -36,7 +37,7 @@ class BlockGroup extends BaseI18nLoop implements PropelSearchLoopInterface
     /**
      * {@inheritdoc}
      */
-    protected function getArgDefinitions()
+    protected function getArgDefinitions(): ArgumentCollection
     {
         return new ArgumentCollection(
             Argument::createIntListTypeArgument('id'),
@@ -52,7 +53,7 @@ class BlockGroup extends BaseI18nLoop implements PropelSearchLoopInterface
      *
      * @return \Propel\Runtime\ActiveQuery\ModelCriteria
      */
-    public function buildModelCriteria()
+    public function buildModelCriteria(): ModelCriteria
     {
         $search = BlockGroupQuery::create();
 
@@ -89,7 +90,7 @@ class BlockGroup extends BaseI18nLoop implements PropelSearchLoopInterface
         return $search;
     }
 
-    public function parseResults(LoopResult $loopResult)
+    public function parseResults(LoopResult $loopResult): LoopResult
     {
         /** @var \TheliaBlocks\Model\BlockGroup $entry */
         foreach ($loopResult->getResultDataCollection() as $entry) {

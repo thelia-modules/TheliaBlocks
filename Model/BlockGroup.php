@@ -34,7 +34,7 @@ class BlockGroup extends BaseBlockGroup
      *
      * @return bool
      */
-    public function preSave(ConnectionInterface $con = null)
+    public function preSave(ConnectionInterface $con = null): bool
     {
         if (null === $this->getSlug()) {
             $this->setSlug($this->slugify($this->getTitle()));
