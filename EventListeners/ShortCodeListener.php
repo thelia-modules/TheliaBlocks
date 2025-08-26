@@ -30,18 +30,17 @@ use TheliaBlocks\TheliaBlocks;
 class ShortCodeListener implements EventSubscriberInterface
 {
     protected ?Request $request = null;
+    protected ?ParserInterface $parser = null;
 
     /**
      * @throws \Exception
      */
     public function __construct(
         protected RequestStack $requestStack,
-        protected ParserInterface $parser,
         protected ParserResolver $parserResolver
-    )
-    {
+    ) {
         $this->request = $requestStack->getCurrentRequest();
-        $this->parser = $this->parserResolver->getParserByCurrentRequest();
+        $this->parser = $this->parserResolver->getCurrentParser();
     }
 
     public static function getSubscribedEvents(): array
@@ -114,7 +113,7 @@ class ShortCodeListener implements EventSubscriberInterface
 
         $blockRenders = [];
         foreach ($blocks as $block) {
-            $blockRenders[] = $this->parser->render('blocks'.DS.$block['type']['id'].'.html', $block);
+            $blockRenders[] = $this->parser->render('blocks' . DS . $block['type']['id'] . '.html', $block);
         }
 
         $event->setResult(implode(' ', $blockRenders));
@@ -147,8 +146,8 @@ class ShortCodeListener implements EventSubscriberInterface
         $locale = $this->request->getSession()->getLang()->getLocale();
 
         $item = $query
-        ->filterById($id)
-        ->findOne();
+            ->filterById($id)
+            ->findOne();
 
         $url = $item->getUrl($locale);
         $title = $attributes['title'] ?? $item->getTitle();
@@ -159,6 +158,6 @@ class ShortCodeListener implements EventSubscriberInterface
 
     private function renderLinkTemplate(string $url, string $title)
     {
-        return '<a href="'.$url.'">'.$title.'</a>';
+        return '<a href="' . $url . '">' . $title . '</a>';
     }
 }
