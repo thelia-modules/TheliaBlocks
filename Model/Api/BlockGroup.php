@@ -246,7 +246,7 @@ class BlockGroup extends BaseApiModel
         return $this;
     }
 
-    protected function getTheliaModel($propelModelName = null)
+    protected function getTheliaModel($propelModelName = null): mixed
     {
         return parent::getTheliaModel(\TheliaBlocks\Model\BlockGroup::class);
     }

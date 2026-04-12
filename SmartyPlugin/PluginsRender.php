@@ -23,7 +23,7 @@ class PluginsRender extends AbstractSmartyPlugin
     public function __construct(private EventDispatcherInterface $dispatcher)
     {}
 
-    public function getPluginDescriptors()
+    public function getPluginDescriptors(): array
     {
         return [
             new SmartyPluginDescriptor('function', 'plugins_render', $this, 'renderPlugins'),

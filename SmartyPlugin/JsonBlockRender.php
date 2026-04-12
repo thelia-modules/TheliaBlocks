@@ -26,7 +26,7 @@ class JsonBlockRender extends AbstractSmartyPlugin
         $this->jsonBlockService = $jsonBlockService;
     }
 
-    public function getPluginDescriptors()
+    public function getPluginDescriptors(): array
     {
         return [
             new SmartyPluginDescriptor('function', 'json_block_render', $this, 'renderJsonBlock'),

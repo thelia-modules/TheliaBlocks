@@ -156,7 +156,7 @@ class ItemBlockGroup extends BaseApiModel
         return $this;
     }
 
-    protected function getTheliaModel($propelModelName = null)
+    protected function getTheliaModel($propelModelName = null): mixed
     {
         return parent::getTheliaModel(\TheliaBlocks\Model\ItemBlockGroup::class);
     }
