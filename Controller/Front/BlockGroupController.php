@@ -17,21 +17,18 @@ use OpenApi\Controller\Front\BaseFrontOpenApiController;
 use OpenApi\Model\Api\ModelFactory;
 use OpenApi\Service\OpenApiService;
 use Propel\Runtime\ActiveQuery\Criteria;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Thelia\Core\HttpFoundation\Request;
 use Thelia\Model\Lang;
 use TheliaBlocks\Model\Api\BlockGroup;
 use TheliaBlocks\Model\BlockGroupI18nQuery;
 use TheliaBlocks\Model\BlockGroupQuery;
 
-/**
- * @Route("/open_api/block_group", name="block_group")
- */
+#[Route("/open_api/block_group", name: "block_group")]
 class BlockGroupController extends BaseFrontOpenApiController
 {
+    #[Route("", name: "_get", methods: ["GET"])]
     /**
-     * @Route("", name="_get", methods="GET")
-     *
      * @OA\Get(
      *     path="/block_group",
      *     tags={"block group"},
@@ -133,9 +130,8 @@ class BlockGroupController extends BaseFrontOpenApiController
         return OpenApiService::jsonResponse($blockGroup);
     }
 
+    #[Route("/list", name: "_get_list", methods: ["GET"])]
     /**
-     * @Route("/list", name="_get_list", methods="GET")
-     *
      * @OA\Get(
      *     path="/block_group/list",
      *     tags={"block group"},

@@ -22,18 +22,14 @@ namespace TheliaBlocks\Controller\Front;
  * file that was distributed with this source code.
  */
 
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Thelia\Controller\Front\BaseFrontController;
 use Thelia\Core\HttpFoundation\Request;
 
-/**
- * @Route("/TheliaBlocks", name="thelia_blocks_front")
- */
+#[Route("/TheliaBlocks", name: "thelia_blocks_front")]
 class PreviewGroupController extends BaseFrontController
 {
-    /**
-     * @Route("/preview", name="_preview", methods="POST")
-     */
+    #[Route("/preview", name: "_preview", methods: ["POST"])]
     public function previewBlockGroup(Request $request)
     {
         return $this->render('thelia-blocks-preview', [

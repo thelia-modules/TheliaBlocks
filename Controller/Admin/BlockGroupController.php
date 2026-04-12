@@ -16,7 +16,7 @@ use OpenApi\Annotations as OA;
 use OpenApi\Controller\Admin\BaseAdminOpenApiController;
 use OpenApi\Model\Api\ModelFactory;
 use OpenApi\Service\OpenApiService;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Thelia\Core\HttpFoundation\JsonResponse;
 use Thelia\Core\HttpFoundation\Request;
 use TheliaBlocks\Model\BlockGroup;
@@ -26,14 +26,11 @@ use TheliaBlocks\Model\BlockGroupQuery;
 use TheliaBlocks\Model\ItemBlockGroup;
 use TheliaBlocks\Model\ItemBlockGroupQuery;
 
-/**
- * @Route("/open_api/block_group", name="block_group")
- */
+#[Route("/open_api/block_group", name: "block_group")]
 class BlockGroupController extends BaseAdminOpenApiController
 {
+    #[Route("", name: "add_block_group", methods: ["POST"])]
     /**
-     * @Route("", name="add_block_group", methods="POST")
-     *
      * @OA\Post(
      *     path="/block_group",
      *     tags={"block group"},
@@ -96,9 +93,8 @@ class BlockGroupController extends BaseAdminOpenApiController
         );
     }
 
+    #[Route("", name: "update_block_group", methods: ["PATCH"])]
     /**
-     * @Route("", name="update_block_group", methods="PATCH")
-     *
      * @OA\Patch(
      *     path="/block_group",
      *     tags={"block group"},
@@ -158,9 +154,8 @@ class BlockGroupController extends BaseAdminOpenApiController
         return OpenApiService::jsonResponse($modelFactory->buildModel('BlockGroup', $blockGroup));
     }
 
+    #[Route("/{blockGroupId}", name: "delete_block_group", methods: ["DELETE"], requirements: ["blockGroupId" => "\d+"])]
     /**
-     * @Route("/{blockGroupId}", name="delete_block_group", methods="DELETE", requirements={"blockGroupId"="\d+"})
-     *
      * @OA\Delete(
      *     path="/block_group/{blockGroupId}",
      *     tags={"block group"},
@@ -196,9 +191,8 @@ class BlockGroupController extends BaseAdminOpenApiController
         return new JsonResponse('Success', 204);
     }
 
+    #[Route("/duplicate/{blockGroupId}", name: "duplicate_block_group", methods: ["POST"], requirements: ["blockGroupId" => "\d+"])]
     /**
-     * @Route("/duplicate/{blockGroupId}", name="duplicate_block_group", methods="POST", requirements={"blockGroupId"="\d+"})
-     *
      * @OA\Post(
      *     path="/block_group/duplicate/{blockGroupId}",
      *     tags={"block group"},

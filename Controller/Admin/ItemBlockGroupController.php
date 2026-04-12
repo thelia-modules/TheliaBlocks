@@ -16,21 +16,18 @@ use OpenApi\Annotations as OA;
 use OpenApi\Controller\Admin\BaseAdminOpenApiController;
 use OpenApi\Model\Api\ModelFactory;
 use OpenApi\Service\OpenApiService;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Thelia\Core\HttpFoundation\JsonResponse;
 use Thelia\Core\HttpFoundation\Request;
 use TheliaBlocks\Model\BlockGroup;
 use TheliaBlocks\Model\ItemBlockGroup;
 use TheliaBlocks\Model\ItemBlockGroupQuery;
 
-/**
- * @Route("/open_api/item_block_group", name="item_block_group")
- */
+#[Route("/open_api/item_block_group", name: "item_block_group")]
 class ItemBlockGroupController extends BaseAdminOpenApiController
 {
+    #[Route("", name: "_create", methods: ["POST"])]
     /**
-     * @Route("", name="_create", methods="POST")
-     *
      * @OA\Post(
      *     path="/item_block_group",
      *     tags={"item block group", "block group"},
@@ -81,9 +78,8 @@ class ItemBlockGroupController extends BaseAdminOpenApiController
         return OpenApiService::jsonResponse($theliaBlock, 200);
     }
 
+    #[Route("/{itemBlockGroupId}", name: "_delete", methods: ["DELETE"], requirements: ["itemBlockGroupId" => "\d+"])]
     /**
-     * @Route("/{itemBlockGroupId}", name="_delete", methods="DELETE", requirements={"itemBlockGroupId"="\d+"})
-     *
      * @OA\Delete(
      *     path="/item_block_group/{itemBlockGroupId}",
      *     tags={"item block group", "block group"},

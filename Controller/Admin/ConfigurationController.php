@@ -12,7 +12,7 @@
 
 namespace TheliaBlocks\Controller\Admin;
 
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Thelia\Controller\Admin\BaseAdminController;
 use TheliaBlocks\Service\JsonBlockService;
 use TheliaBlocks\TheliaBlocks;
@@ -23,9 +23,7 @@ use TheliaBlocks\TheliaBlocks;
  * @author Damien Foulhoux <dfoulhoux@openstudio.fr>
  */
 
-/**
- * @Route("/admin/TheliaBlocks", name="thelia_blocks")
- */
+#[Route("/admin/TheliaBlocks", name: "thelia_blocks")]
 class ConfigurationController extends BaseAdminController
 {
     /** @var JsonBlockService */
@@ -37,25 +35,19 @@ class ConfigurationController extends BaseAdminController
         $this->jsonBlockService = $jsonBlockService;
     }
 
-    /**
-     * @Route("", name="_list", methods="GET")
-     */
+    #[Route("", name: "_list", methods: ["GET"])]
     public function reactAppListingAction()
     {
         return $this->render('thelia-blocks-configuration');
     }
 
-    /**
-     * @Route("/new", name="_new", methods="GET")
-     */
+    #[Route("/new", name: "_new", methods: ["GET"])]
     public function reactAppNewAction()
     {
         return $this->render('thelia-blocks-new-configuration');
     }
 
-    /**
-     * @Route("/{blockGroupId}", name="_edit", methods="GET", requirements={"blockGroupId"="\d+"})
-     */
+    #[Route("/{blockGroupId}", name: "_edit", methods: ["GET"], requirements: ["blockGroupId" => "\d+"])]
     public function reactAppEditAction($blockGroupId)
     {
         return $this->render('thelia-blocks-item-configuration', [
