@@ -7,6 +7,9 @@
     <services>
       <service id="theliablocks.json.block" alias="TheliaBlocks\Service\JsonBlockService" public="true">
       </service>
+      <service id="Thelia\Core\Content\BlockRendererInterface"
+               alias="TheliaBlocks\Service\JsonBlockService"
+               public="true" />
     </services>
 
     <hooks>

@@ -12,12 +12,16 @@
 
 namespace TheliaBlocks\Service;
 
+use Propel\Runtime\ActiveQuery\Criteria;
+use Thelia\Core\Content\BlockRendererInterface;
 use Thelia\Core\Template\Parser\ParserResolver;
 use Thelia\Core\Template\TemplateHelperInterface;
 use Thelia\Log\Tlog;
+use Thelia\Type\BooleanOrBothType;
+use TheliaBlocks\Model\BlockGroupQuery;
 use TwigEngine\Template\TwigParser;
 
-class JsonBlockService
+class JsonBlockService implements BlockRendererInterface
 {
     public function __construct(
         private ParserResolver $parserResolver,
@@ -54,5 +58,43 @@ class JsonBlockService
         }
 
         return implode(' ', $blockRenders);
+    }
+
+    public function findAndRenderBlocks(array $filters): array
+    {
+        $search = BlockGroupQuery::create();
+
+        if (!empty($filters['id'])) {
+            $search->filterById($filters['id'], Criteria::IN);
+        }
+
+        if (!empty($filters['slug'])) {
+            $search->filterBySlug($filters['slug'], Criteria::IN);
+        }
+
+        if (!empty($filters['item_id']) && !empty($filters['item_type'])) {
+            $search->useItemBlockGroupQuery()
+                ->filterByItemType($filters['item_type'])
+                ->filterByItemId($filters['item_id'])
+                ->endUse();
+        }
+
+        $visible = $filters['visible'] ?? 1;
+        if ($visible !== BooleanOrBothType::ANY) {
+            $search->filterByVisible($visible ? 1 : 0);
+        }
+
+        $locale = $filters['locale'] ?? null;
+        $rendered = [];
+
+        foreach ($search->find() as $block) {
+            if ($locale !== null) {
+                $block->setLocale($locale);
+            }
+
+            $rendered[] = $this->renderJsonBlocks($block->getJsonContent());
+        }
+
+        return $rendered;
     }
 }
