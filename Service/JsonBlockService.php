@@ -13,6 +13,7 @@
 namespace TheliaBlocks\Service;
 
 use Propel\Runtime\ActiveQuery\Criteria;
+use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 use Thelia\Core\Content\BlockRendererInterface;
 use Thelia\Core\Template\Parser\ParserResolver;
 use Thelia\Core\Template\TemplateHelperInterface;
@@ -21,6 +22,7 @@ use Thelia\Type\BooleanOrBothType;
 use TheliaBlocks\Model\BlockGroupQuery;
 use TwigEngine\Template\TwigParser;
 
+#[AsAlias(id: BlockRendererInterface::class, public: true)]
 class JsonBlockService implements BlockRendererInterface
 {
     public function __construct(
