@@ -120,12 +120,8 @@ final class BlockGroupController extends BaseFrontController
         $blockGroupQuery->orderById('id' === $order ? Criteria::ASC : Criteria::DESC);
 
         $blockGroups = $blockGroupQuery->find();
-
-        if (0 === \count($blockGroups)) {
-            return $this->legacyJson([], 404);
-        }
-
         $locale = $request->get('locale');
+
         $payload = array_map(
             static fn (BlockGroup $blockGroup): array => LegacyBlockGroupSerializer::toArray($blockGroup, $locale),
             iterator_to_array($blockGroups),
