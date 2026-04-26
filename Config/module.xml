@@ -29,7 +29,6 @@
     </authors>
     <type>classic</type>
     <required>
-        <module version=">=2.0.0">OpenApi</module>
         <module version=">=2.0.0">ShortCode</module>
         <module version=">=1.0.0">TheliaLibrary</module>
     </required>
