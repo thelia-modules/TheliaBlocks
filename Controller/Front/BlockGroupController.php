@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Thelia package.
  * http://www.thelia.net
@@ -12,213 +14,89 @@
 
 namespace TheliaBlocks\Controller\Front;
 
-use OpenApi\Annotations as OA;
-use OpenApi\Controller\Front\BaseFrontOpenApiController;
-use OpenApi\Model\Api\ModelFactory;
-use OpenApi\Service\OpenApiService;
 use Propel\Runtime\ActiveQuery\Criteria;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
+use Thelia\Controller\Front\BaseFrontController;
 use Thelia\Core\HttpFoundation\Request;
 use Thelia\Model\Lang;
-use TheliaBlocks\Model\Api\BlockGroup;
+use TheliaBlocks\Controller\Admin\Support\LegacyBlockGroupSerializer;
+use TheliaBlocks\Model\BlockGroup;
 use TheliaBlocks\Model\BlockGroupI18nQuery;
 use TheliaBlocks\Model\BlockGroupQuery;
 
-#[Route("/open_api/block_group", name: "block_group")]
-class BlockGroupController extends BaseFrontOpenApiController
+/**
+ * Backwards-compatibility shim for the legacy `/open_api/block_group` GET
+ * endpoints (front, public) still consumed by integrations relying on the
+ * pre-AP4 contract.
+ *
+ * The canonical API lives under `/api/front/block_groups` (AP 4.3).
+ */
+#[Route('/open_api/block_group', name: 'theliablocks_legacy_block_group_front')]
+final class BlockGroupController extends BaseFrontController
 {
-    #[Route("", name: "_get", methods: ["GET"])]
-    /**
-     * @OA\Get(
-     *     path="/block_group",
-     *     tags={"block group"},
-     *     summary="Get a block group",
-     *     @OA\Parameter(
-     *          name="id",
-     *          in="query",
-     *          @OA\Schema(
-     *              type="integer"
-     *          )
-     *     ),
-     *     @OA\Parameter(
-     *          name="slug",
-     *          in="query",
-     *          @OA\Schema(
-     *              type="string"
-     *          )
-     *     ),
-     *     @OA\Parameter(
-     *          name="visible",
-     *          in="query",
-     *          @OA\Schema(
-     *              type="boolean",
-     *              default="true"
-     *          )
-     *     ),
-     *     @OA\Parameter(
-     *          name="locale",
-     *          in="query",
-     *          description="Current locale by default",
-     *          @OA\Schema(
-     *              type="string"
-     *          )
-     *     ),
-     *     @OA\Response(
-     *          response="200",
-     *          description="Success",
-     *          @OA\JsonContent(ref="#/components/schemas/BlockGroup")
-     *     ),
-     *     @OA\Response(
-     *          response="400",
-     *          description="Bad request",
-     *          @OA\JsonContent(ref="#/components/schemas/Error")
-     *     )
-     * )
-     */
-    public function getBlockGroup(
-        Request $request,
-        ModelFactory $modelFactory
-    ) {
+    #[Route('', name: '_get', methods: ['GET'])]
+    public function getBlockGroup(Request $request): JsonResponse
+    {
         $blockGroupQuery = BlockGroupQuery::create();
 
         if (null !== $id = $request->get('id')) {
-            $blockGroupQuery->filterById($id);
+            $blockGroupQuery->filterById((int) $id);
         }
 
         if (null !== $slug = $request->get('slug')) {
             $blockGroupQuery->filterBySlug($slug);
         }
 
-        if ($request->get('visible') !== null) {
-            $visible = (bool) json_decode(strtolower($request->get('visible')));
-            $blockGroupQuery->filterByVisible($visible);
+        $visibleParam = $request->get('visible');
+        if (null !== $visibleParam) {
+            $blockGroupQuery->filterByVisible((bool) json_decode(strtolower((string) $visibleParam)));
         }
 
-        $propelBlockGroup = $blockGroupQuery->findOne();
+        $blockGroup = $blockGroupQuery->findOne();
 
-        if (null === $propelBlockGroup) {
-            return OpenApiService::jsonResponse(null, 404);
+        if (null === $blockGroup) {
+            return $this->legacyJson(null, 404);
         }
 
-        /** @var BlockGroup $blockGroup */
-        $blockGroup = $modelFactory->buildModel('BlockGroup', $propelBlockGroup, $request->get('locale'));
+        $locale = $request->get('locale');
+        $payload = LegacyBlockGroupSerializer::toArray($blockGroup, $locale);
 
-        if (null !== $blockGroup && empty($blockGroup->getJsonContent())) {
-            $requestLocale = $request->get('locale');
+        if (empty($payload['jsonContent'])) {
+            $fallbackLocale = $this->resolveFallbackLocale($payload['locales'] ?? [], $locale);
 
-            if (!in_array($requestLocale, $blockGroup->getLocales())) {
-                // Copy default locale JSON content
-                $defaultLocale = Lang::getDefaultLanguage()->getLocale();
-
-                $copyLocale = $blockGroup->getLocales()[0];
-
-                if (in_array($defaultLocale, $blockGroup->getLocales())) {
-                    $copyLocale = $defaultLocale;
-                }
-
-                if (
-                    null !== $copyGroup = BlockGroupI18nQuery::create()
+            if (null !== $fallbackLocale) {
+                $fallbackI18n = BlockGroupI18nQuery::create()
                     ->filterById($blockGroup->getId())
-                    ->filterByLocale($copyLocale)
-                    ->findOne()
-                ) {
-                    $blockGroup->setJsonContent($copyGroup->getJsonContent());
+                    ->filterByLocale($fallbackLocale)
+                    ->findOne();
+
+                if (null !== $fallbackI18n) {
+                    $payload['jsonContent'] = $fallbackI18n->getJsonContent();
                 }
             }
         }
 
-        return OpenApiService::jsonResponse($blockGroup);
+        return $this->legacyJson($payload);
     }
 
-    #[Route("/list", name: "_get_list", methods: ["GET"])]
-    /**
-     * @OA\Get(
-     *     path="/block_group/list",
-     *     tags={"block group"},
-     *     summary="Get list of block groups",
-     *     @OA\Parameter(
-     *          name="limit",
-     *          in="query",
-     *          @OA\Schema(
-     *              type="integer"
-     *          )
-     *     ),
-     *     @OA\Parameter(
-     *          name="offset",
-     *          in="query",
-     *          @OA\Schema(
-     *              type="string"
-     *          )
-     *     ),
-     *     @OA\Parameter(
-     *          name="itemType",
-     *          description="the type of an item linked to the block group",
-     *          in="query",
-     *          @OA\Schema(
-     *              type="string"
-     *          )
-     *     ),
-     *     @OA\Parameter(
-     *         name="title",
-     *         in="query",
-     *         @OA\Schema(   
-     *             type="string"
-     *         ),
-     *    ),
-     *     @OA\Parameter(
-     *          name="itemId",
-     *          description="the id of an item linked to the block group (itemType has too be defined too)",
-     *          in="query",
-     *          @OA\Schema(
-     *              type="string"
-     *          )
-     *     ),
-     *     @OA\Parameter(
-     *          name="visible",
-     *          in="query",
-     *          @OA\Schema(
-     *              type="boolean",
-     *              default="true"
-     *          )
-     *     ),
-     *     @OA\Parameter(
-     *          name="locale",
-     *          in="query",
-     *          description="Current locale by default",
-     *          @OA\Schema(
-     *              type="string"
-     *          )
-     *     ),
-     *     @OA\Response(
-     *          response="200",
-     *          description="Success",
-     *          @OA\JsonContent(ref="#/components/schemas/BlockGroup")
-     *     ),
-     *     @OA\Response(
-     *          response="400",
-     *          description="Bad request",
-     *          @OA\JsonContent(ref="#/components/schemas/Error")
-     *     )
-     * )
-     */
-    public function getBlockGroups(
-        Request $request,
-        ModelFactory $modelFactory
-    ) {
+    #[Route('/list', name: '_list', methods: ['GET'])]
+    public function getBlockGroups(Request $request): JsonResponse
+    {
         $blockGroupQuery = BlockGroupQuery::create();
 
         if (null !== $limit = $request->get('limit')) {
-            $blockGroupQuery->limit($limit);
+            $blockGroupQuery->limit((int) $limit);
         }
 
         if (null !== $offset = $request->get('offset')) {
-            $blockGroupQuery->offset($offset);
+            $blockGroupQuery->offset((int) $offset);
         }
 
         if (null !== $title = $request->get('title')) {
             $blockGroupQuery
                 ->useBlockGroupI18nQuery()
-                ->filterByTitle('%' . $title . '%', Criteria::LIKE)
+                ->filterByTitle('%'.$title.'%', Criteria::LIKE)
                 ->endUse();
         }
 
@@ -227,41 +105,63 @@ class BlockGroupController extends BaseFrontOpenApiController
                 ->filterByItemType($itemType);
 
             if (null !== $itemId = $request->get('itemId')) {
-                $itemBlockGroupQuery->filterByItemId($itemId);
+                $itemBlockGroupQuery->filterByItemId((int) $itemId);
             }
 
             $itemBlockGroupQuery->endUse();
         }
 
-        if ($request->get('visible') !== null) {
-            $visible = (bool) json_decode(strtolower($request->get('visible')));
-            $blockGroupQuery->filterByVisible($visible);
+        $visibleParam = $request->get('visible');
+        if (null !== $visibleParam) {
+            $blockGroupQuery->filterByVisible((bool) json_decode(strtolower((string) $visibleParam)));
         }
 
         $order = $request->get('order');
+        $blockGroupQuery->orderById('id' === $order ? Criteria::ASC : Criteria::DESC);
 
-        switch ($order) {
-            case 'id':
-                $blockGroupQuery->orderById(Criteria::ASC);
-                break;
-            case 'id_reverse':
-                $blockGroupQuery->orderById(Criteria::DESC);
-                break;
-            default:
-                $blockGroupQuery->orderById(Criteria::DESC);
+        $blockGroups = $blockGroupQuery->find();
+
+        if (0 === \count($blockGroups)) {
+            return $this->legacyJson([], 404);
         }
 
-        $propelTheliaBlocks = $blockGroupQuery->find();
-
-        if (empty($propelTheliaBlocks)) {
-            return OpenApiService::jsonResponse([], 404);
-        }
-
-        $theliaBlocks = array_map(
-            fn ($propelBlockGroup) => $modelFactory->buildModel('BlockGroup', $propelBlockGroup, $request->get('locale')),
-            iterator_to_array($propelTheliaBlocks)
+        $locale = $request->get('locale');
+        $payload = array_map(
+            static fn (BlockGroup $blockGroup): array => LegacyBlockGroupSerializer::toArray($blockGroup, $locale),
+            iterator_to_array($blockGroups),
         );
 
-        return OpenApiService::jsonResponse($theliaBlocks);
+        return $this->legacyJson($payload);
+    }
+
+    /**
+     * @param array<int, string> $availableLocales
+     */
+    private function resolveFallbackLocale(array $availableLocales, ?string $requestLocale): ?string
+    {
+        if ([] === $availableLocales) {
+            return null;
+        }
+
+        if (null !== $requestLocale && \in_array($requestLocale, $availableLocales, true)) {
+            return null;
+        }
+
+        $defaultLocale = Lang::getDefaultLanguage()->getLocale();
+
+        if (\in_array($defaultLocale, $availableLocales, true)) {
+            return $defaultLocale;
+        }
+
+        return $availableLocales[0];
+    }
+
+    private function legacyJson(mixed $data, int $status = 200): JsonResponse
+    {
+        $response = (new JsonResponse())->setContent(json_encode($data));
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+        $response->setStatusCode($status);
+
+        return $response;
     }
 }

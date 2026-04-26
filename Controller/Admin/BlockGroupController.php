@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Thelia package.
  * http://www.thelia.net
@@ -12,13 +14,12 @@
 
 namespace TheliaBlocks\Controller\Admin;
 
-use OpenApi\Annotations as OA;
-use OpenApi\Controller\Admin\BaseAdminOpenApiController;
-use OpenApi\Model\Api\ModelFactory;
-use OpenApi\Service\OpenApiService;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
-use Thelia\Core\HttpFoundation\JsonResponse;
+use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\HttpFoundation\Request;
+use Thelia\Model\LangQuery;
+use TheliaBlocks\Controller\Admin\Support\LegacyBlockGroupSerializer;
 use TheliaBlocks\Model\BlockGroup;
 use TheliaBlocks\Model\BlockGroupI18n;
 use TheliaBlocks\Model\BlockGroupI18nQuery;
@@ -26,238 +27,154 @@ use TheliaBlocks\Model\BlockGroupQuery;
 use TheliaBlocks\Model\ItemBlockGroup;
 use TheliaBlocks\Model\ItemBlockGroupQuery;
 
-#[Route("/open_api/block_group", name: "block_group")]
-class BlockGroupController extends BaseAdminOpenApiController
+/**
+ * Backwards-compatibility shim for the legacy `/open_api/block_group` endpoints
+ * still consumed by the bundled `@thelia/blocks-editor` admin UI.
+ *
+ * The canonical API for new integrations lives under `/api/admin/block_groups`
+ * (API Platform 4.3 resources). This controller exposes the same Propel logic
+ * but returns the legacy JSON shape expected by the npm bundle.
+ */
+#[Route('/open_api/block_group', name: 'theliablocks_legacy_block_group_admin')]
+final class BlockGroupController extends BaseAdminController
 {
-    #[Route("", name: "add_block_group", methods: ["POST"])]
-    /**
-     * @OA\Post(
-     *     path="/block_group",
-     *     tags={"block group"},
-     *     summary="Add a new group of block",
-     *     @OA\RequestBody(
-     *          required=true,
-     *             @OA\JsonContent(
-     *                  @OA\Property(
-     *                      property="blockGroup",
-     *                      ref="#/components/schemas/BlockGroup"
-     *                  ),
-     *                  @OA\Property(
-     *                      property="itemBlockGroup",
-     *                      ref="#/components/schemas/ItemBlockGroup"
-     *                  ),
-     *                 @OA\Property(
-     *                     property="locale",
-     *                     default="en_US",
-     *                     type="string"
-     *                 ),
-     *             )
-     *     ),
-     *     @OA\Response(
-     *          response="200",
-     *          description="Success",
-     *          @OA\JsonContent(ref="#/components/schemas/BlockGroup")
-     *     ),
-     *     @OA\Response(
-     *          response="400",
-     *          description="Bad request",
-     *          @OA\JsonContent(ref="#/components/schemas/Error")
-     *     )
-     * )
-     */
-    public function createBlockGroup(
-        Request $request,
-        ModelFactory $modelFactory
-    ) {
-        $data = json_decode($request->getContent(), true);
-        /** @var \TheliaBlocks\Model\Api\BlockGroup $openApiBlockGroup */
-        $openApiBlockGroup = $modelFactory->buildModel('BlockGroup', $data['blockGroup']);
-        $openApiBlockGroup->validate(self::GROUP_CREATE);
-
-        if (!isset($data['locale'])) {
-            $data['locale'] = $request->getSession()->getAdminLang()->getLocale();
-        }
-
-        /** @var BlockGroup $blockGroup */
-        $blockGroup = $openApiBlockGroup->toTheliaModel($data['locale']);
-        $blockGroup->save();
-
-        if (isset($data['itemBlockGroup'])) {
-            $this->assignBlockGroupToItem($modelFactory, $data['itemBlockGroup'], $blockGroup->getId());
-        }
-
-        $blockGroup->clearItemBlockGroups();
-
-        return OpenApiService::jsonResponse(
-            $modelFactory->buildModel('BlockGroup', $blockGroup)
-        );
-    }
-
-    #[Route("", name: "update_block_group", methods: ["PATCH"])]
-    /**
-     * @OA\Patch(
-     *     path="/block_group",
-     *     tags={"block group"},
-     *     summary="Update a block group",
-     *     @OA\RequestBody(
-     *          required=true,
-     *             @OA\JsonContent(
-     *                  @OA\Property(
-     *                      property="blockGroup",
-     *                      ref="#/components/schemas/BlockGroup"
-     *                  ),
-     *                  @OA\Property(
-     *                      property="itemBlockGroup",
-     *                      ref="#/components/schemas/ItemBlockGroup"
-     *                  ),
-     *                 @OA\Property(
-     *                     property="locale",
-     *                     type="string",
-     *                     default="en_US"
-     *                 ),
-     *             )
-     *     ),
-     *     @OA\Response(
-     *          response="200",
-     *          description="Success",
-     *          @OA\JsonContent(ref="#/components/schemas/BlockGroup")
-     *     ),
-     *     @OA\Response(
-     *          response="400",
-     *          description="Bad request",
-     *          @OA\JsonContent(ref="#/components/schemas/Error")
-     *     )
-     * )
-     */
-    public function updateBlockGroup(
-        Request $request,
-        ModelFactory $modelFactory
-    ) {
-        $data = json_decode($request->getContent(), true);
-        /** @var \TheliaBlocks\Model\Api\BlockGroup $openApiBlockGroup */
-        $openApiBlockGroup = $modelFactory->buildModel('BlockGroup', $data['blockGroup']);
-        $openApiBlockGroup->validate(self::GROUP_UPDATE);
-
-        if (!isset($data['locale'])) {
-            $data['locale'] = $request->getSession()->getAdminLang()->getLocale();
-        }
-
-        /** @var BlockGroup $blockGroup */
-        $blockGroup = $openApiBlockGroup->toTheliaModel($data['locale']);
-        $blockGroup->save();
-
-        if (isset($data['itemBlockGroup'])) {
-            $this->assignBlockGroupToItem($modelFactory, $data['itemBlockGroup'], $blockGroup->getId());
-        }
-        $blockGroup->clearItemBlockGroups();
-
-        return OpenApiService::jsonResponse($modelFactory->buildModel('BlockGroup', $blockGroup));
-    }
-
-    #[Route("/{blockGroupId}", name: "delete_block_group", methods: ["DELETE"], requirements: ["blockGroupId" => "\d+"])]
-    /**
-     * @OA\Delete(
-     *     path="/block_group/{blockGroupId}",
-     *     tags={"block group"},
-     *     summary="Delete a block group",
-     *     @OA\Parameter(
-     *          name="blockGroupId",
-     *          in="path",
-     *          required=true,
-     *          @OA\Schema(
-     *              type="integer"
-     *          )
-     *     ),
-     *     @OA\Response(
-     *          response="204",
-     *          description="Success"
-     *     ),
-     *     @OA\Response(
-     *          response="400",
-     *          description="Bad request",
-     *          @OA\JsonContent(ref="#/components/schemas/Error")
-     *     )
-     * )
-     */
-    public function deleteBlockGroup(
-        $blockGroupId
-    ) {
-        $blockGroup = BlockGroupQuery::create()
-            ->filterById($blockGroupId)
-            ->findOne();
-
-        $blockGroup->delete();
-
-        return new JsonResponse('Success', 204);
-    }
-
-    #[Route("/duplicate/{blockGroupId}", name: "duplicate_block_group", methods: ["POST"], requirements: ["blockGroupId" => "\d+"])]
-    /**
-     * @OA\Post(
-     *     path="/block_group/duplicate/{blockGroupId}",
-     *     tags={"block group"},
-     *     summary="Duplicate a group of block",
-     *     @OA\Parameter(
-     *          name="blockGroupId",
-     *          in="path",
-     *          required=true,
-     *          @OA\Schema(
-     *              type="integer"
-     *          )
-     *     ),
-     *     @OA\Response(
-     *          response="200",
-     *          description="Success",
-     *          @OA\JsonContent(ref="#/components/schemas/BlockGroup")
-     *     ),
-     *     @OA\Response(
-     *          response="400",
-     *          description="Bad request",
-     *          @OA\JsonContent(ref="#/components/schemas/Error")
-     *     )
-     * )
-     */
-    public function duplicateBlockGroup(
-        $blockGroupId
-    ) {
-        $propelBlockGroup = BlockGroupQuery::create()->filterById($blockGroupId)->findOne();
-
-        if (null === $propelBlockGroup) {
-            return OpenApiService::jsonResponse(null, 404);
-        }
-
-        $newBlockGroup = $propelBlockGroup->copy();
-        $newBlockGroup->save();
-        $newBlockId = $newBlockGroup->getId();
-
-        $blockGroupI18ns = BlockGroupI18nQuery::create()->filterById($blockGroupId)->find();
-
-        array_map(function (BlockGroupI18n $blockI18n) use ($newBlockId): void {
-            $newBlockI18n = $blockI18n->copy();
-            $newBlockI18n->setId($newBlockId)->save();
-        }, iterator_to_array($blockGroupI18ns));
-
-        return OpenApiService::jsonResponse($newBlockGroup->getId());
-    }
-
-    protected function assignBlockGroupToItem(ModelFactory $modelFactory, $itemBlockGroup, $blockGroupId)
+    #[Route('', name: '_create', methods: ['POST'])]
+    public function createBlockGroup(Request $request): JsonResponse
     {
-        $openApiItemBlockGroup = $modelFactory->buildModel('ItemBlockGroup', $itemBlockGroup);
-        /** @var ItemBlockGroup $itemBlockGroup */
-        $itemBlockGroup = $openApiItemBlockGroup->toTheliaModel();
-        $itemBlockGroup->setBlockGroupId($blockGroupId);
+        $data = json_decode($request->getContent(), true) ?? [];
+        $payload = $data['blockGroup'] ?? [];
+        $locale = $data['locale'] ?? $request->getSession()->getAdminLang()->getLocale();
 
-        // todo allow multiple block for an item
-        $oldItemBlockGroup = ItemBlockGroupQuery::create()
+        $blockGroup = (new BlockGroup())
+            ->setVisible((int) (bool) ($payload['visible'] ?? false));
+
+        if (\array_key_exists('slug', $payload) && null !== $payload['slug']) {
+            $blockGroup->setSlug($payload['slug']);
+        }
+
+        $blockGroup
+            ->setLocale($locale)
+            ->setTitle($payload['title'] ?? '')
+            ->setJsonContent($payload['jsonContent'] ?? null);
+
+        $blockGroup->save();
+
+        if (isset($data['itemBlockGroup'])) {
+            $this->upsertItemBlockGroup($data['itemBlockGroup'], $blockGroup->getId());
+        }
+
+        $blockGroup->clearItemBlockGroups();
+
+        return $this->legacyJson(LegacyBlockGroupSerializer::toArray($blockGroup, $locale));
+    }
+
+    #[Route('', name: '_update', methods: ['PATCH'])]
+    public function updateBlockGroup(Request $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true) ?? [];
+        $payload = $data['blockGroup'] ?? [];
+        $locale = $data['locale'] ?? $request->getSession()->getAdminLang()->getLocale();
+        $id = $payload['id'] ?? null;
+
+        if (null === $id) {
+            return $this->legacyJson(['error' => 'Missing id'], 400);
+        }
+
+        $blockGroup = BlockGroupQuery::create()->findPk((int) $id);
+
+        if (null === $blockGroup) {
+            return $this->legacyJson(['error' => 'Not found'], 404);
+        }
+
+        if (\array_key_exists('visible', $payload)) {
+            $blockGroup->setVisible((int) (bool) $payload['visible']);
+        }
+
+        if (\array_key_exists('slug', $payload) && null !== $payload['slug']) {
+            $blockGroup->setSlug($payload['slug']);
+        }
+
+        $blockGroup->setLocale($locale);
+
+        if (\array_key_exists('title', $payload)) {
+            $blockGroup->setTitle((string) $payload['title']);
+        }
+
+        if (\array_key_exists('jsonContent', $payload)) {
+            $blockGroup->setJsonContent($payload['jsonContent']);
+        }
+
+        $blockGroup->save();
+
+        if (isset($data['itemBlockGroup'])) {
+            $this->upsertItemBlockGroup($data['itemBlockGroup'], $blockGroup->getId());
+        }
+
+        $blockGroup->clearItemBlockGroups();
+
+        return $this->legacyJson(LegacyBlockGroupSerializer::toArray($blockGroup, $locale));
+    }
+
+    #[Route('/{blockGroupId}', name: '_delete', methods: ['DELETE'], requirements: ['blockGroupId' => '\d+'])]
+    public function deleteBlockGroup(int $blockGroupId): JsonResponse
+    {
+        $blockGroup = BlockGroupQuery::create()->findPk($blockGroupId);
+
+        $blockGroup?->delete();
+
+        return $this->legacyJson('Success', 204);
+    }
+
+    #[Route('/duplicate/{blockGroupId}', name: '_duplicate', methods: ['POST'], requirements: ['blockGroupId' => '\d+'])]
+    public function duplicateBlockGroup(int $blockGroupId): JsonResponse
+    {
+        $sourceBlockGroup = BlockGroupQuery::create()->findPk($blockGroupId);
+
+        if (null === $sourceBlockGroup) {
+            return $this->legacyJson(null, 404);
+        }
+
+        $newBlockGroup = $sourceBlockGroup->copy();
+        $newBlockGroup->save();
+        $newBlockGroupId = $newBlockGroup->getId();
+
+        $sourceI18ns = BlockGroupI18nQuery::create()
+            ->filterById($blockGroupId)
+            ->find();
+
+        /** @var BlockGroupI18n $sourceI18n */
+        foreach ($sourceI18ns as $sourceI18n) {
+            $newI18n = $sourceI18n->copy();
+            $newI18n->setId($newBlockGroupId);
+            $newI18n->save();
+        }
+
+        return $this->legacyJson($newBlockGroupId);
+    }
+
+    private function upsertItemBlockGroup(array $payload, int $blockGroupId): void
+    {
+        $itemBlockGroup = (new ItemBlockGroup())
+            ->setItemType($payload['itemType'] ?? '')
+            ->setItemId((int) ($payload['itemId'] ?? 0))
+            ->setBlockGroupId($blockGroupId);
+
+        $existing = ItemBlockGroupQuery::create()
             ->filterByItemType($itemBlockGroup->getItemType())
             ->filterByItemId($itemBlockGroup->getItemId())
             ->findOne();
-        if (null !== $oldItemBlockGroup) {
-            $oldItemBlockGroup->delete();
-        }
+
+        $existing?->delete();
 
         $itemBlockGroup->save();
+    }
 
-        return $itemBlockGroup;
+    private function legacyJson(mixed $data, int $status = 200): JsonResponse
+    {
+        $response = (new JsonResponse())->setContent(json_encode($data));
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+        $response->setStatusCode($status);
+
+        return $response;
     }
 }

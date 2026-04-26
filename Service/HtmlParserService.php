@@ -12,21 +12,19 @@
 
 namespace TheliaBlocks\Service;
 
-use OpenApi\Model\Api\ModelFactory;
 use Symfony\Component\HttpFoundation\RequestStack;
 use TheliaLibrary\Model\LibraryImage;
+use TheliaLibrary\Service\LibraryImageService;
 use TheliaLibrary\TheliaLibrary;
 
 class HtmlParserService
 {
-    /** @var ModelFactory */
-    protected $modelFactory;
-
     protected $locale;
 
-    public function __construct(ModelFactory $modelFactory, RequestStack $requestStack)
-    {
-        $this->modelFactory = $modelFactory;
+    public function __construct(
+        RequestStack $requestStack,
+        protected readonly LibraryImageService $libraryImageService,
+    ) {
         $this->locale = $requestStack->getCurrentRequest()->getSession()->getLang(true)->getLocale();
     }
 
@@ -270,13 +268,19 @@ class HtmlParserService
 
                 $libraryImage->save();
 
-                $openApiImage = $this->modelFactory->buildModel('LibraryImage', $libraryImage);
+                $imagePayload = [
+                    'id' => $libraryImage->getId(),
+                    'title' => $libraryImage->getTitle(),
+                    'fileName' => $libraryImage->getFileName(),
+                    'url' => $this->libraryImageService->getImagePublicUrl($libraryImage),
+                    'tags' => [],
+                ];
 
                 return array_merge(
                     $blockBaseData,
                     [
                         'type' => ['id' => 'blockImage'],
-                        'data' => array_merge($imgData, json_decode(json_encode($openApiImage), true)),
+                        'data' => array_merge($imgData, $imagePayload),
                     ]
                 );
             }

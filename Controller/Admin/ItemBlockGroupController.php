@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Thelia package.
  * http://www.thelia.net
@@ -12,108 +14,70 @@
 
 namespace TheliaBlocks\Controller\Admin;
 
-use OpenApi\Annotations as OA;
-use OpenApi\Controller\Admin\BaseAdminOpenApiController;
-use OpenApi\Model\Api\ModelFactory;
-use OpenApi\Service\OpenApiService;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
-use Thelia\Core\HttpFoundation\JsonResponse;
+use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\HttpFoundation\Request;
-use TheliaBlocks\Model\BlockGroup;
+use TheliaBlocks\Controller\Admin\Support\LegacyBlockGroupSerializer;
+use TheliaBlocks\Model\BlockGroupQuery;
 use TheliaBlocks\Model\ItemBlockGroup;
 use TheliaBlocks\Model\ItemBlockGroupQuery;
 
-#[Route("/open_api/item_block_group", name: "item_block_group")]
-class ItemBlockGroupController extends BaseAdminOpenApiController
+/**
+ * Backwards-compatibility shim for the legacy `/open_api/item_block_group`
+ * endpoints still consumed by the `@thelia/blocks-editor` admin bundle.
+ *
+ * The canonical API lives under `/api/admin/item_block_groups` (AP 4.3).
+ */
+#[Route('/open_api/item_block_group', name: 'theliablocks_legacy_item_block_group_admin')]
+final class ItemBlockGroupController extends BaseAdminController
 {
-    #[Route("", name: "_create", methods: ["POST"])]
-    /**
-     * @OA\Post(
-     *     path="/item_block_group",
-     *     tags={"item block group", "block group"},
-     *     summary="Add a relation between an item and a block group",
-     *     @OA\RequestBody(
-     *          required=true,
-     *             @OA\JsonContent(
-     *                  @OA\Property(
-     *                      property="itemBlockGroup",
-     *                      ref="#/components/schemas/ItemBlockGroup"
-     *                  )
-     *             )
-     *     ),
-     *     @OA\Response(
-     *          response="200",
-     *          description="Success",
-     *          @OA\JsonContent(ref="#/components/schemas/BlockGroup")
-     *     ),
-     *     @OA\Response(
-     *          response="400",
-     *          description="Bad request",
-     *          @OA\JsonContent(ref="#/components/schemas/Error")
-     *     )
-     * )
-     */
-    public function createItemBlockGroup(
-        Request $request,
-        ModelFactory $modelFactory
-    ) {
-        $data = json_decode($request->getContent(), true);
-        $openApiItemBlockGroup = $modelFactory->buildModel('ItemBlockGroup', $data['itemBlockGroup']);
-        /** @var ItemBlockGroup $itemBlockGroup */
-        $itemBlockGroup = $openApiItemBlockGroup->toTheliaModel();
+    #[Route('', name: '_create', methods: ['POST'])]
+    public function createItemBlockGroup(Request $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true) ?? [];
+        $payload = $data['itemBlockGroup'] ?? [];
+        $locale = $request->get('locale') ?? $request->getSession()->getAdminLang()->getLocale();
 
-        // todo allow multiple block for an item
-        $oldItemBlockGroup = ItemBlockGroupQuery::create()
+        $itemBlockGroup = (new ItemBlockGroup())
+            ->setItemType((string) ($payload['itemType'] ?? ''))
+            ->setItemId((int) ($payload['itemId'] ?? 0))
+            ->setBlockGroupId((int) ($payload['blockGroupId'] ?? 0));
+
+        $existing = ItemBlockGroupQuery::create()
             ->filterByItemType($itemBlockGroup->getItemType())
             ->filterByItemId($itemBlockGroup->getItemId())
             ->findOne();
-        if (null !== $oldItemBlockGroup) {
-            $oldItemBlockGroup->delete();
-        }
+
+        $existing?->delete();
 
         $itemBlockGroup->save();
 
-        $theliaBlock = $modelFactory->buildModel('BlockGroup', $itemBlockGroup->getBlockGroup(), $request->get('locale'));
+        $blockGroup = BlockGroupQuery::create()->findPk($itemBlockGroup->getBlockGroupId());
 
-        return OpenApiService::jsonResponse($theliaBlock, 200);
-    }
-
-    #[Route("/{itemBlockGroupId}", name: "_delete", methods: ["DELETE"], requirements: ["itemBlockGroupId" => "\d+"])]
-    /**
-     * @OA\Delete(
-     *     path="/item_block_group/{itemBlockGroupId}",
-     *     tags={"item block group", "block group"},
-     *     summary="Delete a relation between an item and a block group",
-     *     @OA\Parameter(
-     *          name="itemBlockGroupId",
-     *          in="path",
-     *          required=true,
-     *          @OA\Schema(
-     *              type="integer"
-     *          )
-     *     ),
-     *     @OA\Response(
-     *          response="204",
-     *          description="Success"
-     *     ),
-     *     @OA\Response(
-     *          response="400",
-     *          description="Bad request",
-     *          @OA\JsonContent(ref="#/components/schemas/Error")
-     *     )
-     * )
-     */
-    public function deleteItemBlockGroup(
-        $itemBlockGroupId
-    ) {
-        $itemBlockGroup = ItemBlockGroupQuery::create()
-            ->filterById($itemBlockGroupId)
-            ->findOne();
-
-        if (null !== $itemBlockGroup) {
-            $itemBlockGroup->delete();
+        if (null === $blockGroup) {
+            return $this->legacyJson(null, 404);
         }
 
-        return new JsonResponse('Success', 204);
+        return $this->legacyJson(LegacyBlockGroupSerializer::toArray($blockGroup, $locale));
+    }
+
+    #[Route('/{itemBlockGroupId}', name: '_delete', methods: ['DELETE'], requirements: ['itemBlockGroupId' => '\d+'])]
+    public function deleteItemBlockGroup(int $itemBlockGroupId): JsonResponse
+    {
+        $itemBlockGroup = ItemBlockGroupQuery::create()->findPk($itemBlockGroupId);
+
+        $itemBlockGroup?->delete();
+
+        return $this->legacyJson('Success', 204);
+    }
+
+    private function legacyJson(mixed $data, int $status = 200): JsonResponse
+    {
+        $response = (new JsonResponse())->setContent(json_encode($data));
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+        $response->setStatusCode($status);
+
+        return $response;
     }
 }
