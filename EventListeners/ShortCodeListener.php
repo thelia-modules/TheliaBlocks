@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Thelia\Core\HttpFoundation\Request;
 use Thelia\Core\Template\Parser\ParserResolver;
 use Thelia\Core\Template\ParserInterface;
+use Thelia\Core\Template\TemplateDefinition;
 use Thelia\Core\Template\TheliaTemplateHelper;
 use Thelia\Log\Tlog;
 use Thelia\Model\CategoryQuery;
@@ -58,20 +59,50 @@ class ShortCodeListener implements EventSubscriberInterface
 
     public function addBlockGroupCss(ShortCodeEvent $event): void
     {
-        if (TheliaBlocks::$pageNeedTheliaBlockAssets) {
+        if (TheliaBlocks::$pageNeedTheliaBlockAssets && null !== ($parser = $this->resolveBackOfficeParser())) {
             $event->setResult(
-                $this->parser->render('thelia-blocks-css.html')
+                $parser->render('thelia-blocks-css.html')
             );
         }
     }
 
     public function addBlockGroupJs(ShortCodeEvent $event): void
     {
-        if (TheliaBlocks::$pageNeedTheliaBlockAssets) {
+        if (TheliaBlocks::$pageNeedTheliaBlockAssets && null !== ($parser = $this->resolveBackOfficeParser())) {
             $event->setResult(
-                $this->parser->render('thelia-blocks-js.html')
+                $parser->render('thelia-blocks-js.html')
             );
         }
+    }
+
+    /**
+     * Resolve a parser able to render the module's Smarty back-office asset
+     * templates (thelia-blocks-css.html / thelia-blocks-js.html).
+     *
+     * In an all-Smarty back-office the current parser already is a configured
+     * Smarty parser. In a Twig back-office no Thelia parser is "current"
+     * (controllers render through the native Twig environment), so fall back to
+     * the Smarty parser pointed at the default back-office template, where the
+     * module templates are registered.
+     */
+    private function resolveBackOfficeParser(): ?ParserInterface
+    {
+        if ($this->parser instanceof ParserInterface && 'html' === $this->parser->getFileExtension()) {
+            return $this->parser;
+        }
+
+        foreach ($this->parserResolver->getParsers() as $parser) {
+            if ('html' === $parser->getFileExtension()) {
+                $parser->setTemplateDefinition(
+                    new TemplateDefinition('default', TemplateDefinition::BACK_OFFICE),
+                    true
+                );
+
+                return $parser;
+            }
+        }
+
+        return null;
     }
 
     public function blockGroupShortCode(ShortCodeEvent $event): void
