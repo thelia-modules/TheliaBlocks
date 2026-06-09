@@ -1,0 +1,26 @@
+{# TheliaBlocks item configuration editor (default-twig BO hook fragment). #}
+{% set containerId = 'thelia-blocks-root-edit' ~ random(100000, 999999) %}
+<div id="{{ containerId }}-linking" class="thelia-blocks-link-content"></div>
+<div id="{{ containerId }}" class="thelia-blocks-ui"></div>
+
+<script type="module">
+    let API_ROOT = (window.THELIA_BLOCKS_API_ROOT || "/open_api");
+    let groupId = "{{ groupId|default('') }}";
+    let itemId = "{{ itemId|default('') }}";
+    let itemType = "{{ itemType|default('') }}";
+    let containerId = "{{ containerId }}";
+    let containerLinkingId = "{{ containerId }}-linking";
+
+    ReactDOM.render(React.createElement(TheliaBlocks.BlocksEditor, {
+        apiUrl: API_ROOT,
+        containerId: containerId,
+        groupId: groupId || null,
+        itemId: itemId || null,
+        itemType: itemType || null,
+        locales: window.THELIA_BLOCKS_LOCALES,
+        urlPrefix: window.THELIA_BLOCKS_URL_PREFIX,
+        itemConfiguration: true,
+        backlink: false,
+        noRedirect: true
+    }, null), document.getElementById(containerId));
+</script>

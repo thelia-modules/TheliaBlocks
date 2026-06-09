@@ -21,6 +21,36 @@ use TheliaBlocks\TheliaBlocks;
 
 class TheliaBlocksBackHook extends BaseHook
 {
+    public static function getSubscribedHooks(): array
+    {
+        return [
+            'thelia.blocks.item.configuration' => [
+                ['type' => 'back', 'method' => 'onBlockItemConfiguration'],
+            ],
+            'product.tab' => [
+                ['type' => 'back', 'method' => 'onProductTab'],
+            ],
+            'category.tab' => [
+                ['type' => 'back', 'method' => 'onCategoryTab'],
+            ],
+            'content.tab' => [
+                ['type' => 'back', 'method' => 'onContentTab'],
+            ],
+            'brand.tab' => [
+                ['type' => 'back', 'method' => 'onBrandTab'],
+            ],
+            'folder.tab' => [
+                ['type' => 'back', 'method' => 'onFolderTab'],
+            ],
+            'main.head-css' => [
+                ['type' => 'back', 'method' => 'onMainCss'],
+            ],
+            'main.footer-js' => [
+                ['type' => 'back', 'method' => 'onMainJs'],
+            ],
+        ];
+    }
+
     public function onProductTab(HookRenderBlockEvent $event): void
     {
         $this->addTheliaBlocksConfigurationTab($event, 'product');
@@ -98,7 +128,7 @@ class TheliaBlocksBackHook extends BaseHook
         $group = $search->findOne();
 
         return $this->render(
-            'item-configuration.html',
+            'item-configuration.html.twig',
             [
                 'itemId' => $itemId,
                 'itemType' => $itemType,

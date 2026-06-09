@@ -1,0 +1,8 @@
+{# Top menu entry for TheliaBlocks (default-twig BO). #}
+{% set is_active = admin_current_location is defined and admin_current_location starts with 'thelia_blocks' %}
+<li class="nav-item">
+    <a class="nav-link {{ is_active ? 'active' : '' }}" title="Thelia blocks" href="{{ path('thelia_blocks_list') }}">
+        <i class="bi bi-grid-3x3-gap me-2" aria-hidden="true"></i>
+        <span class="item-text">{{ 'Blocs de contenus'|trans({}, 'TheliaBlocks') }}</span>
+    </a>
+</li>

@@ -17,10 +17,19 @@ use Thelia\Core\Hook\BaseHook;
 
 class TheliaBlocksMenuHook extends BaseHook
 {
+    public static function getSubscribedHooks(): array
+    {
+        return [
+            'main.in-top-menu-items' => [
+                ['type' => 'back', 'method' => 'onMainInTopMenuItems'],
+            ],
+        ];
+    }
+
     public function onMainInTopMenuItems(HookRenderEvent $event): void
     {
         $event->add(
-            $this->render('hook-in-top-menu-item.html', $event->getTemplateVars())
+            $this->render('hook-in-top-menu-item.html.twig', $event->getTemplateVars())
         );
     }
 }

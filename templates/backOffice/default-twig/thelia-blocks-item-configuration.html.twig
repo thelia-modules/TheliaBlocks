@@ -1,0 +1,33 @@
+{% extends '@BackOfficeDefaultTwig/base.html.twig' %}
+
+{% block title %}{{ 'Thelia blocks'|trans({}, 'TheliaBlocks') }}{% endblock %}
+{% block body_testid %}thelia-blocks-edit{% endblock %}
+
+{% block content %}
+    {% if is_granted('VIEW', 'admin.content') %}
+        <div id="thelia-blocks-root-edit" class="thelia-blocks-ui"></div>
+    {% endif %}
+{% endblock %}
+
+{% block scripts_extra %}
+    {{ safe_hook('thelia.blocks.plugins') }}
+
+    <script type="module">
+        let groupId = "{{ groupId|default('') }}";
+        let itemId = "{{ itemId|default('') }}";
+        let itemType = "{{ itemType|default('') }}";
+        let CONTAINER_ID = "thelia-blocks-root-edit";
+        let CONTAINER = document.getElementById(CONTAINER_ID);
+
+        ReactDOM.render(React.createElement(TheliaBlocks.BlocksEditor, {
+            apiUrl: window.THELIA_BLOCKS_API_ROOT,
+            containerId: CONTAINER_ID,
+            groupId: groupId || null,
+            itemId: itemId || null,
+            itemType: itemType || null,
+            isEditing: true,
+            locales: window.THELIA_BLOCKS_LOCALES,
+            urlPrefix: window.THELIA_BLOCKS_URL_PREFIX,
+        }, null), CONTAINER);
+    </script>
+{% endblock %}
