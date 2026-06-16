@@ -10,8 +10,7 @@
 {% endblock %}
 
 {% block scripts_extra %}
-    {{ safe_hook('thelia.blocks.plugins') }}
-
+    {# Plugins are loaded once, after the editor core, by the main.footer-js hook (block_group_admin_js). #}
     <script>
     (function () {
         // The React editor hard-codes the default admin prefix in its links and redirects.
