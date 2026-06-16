@@ -12,6 +12,60 @@
 {% block scripts_extra %}
     {{ safe_hook('thelia.blocks.plugins') }}
 
+    <script>
+    (function () {
+        // The React editor hard-codes the default admin prefix in its links and redirects.
+        // When the BackOfficePath module serves the back-office under a custom path, it rewrites
+        // every literal admin prefix in this response. "realBase" carries that rewrite; "defaultBase"
+        // is rebuilt at runtime so it stays untouched. When they differ, realign the hard-coded URLs.
+        var realBase = '/admin';
+        var defaultBase = '/' + 'admin';
+        if (realBase === defaultBase) {
+            return;
+        }
+        var needle = defaultBase + '/TheliaBlocks';
+        var remap = function (url) {
+            return (typeof url === 'string' && url.indexOf(needle) === 0)
+                ? realBase + url.slice(defaultBase.length)
+                : url;
+        };
+        document.addEventListener('click', function (event) {
+            var anchor = event.target && event.target.closest ? event.target.closest('a[href]') : null;
+            if (!anchor) {
+                return;
+            }
+            var fixed = remap(anchor.getAttribute('href'));
+            if (fixed !== anchor.getAttribute('href')) {
+                anchor.setAttribute('href', fixed);
+            }
+        }, true);
+        // location.assign/replace cannot be overridden, so realign programmatic redirects
+        // (issued after save/create) through the Navigation API where it is available.
+        if (window.navigation && typeof window.navigation.addEventListener === 'function') {
+            window.navigation.addEventListener('navigate', function (event) {
+                if (!event.cancelable) {
+                    return;
+                }
+                var target;
+                try {
+                    target = new URL(event.destination.url);
+                } catch (error) {
+                    return;
+                }
+                if (target.origin !== window.location.origin) {
+                    return;
+                }
+                var path = target.pathname + target.search + target.hash;
+                var fixed = remap(path);
+                if (fixed !== path) {
+                    event.preventDefault();
+                    window.location.replace(fixed);
+                }
+            });
+        }
+    })();
+    </script>
+
     <script type="module">
         let groupId = "{{ groupId|default('') }}";
         let itemId = "{{ itemId|default('') }}";
