@@ -24,6 +24,7 @@ use Thelia\Log\Tlog;
 use Thelia\Model\CategoryQuery;
 use Thelia\Model\ContentQuery;
 use Thelia\Model\FolderQuery;
+use Thelia\Model\Lang;
 use Thelia\Model\ProductQuery;
 use TheliaBlocks\Model\BlockGroupQuery;
 use TheliaBlocks\TheliaBlocks;
@@ -124,7 +125,9 @@ class ShortCodeListener implements EventSubscriberInterface
             return;
         }
 
-        $lang = $this->request->getSession()->getLang();
+        $lang = (null !== $this->request && $this->request->hasSession())
+            ? $this->request->getSession()->getLang()
+            : Lang::getDefaultLanguage();
         $blockGroup->setLocale($lang->getLocale());
 
         $blocks = json_decode($blockGroup->getJsonContent(), true);
@@ -174,7 +177,9 @@ class ShortCodeListener implements EventSubscriberInterface
     {
         $attributes = $event->getAttributes();
         $id = $attributes['id'];
-        $locale = $this->request->getSession()->getLang()->getLocale();
+        $locale = (null !== $this->request && $this->request->hasSession())
+            ? $this->request->getSession()->getLang()->getLocale()
+            : Lang::getDefaultLanguage()->getLocale();
 
         $item = $query
             ->filterById($id)

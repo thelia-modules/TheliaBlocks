@@ -43,7 +43,9 @@ final class BlockGroupController extends BaseAdminController
     {
         $data = json_decode($request->getContent(), true) ?? [];
         $payload = $data['blockGroup'] ?? [];
-        $locale = $data['locale'] ?? $request->getSession()->getAdminLang()->getLocale();
+        $locale = $data['locale'] ?? ($request->hasSession()
+            ? $request->getSession()->getAdminLang()->getLocale()
+            : (LangQuery::create()->findOneByByDefault(true)?->getLocale() ?? 'en_US'));
 
         $blockGroup = (new BlockGroup())
             ->setVisible((int) (bool) ($payload['visible'] ?? false));
@@ -73,7 +75,9 @@ final class BlockGroupController extends BaseAdminController
     {
         $data = json_decode($request->getContent(), true) ?? [];
         $payload = $data['blockGroup'] ?? [];
-        $locale = $data['locale'] ?? $request->getSession()->getAdminLang()->getLocale();
+        $locale = $data['locale'] ?? ($request->hasSession()
+            ? $request->getSession()->getAdminLang()->getLocale()
+            : (LangQuery::create()->findOneByByDefault(true)?->getLocale() ?? 'en_US'));
         $id = $payload['id'] ?? null;
 
         if (null === $id) {

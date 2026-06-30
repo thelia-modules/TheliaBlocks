@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\HttpFoundation\Request;
+use Thelia\Model\LangQuery;
 use TheliaBlocks\Controller\Admin\Support\LegacyBlockGroupSerializer;
 use TheliaBlocks\Model\BlockGroupQuery;
 use TheliaBlocks\Model\ItemBlockGroup;
@@ -37,7 +38,10 @@ final class ItemBlockGroupController extends BaseAdminController
     {
         $data = json_decode($request->getContent(), true) ?? [];
         $payload = $data['itemBlockGroup'] ?? [];
-        $locale = $request->get('locale') ?? $request->getSession()->getAdminLang()->getLocale();
+        $requestedLocale = $request->attributes->get('locale', $request->query->get('locale', $request->request->get('locale')));
+        $locale = $requestedLocale ?? ($request->hasSession()
+            ? $request->getSession()->getAdminLang()->getLocale()
+            : (LangQuery::create()->findOneByByDefault(true)?->getLocale() ?? 'en_US'));
 
         $itemBlockGroup = (new ItemBlockGroup())
             ->setItemType((string) ($payload['itemType'] ?? ''))

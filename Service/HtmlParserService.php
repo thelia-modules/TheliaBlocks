@@ -13,6 +13,7 @@
 namespace TheliaBlocks\Service;
 
 use Symfony\Component\HttpFoundation\RequestStack;
+use Thelia\Model\LangQuery;
 use TheliaLibrary\Model\LibraryImage;
 use TheliaLibrary\Service\LibraryImageService;
 use TheliaLibrary\TheliaLibrary;
@@ -25,7 +26,10 @@ class HtmlParserService
         RequestStack $requestStack,
         protected readonly LibraryImageService $libraryImageService,
     ) {
-        $this->locale = $requestStack->getCurrentRequest()->getSession()->getLang(true)->getLocale();
+        $request = $requestStack->getCurrentRequest();
+        $this->locale = (null !== $request && $request->hasSession())
+            ? $request->getSession()->getLang(true)->getLocale()
+            : (LangQuery::create()->findOneByByDefault(true)?->getLocale() ?? 'en_US');
     }
 
     public function htmlToJsonBlocks($html, $mediaBaseUrl = null)
