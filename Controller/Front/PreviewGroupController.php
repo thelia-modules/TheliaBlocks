@@ -33,7 +33,7 @@ class PreviewGroupController extends BaseFrontController
     public function previewBlockGroup(Request $request)
     {
         return $this->render('thelia-blocks-preview', [
-            'json' => $request->get('json'),
+            'json' => $request->attributes->get('json', $request->query->get('json', $request->request->get('json'))),
         ]);
     }
 }

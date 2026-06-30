@@ -40,15 +40,15 @@ final class BlockGroupController extends BaseFrontController
     {
         $blockGroupQuery = BlockGroupQuery::create();
 
-        if (null !== $id = $request->get('id')) {
+        if (null !== $id = $request->attributes->get('id', $request->query->get('id', $request->request->get('id')))) {
             $blockGroupQuery->filterById((int) $id);
         }
 
-        if (null !== $slug = $request->get('slug')) {
+        if (null !== $slug = $request->attributes->get('slug', $request->query->get('slug', $request->request->get('slug')))) {
             $blockGroupQuery->filterBySlug($slug);
         }
 
-        $visibleParam = $request->get('visible');
+        $visibleParam = $request->attributes->get('visible', $request->query->get('visible', $request->request->get('visible')));
         if (null !== $visibleParam) {
             $blockGroupQuery->filterByVisible((bool) json_decode(strtolower((string) $visibleParam)));
         }
@@ -59,7 +59,7 @@ final class BlockGroupController extends BaseFrontController
             return $this->legacyJson(null, 404);
         }
 
-        $locale = $request->get('locale');
+        $locale = $request->attributes->get('locale', $request->query->get('locale', $request->request->get('locale')));
         $payload = LegacyBlockGroupSerializer::toArray($blockGroup, $locale);
 
         if (empty($payload['jsonContent'])) {
@@ -85,42 +85,42 @@ final class BlockGroupController extends BaseFrontController
     {
         $blockGroupQuery = BlockGroupQuery::create();
 
-        if (null !== $limit = $request->get('limit')) {
+        if (null !== $limit = $request->attributes->get('limit', $request->query->get('limit', $request->request->get('limit')))) {
             $blockGroupQuery->limit((int) $limit);
         }
 
-        if (null !== $offset = $request->get('offset')) {
+        if (null !== $offset = $request->attributes->get('offset', $request->query->get('offset', $request->request->get('offset')))) {
             $blockGroupQuery->offset((int) $offset);
         }
 
-        if (null !== $title = $request->get('title')) {
+        if (null !== $title = $request->attributes->get('title', $request->query->get('title', $request->request->get('title')))) {
             $blockGroupQuery
                 ->useBlockGroupI18nQuery()
                 ->filterByTitle('%'.$title.'%', Criteria::LIKE)
                 ->endUse();
         }
 
-        if (null !== $itemType = $request->get('itemType')) {
+        if (null !== $itemType = $request->attributes->get('itemType', $request->query->get('itemType', $request->request->get('itemType')))) {
             $itemBlockGroupQuery = $blockGroupQuery->useItemBlockGroupQuery()
                 ->filterByItemType($itemType);
 
-            if (null !== $itemId = $request->get('itemId')) {
+            if (null !== $itemId = $request->attributes->get('itemId', $request->query->get('itemId', $request->request->get('itemId')))) {
                 $itemBlockGroupQuery->filterByItemId((int) $itemId);
             }
 
             $itemBlockGroupQuery->endUse();
         }
 
-        $visibleParam = $request->get('visible');
+        $visibleParam = $request->attributes->get('visible', $request->query->get('visible', $request->request->get('visible')));
         if (null !== $visibleParam) {
             $blockGroupQuery->filterByVisible((bool) json_decode(strtolower((string) $visibleParam)));
         }
 
-        $order = $request->get('order');
+        $order = $request->attributes->get('order', $request->query->get('order', $request->request->get('order')));
         $blockGroupQuery->orderById('id' === $order ? Criteria::ASC : Criteria::DESC);
 
         $blockGroups = $blockGroupQuery->find();
-        $locale = $request->get('locale');
+        $locale = $request->attributes->get('locale', $request->query->get('locale', $request->request->get('locale')));
 
         $payload = array_map(
             static fn (BlockGroup $blockGroup): array => LegacyBlockGroupSerializer::toArray($blockGroup, $locale),
