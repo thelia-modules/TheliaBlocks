@@ -20,7 +20,6 @@ use Thelia\Core\Template\TemplateHelperInterface;
 use Thelia\Log\Tlog;
 use Thelia\Type\BooleanOrBothType;
 use TheliaBlocks\Model\BlockGroupQuery;
-use TwigEngine\Template\TwigParser;
 
 #[AsAlias(id: BlockRendererInterface::class, public: true)]
 class JsonBlockService implements BlockRendererInterface
@@ -42,10 +41,6 @@ class JsonBlockService implements BlockRendererInterface
                 $parser = $this->parserResolver->getParser($templateDefintion->getAbsolutePath().DS.'blocks', $block['type']['id']);
                 $parser->setTemplateDefinition($templateDefintion, true);
                 try {
-                    if ($parser instanceof TwigParser) {
-                        return $parser->renderString('blocks'.DS.$block['type']['id'].'.'.$parser->getFileExtension(), $block);
-                    }
-
                     return $parser->render('blocks'.DS.$block['type']['id'].'.'.$parser->getFileExtension(), $block);
                 } catch (\Throwable $th) {
                     Tlog::getInstance()->warning('Block template at path : blocks'.DS.$block['type']['id'].'.html not found');
