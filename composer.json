@@ -1,21 +1,19 @@
 {
   "name": "thelia/thelia-blocks-module",
   "description": "TheliaBlocks module for Thelia",
-  "license": "LGPL-3.0-or-later",
+  "license": "GPL-3.0-or-later",
   "type": "thelia-module",
   "require": {
-    "thelia/installer": "~1.1",
-    "thelia/short-code-module": "dev-twig",
-    "thelia/thelia-library-module": "dev-twig"
+    "thelia/installer": "^1.6",
+    "thelia/short-code-module": "^3.0",
+    "thelia/thelia-library-module": "^2.0"
   },
   "suggest": {
-    "thelia/twig-engine-module": "Enables Twig rendering of block groups in the front-office (dev-twig)."
+    "thelia/twig-engine-module": "Enables Twig rendering of block groups in the front-office."
   },
   "extra": {
     "installer-name": "TheliaBlocks"
   },
-  "minimum-stability": "dev",
-  "prefer-stable": true,
   "config": {
     "allow-plugins": {
       "thelia/installer": true
