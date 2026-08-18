@@ -38,7 +38,7 @@ class TheliaBlocks extends BaseModule
     public const FOLDER_LINK = 'folder_link';
     public const CONTENT_LINK = 'content_link';
 
-    public function update($currentVersion, $newVersion, ConnectionInterface $con = null): void
+    public function update($currentVersion, $newVersion, ?ConnectionInterface $con = null): void
     {
         $finder = Finder::create()
             ->name('*.sql')
@@ -56,7 +56,7 @@ class TheliaBlocks extends BaseModule
         }
     }
 
-    public function preActivation(ConnectionInterface $con = null): bool
+    public function preActivation(?ConnectionInterface $con = null): bool
     {
         if (!$this->getConfigValue('is_initialized', false)) {
             $database = new Database($con);
@@ -118,7 +118,7 @@ class TheliaBlocks extends BaseModule
             ->autoconfigure(true);
     }
 
-    public function postActivation(ConnectionInterface $con = null): void
+    public function postActivation(?ConnectionInterface $con = null): void
     {
         ShortCode::createNewShortCodeIfNotExist(self::BLOCK_GROUP_SHORT_CODE, self::BLOCK_GROUP_SHORT_CODE);
         ShortCode::createNewShortCodeIfNotExist(self::ADMIN_CSS_SHORTCODE, self::ADMIN_CSS_SHORTCODE);
