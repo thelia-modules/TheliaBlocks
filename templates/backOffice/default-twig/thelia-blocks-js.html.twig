@@ -1,0 +1,20 @@
+{# The editor bundle is built with React as an external global, so React has to be loaded first,
+   and synchronously: the pages mounting the editor do it from a deferred module script, which
+   runs once every classic script of the page has been executed. #}
+<script src="{{ module_asset('TheliaBlocks', 'vendor/react/react.production.min.js') }}"></script>
+<script src="{{ module_asset('TheliaBlocks', 'vendor/react/react-dom.production.min.js') }}"></script>
+<script src="{{ module_asset('TheliaBlocks', 'vendor/index.global.js') }}"></script>
+
+<script>
+    window.THELIA_BLOCKS_API_ROOT = {{ apiRoot|json_encode(constant('JSON_HEX_TAG'))|raw }};
+    window.THELIA_BLOCKS_LOCALES = {{ locales|json_encode(constant('JSON_HEX_TAG'))|raw }};
+</script>
+
+{{ hook('thelia.blocks.variables') }}
+{{ hook('thelia.blocks.plugins') }}
+
+{% for moduleCode, plugin in plugins %}
+    {% if plugin.js is defined %}
+        <script src="{{ module_asset(moduleCode, plugin.js) }}"></script>
+    {% endif %}
+{% endfor %}
