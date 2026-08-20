@@ -1,0 +1,12 @@
+{# Stylesheets of the bundled @thelia/blocks-editor UI, and of the modules extending it.
+   Everything is served from the module itself, so the back office needs no external host. #}
+<link rel="stylesheet" href="{{ module_asset('TheliaBlocks', 'vendor/index.css') }}">
+<link rel="stylesheet" href="{{ module_asset('TheliaBlocks', 'styles/styles.css') }}">
+
+{{ hook('thelia.blocks.plugincss') }}
+
+{% for moduleCode, plugin in plugins %}
+    {% if plugin.css is defined %}
+        <link rel="stylesheet" href="{{ module_asset(moduleCode, plugin.css) }}">
+    {% endif %}
+{% endfor %}
