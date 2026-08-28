@@ -46,6 +46,11 @@ class TheliaBlocksBackHook extends BaseHook
             'folder.tab' => [
                 ['type' => 'back', 'method' => 'onFolderTab'],
             ],
+            // Not "dealer.tab": the Dealer module named its own tab hook `dealer.additional`,
+            // and it has carried that name since the module shipped.
+            'dealer.additional' => [
+                ['type' => 'back', 'method' => 'onDealerTab'],
+            ],
             'main.head-css' => [
                 ['type' => 'back', 'method' => 'onMainCss'],
             ],
@@ -78,6 +83,15 @@ class TheliaBlocksBackHook extends BaseHook
     public function onFolderTab(HookRenderBlockEvent $event): void
     {
         $this->addTheliaBlocksConfigurationTab($event, 'folder');
+    }
+
+    /**
+     * The Dealer edit page names the store `dealer`, not `id` — its Smarty template passes that
+     * one alone — so the item id is read from it rather than left to the `id` fallback.
+     */
+    public function onDealerTab(HookRenderBlockEvent $event): void
+    {
+        $this->addTheliaBlocksConfigurationTab($event, 'dealer', $event->getArgument('dealer'));
     }
 
     public function onBlockItemConfiguration(HookRenderEvent $event): void
