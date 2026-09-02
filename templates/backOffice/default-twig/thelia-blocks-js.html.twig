@@ -10,6 +10,46 @@
     window.THELIA_BLOCKS_LOCALES = {{ locales|json_encode(constant('JSON_HEX_TAG'))|raw }};
 </script>
 
+{# The editor looks its labels up by the locale it runs with (fr_FR, turned into the fr-FR tag of its
+   IntlProvider) while its dictionaries are keyed by language code (fr): every label fell back to
+   English and the "Columns" layout group was named "undefined". Until the editor accepts both forms,
+   each language entry of the bundled blocks is aliased under both locale spellings. #}
+<script>
+    (function (editor, locales) {
+        var aliasDictionaries = function (plugin) {
+            ['title', 'description', 'layout'].forEach(function (key) {
+                var dictionary = plugin && plugin[key];
+                if (!dictionary || typeof dictionary !== 'object') {
+                    return;
+                }
+                locales.forEach(function (locale) {
+                    var language = locale.code.split('_')[0];
+                    if (dictionary[language] === undefined) {
+                        return;
+                    }
+                    [locale.code, locale.code.replace('_', '-')].forEach(function (spelling) {
+                        if (dictionary[spelling] === undefined) {
+                            dictionary[spelling] = dictionary[language];
+                        }
+                    });
+                });
+            });
+
+            return plugin;
+        };
+
+        // Only the bundled blocks are reachable: registerPlugin() is a sealed export, so the blocks
+        // other modules register keep the editor's own fallback (their default title).
+        Object.values(editor.blocks || {}).forEach(function (entry) {
+            if (entry && entry.type) {
+                aliasDictionaries(entry);
+            } else if (entry && typeof entry === 'object') {
+                Object.values(entry).forEach(aliasDictionaries);
+            }
+        });
+    })(window.TheliaBlocks, window.THELIA_BLOCKS_LOCALES);
+</script>
+
 {{ hook('thelia.blocks.variables') }}
 {{ hook('thelia.blocks.plugins') }}
 
