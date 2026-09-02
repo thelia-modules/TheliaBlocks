@@ -2,6 +2,10 @@
    Everything is served from the module itself, so the back office needs no external host. #}
 <link rel="stylesheet" href="{{ module_asset('TheliaBlocks', 'vendor/index.css') }}">
 <link rel="stylesheet" href="{{ module_asset('TheliaBlocks', 'styles/styles.css') }}">
+{# The editor draws its toolbar and block controls with Font Awesome classes and expects the host
+   back office to provide the font. The Twig back office ships Bootstrap Icons instead, so the module
+   embeds the glyphs it needs, scoped to the editor. #}
+<link rel="stylesheet" href="{{ module_asset('TheliaBlocks', 'styles/thelia-blocks-icons.css') }}">
 
 {{ hook('thelia.blocks.plugincss') }}
 
