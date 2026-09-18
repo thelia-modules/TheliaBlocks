@@ -13,11 +13,11 @@
 namespace TheliaBlocks\Service;
 
 use Propel\Runtime\ActiveQuery\Criteria;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 use Thelia\Core\Content\BlockRendererInterface;
 use Thelia\Core\Template\Parser\ParserResolver;
 use Thelia\Core\Template\TemplateHelperInterface;
-use Thelia\Log\Tlog;
 use Thelia\Type\BooleanOrBothType;
 use TheliaBlocks\Model\BlockGroupQuery;
 
@@ -27,6 +27,7 @@ class JsonBlockService implements BlockRendererInterface
     public function __construct(
         private ParserResolver $parserResolver,
         private TemplateHelperInterface $templateHelper,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -38,18 +39,29 @@ class JsonBlockService implements BlockRendererInterface
         $templateDefintion = $this->templateHelper->getActiveFrontTemplate();
         try {
             $blockRenders = array_map(function ($block) use ($templateDefintion) {
-                $parser = $this->parserResolver->getParser($templateDefintion->getAbsolutePath().DS.'blocks', $block['type']['id']);
-                $parser->setTemplateDefinition($templateDefintion, true);
+                $templateName = 'blocks'.DS.$block['type']['id'];
+
                 try {
-                    return $parser->render('blocks'.DS.$block['type']['id'].'.'.$parser->getFileExtension(), $block);
+                    // The template path is the theme, not its blocks directory: a parser reads the
+                    // template type off the parent directory of the path it is given, and only then
+                    // looks at the directories modules contribute. Passing `<theme>/blocks` hides
+                    // that type behind the theme name, and the block templates this module ships
+                    // for the default theme are never reached.
+                    $parser = $this->parserResolver->getParser($templateDefintion->getAbsolutePath(), $templateName);
+                    $parser->setTemplateDefinition($templateDefintion, true);
+
+                    return $parser->render($templateName.'.'.$parser->getFileExtension(), $block);
                 } catch (\Throwable $th) {
-                    Tlog::getInstance()->warning('Block template at path : blocks'.DS.$block['type']['id'].'.html not found');
+                    // Resolution and rendering are both inside: a block type no template answers
+                    // used to escape this block from getParser() and take the whole page down with
+                    // it, rather than dropping the one block that cannot be drawn.
+                    $this->logger->warning('Block template not found: '.$templateName);
 
                     return '';
                 }
             }, json_decode($json, true, 512, \JSON_THROW_ON_ERROR));
         } catch (\JsonException $e) {
-            Tlog::getInstance()->error('Error while decoding json : '.$e->getMessage());
+            $this->logger->error('Error while decoding json: '.$e->getMessage());
 
             return '';
         }

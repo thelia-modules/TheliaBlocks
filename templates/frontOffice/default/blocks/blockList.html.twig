@@ -1,0 +1,5 @@
+<{{ data.type|default("ul") }} class="tb-{{ type.id }}">
+    {% for value in data.values|default([]) %}
+        <li>{{ value|raw }}</li>
+    {% endfor %}
+</{{ data.type|default("ul") }}>

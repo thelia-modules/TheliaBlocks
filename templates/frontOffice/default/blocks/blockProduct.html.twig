@@ -1,0 +1,16 @@
+<div class="tb-{{ type.id }}">
+    {% for productId in data.productList|default([]) %}
+        {% for product in loop("tb_product_" ~ productId, "product", { id: productId }) %}
+            <a href="{{ product.URL }}">
+                <figure tabindex="-1">
+                    {% for image in loop("tb_product_image_" ~ productId, "image", { product: product.ID, width: 150, height: 150, resize_mode: "borders", limit: 1 }) %}
+                        <img src="{{ image.IMAGE_URL }}" alt="{{ product.TITLE }}" loading="lazy" width="150" height="150">
+                    {% endfor %}
+                </figure>
+                <div>{{ product.TITLE }}</div>
+                {% if product.CHAPO %}<div>{{ product.CHAPO|raw }}</div>{% endif %}
+                <div>{{ format_money(product.BEST_TAXED_PRICE) }}</div>
+            </a>
+        {% endfor %}
+    {% endfor %}
+</div>

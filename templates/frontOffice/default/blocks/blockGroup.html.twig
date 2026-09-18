@@ -1,0 +1,11 @@
+<div class="tb-{{ type.id }}">
+    {% for item in data.content|default([]) %}
+        <div data-tb-contain="{{ item|map(b => b.type.id|default(""))|join(" ") }}">
+            {% for block in item %}
+                {% if block.type.id|default(false) %}
+                    {{ include("blocks/" ~ block.type.id ~ ".html.twig", { data: block.data, type: block.type }, with_context = false, ignore_missing = true) }}
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>

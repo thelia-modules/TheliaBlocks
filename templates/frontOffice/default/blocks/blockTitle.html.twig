@@ -1,0 +1,7 @@
+{% if data.text %}
+    {% if data.level %}
+        <h{{ data.level }} class="tb-{{ type.id }}">{{ data.text|raw }}</h{{ data.level }}>
+    {% else %}
+        <p class="tb-{{ type.id }}">{{ data.text|raw }}</p>
+    {% endif %}
+{% endif %}
