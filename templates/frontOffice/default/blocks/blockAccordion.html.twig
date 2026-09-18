@@ -1,0 +1,15 @@
+<div class="tb-{{ type.id }}">
+    {% if data.title is defined %}<div>{{ data.title }}</div>{% endif %}
+    {% for item in data.group|default([]) %}
+        <details>
+            <summary>{{ item.title|default("") }}</summary>
+            <div data-tb-contain="{{ item.content|default([])|map(b => b.type.id|default(""))|join(" ") }}">
+                {% for block in item.content|default([]) %}
+                    {% if block.type.id|default(false) %}
+                        {{ include("blocks/" ~ block.type.id ~ ".html.twig", { data: block.data, type: block.type }, with_context = false, ignore_missing = true) }}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </details>
+    {% endfor %}
+</div>

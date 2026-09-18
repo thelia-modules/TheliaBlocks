@@ -1,0 +1,14 @@
+<div class="tb-{{ type.id }}">
+    {% for categoryId in data.categoryList|default([]) %}
+        {% for category in loop("tb_category_" ~ categoryId, "category", { id: categoryId }) %}
+            <a href="{{ category.URL }}">
+                <figure tabindex="-1">
+                    {% for image in loop("tb_category_image_" ~ categoryId, "image", { category: category.ID, width: 150, height: 150, resize_mode: "borders", limit: 1 }) %}
+                        <img src="{{ image.IMAGE_URL }}" alt="{{ category.TITLE }}" loading="lazy" width="150" height="150">
+                    {% endfor %}
+                </figure>
+                <div>{{ category.TITLE }}</div>
+            </a>
+        {% endfor %}
+    {% endfor %}
+</div>
