@@ -12,13 +12,13 @@
 
 namespace TheliaBlocks\EventListeners;
 
+use Psr\Log\LoggerInterface;
 use ShortCode\Event\ShortCodeEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Thelia\Core\HttpFoundation\Request;
 use Thelia\Core\Template\Parser\ParserResolver;
 use Thelia\Core\Template\ParserInterface;
-use Thelia\Log\Tlog;
 use Thelia\Model\CategoryQuery;
 use Thelia\Model\ContentQuery;
 use Thelia\Model\FolderQuery;
@@ -37,7 +37,8 @@ class ShortCodeListener implements EventSubscriberInterface
      */
     public function __construct(
         protected RequestStack $requestStack,
-        protected ParserResolver $parserResolver
+        protected ParserResolver $parserResolver,
+        protected LoggerInterface $logger,
     ) {
         $this->request = $requestStack->getCurrentRequest();
         $this->parser = $this->parserResolver->getCurrentParser();
@@ -68,7 +69,7 @@ class ShortCodeListener implements EventSubscriberInterface
             ->findOne();
 
         if (null === $blockGroup) {
-            Tlog::getInstance()->warning("Block group with slug $blockGroupSlug not found");
+            $this->logger->warning("Block group with slug $blockGroupSlug not found");
 
             return;
         }

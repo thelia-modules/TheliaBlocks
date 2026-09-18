@@ -13,11 +13,11 @@
 namespace TheliaBlocks\Service;
 
 use Propel\Runtime\ActiveQuery\Criteria;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 use Thelia\Core\Content\BlockRendererInterface;
 use Thelia\Core\Template\Parser\ParserResolver;
 use Thelia\Core\Template\TemplateHelperInterface;
-use Thelia\Log\Tlog;
 use Thelia\Type\BooleanOrBothType;
 use TheliaBlocks\Model\BlockGroupQuery;
 
@@ -27,6 +27,7 @@ class JsonBlockService implements BlockRendererInterface
     public function __construct(
         private ParserResolver $parserResolver,
         private TemplateHelperInterface $templateHelper,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -54,13 +55,13 @@ class JsonBlockService implements BlockRendererInterface
                     // Resolution and rendering are both inside: a block type no template answers
                     // used to escape this block from getParser() and take the whole page down with
                     // it, rather than dropping the one block that cannot be drawn.
-                    Tlog::getInstance()->warning('Block template not found: '.$templateName);
+                    $this->logger->warning('Block template not found: '.$templateName);
 
                     return '';
                 }
             }, json_decode($json, true, 512, \JSON_THROW_ON_ERROR));
         } catch (\JsonException $e) {
-            Tlog::getInstance()->error('Error while decoding json : '.$e->getMessage());
+            $this->logger->error('Error while decoding json: '.$e->getMessage());
 
             return '';
         }
