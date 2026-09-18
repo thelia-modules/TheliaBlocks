@@ -38,12 +38,23 @@ class JsonBlockService implements BlockRendererInterface
         $templateDefintion = $this->templateHelper->getActiveFrontTemplate();
         try {
             $blockRenders = array_map(function ($block) use ($templateDefintion) {
-                $parser = $this->parserResolver->getParser($templateDefintion->getAbsolutePath().DS.'blocks', $block['type']['id']);
-                $parser->setTemplateDefinition($templateDefintion, true);
+                $templateName = 'blocks'.DS.$block['type']['id'];
+
                 try {
-                    return $parser->render('blocks'.DS.$block['type']['id'].'.'.$parser->getFileExtension(), $block);
+                    // The template path is the theme, not its blocks directory: a parser reads the
+                    // template type off the parent directory of the path it is given, and only then
+                    // looks at the directories modules contribute. Passing `<theme>/blocks` hides
+                    // that type behind the theme name, and the block templates this module ships
+                    // for the default theme are never reached.
+                    $parser = $this->parserResolver->getParser($templateDefintion->getAbsolutePath(), $templateName);
+                    $parser->setTemplateDefinition($templateDefintion, true);
+
+                    return $parser->render($templateName.'.'.$parser->getFileExtension(), $block);
                 } catch (\Throwable $th) {
-                    Tlog::getInstance()->warning('Block template at path : blocks'.DS.$block['type']['id'].'.html not found');
+                    // Resolution and rendering are both inside: a block type no template answers
+                    // used to escape this block from getParser() and take the whole page down with
+                    // it, rather than dropping the one block that cannot be drawn.
+                    Tlog::getInstance()->warning('Block template not found: '.$templateName);
 
                     return '';
                 }
