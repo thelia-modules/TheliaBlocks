@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Thelia blocks'|trans({}, 'theliablocks') }}{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block body %}
+    {{ getTheliaBLocksRenderedContent(json)|raw }}
+{% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block modals %}{% endblock %}

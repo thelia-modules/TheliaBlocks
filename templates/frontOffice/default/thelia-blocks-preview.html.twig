@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ attr('config', 'store_name') }}{% endblock %}
+
+{% block body_class %}page-home{% endblock %}
+
+{% block body %}
+    {{ getTheliaBLocksRenderedContent(json)|raw }}
+{% endblock %}
