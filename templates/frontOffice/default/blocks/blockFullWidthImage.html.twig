@@ -1,0 +1,20 @@
+{% set link = data.link|default(null) %}
+{% set hasLink = link is not empty and link.url|default('') is not empty %}
+<div class="tb-{{ type.id }}" style="width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; max-width: initial;">
+    {% if hasLink %}
+        <a href="{{ link.url }}"{% if link.target|default('') is not empty %} target="{{ link.target }}"{% endif %}>
+    {% endif %}
+    {% if data.id is defined %}
+        {% for image in getImagesData({source_type: 'library', img_id: data.id, filters: 'default'}) %}
+            {% set source = image.sources|first %}
+            {% if source.url|default('') is not empty %}
+                <img src="{{ source.url }}" alt="{{ image.data.title|default('') }}" style="width: 100%;"/>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <img src="{{ data.url|default('') }}" alt="{{ data.alt|default('') }}"{% if data.width|default('') is not empty %} width="{{ data.width }}"{% endif %}{% if data.height|default('') is not empty %} height="{{ data.height }}"{% endif %} style="width: 100%;"/>
+    {% endif %}
+    {% if hasLink %}
+        </a>
+    {% endif %}
+</div>
