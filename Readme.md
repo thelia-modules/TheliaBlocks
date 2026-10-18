@@ -21,11 +21,11 @@ Vous êtes évidemment libre de structurer votre module comme vous le souhaitez.
 │   ├── Config/
 │   │	├── module.xml
 │   │   └── config.xml
-│   ├── Hook/
-│   │   └── BackHook.php
+│   ├── EventListeners/
+│   │   └── TheliaBlocksPluginListener.php
 │   └── templates/
 │   │	├── frontOffice/default/blocks/
-│   │	│	├── blockCitation.html
+│   │	│	├── blockCitation.html.twig
 │   │   │	└── ...
 │   │   └── backOffice/default/
 │   │   │	├── src/
@@ -237,49 +237,58 @@ export default defineConfig([
 ]);
 ```
 
-#### 4.3 - Création des template Smarty
+#### 4.3 - Déclaration des assets du plugin
 
-```smarty
-<!-- ./templates/backOffice/default/import-plugin.html -->
+Thelia Blocks charge les assets des plugins déclarés via l'événement `TheliaBlocksPluginsListEvent::THELIA_BLOCKS_PLUGINS`. Chaque plugin est identifié par le code de son module et pointe vers ses fichiers JS et CSS, relatifs au dossier `templates/backOffice/default` du module.
 
-<script src="{encore_module_asset file='dist/index.global.js' module="ModuleCitation"}"></script>
+```php
+<?php
+// ./EventListeners/TheliaBlocksPluginListener.php
+
+namespace ModuleCitation\EventListeners;
+
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use TheliaBlocks\Event\TheliaBlocksPluginsListEvent;
+
+class TheliaBlocksPluginListener implements EventSubscriberInterface
+{
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            TheliaBlocksPluginsListEvent::THELIA_BLOCKS_PLUGINS => ['registerPlugin'],
+        ];
+    }
+
+    public function registerPlugin(TheliaBlocksPluginsListEvent $event): void
+    {
+        $event->addPlugin('ModuleCitation', [
+            'js' => 'dist/index.global.js',
+            'css' => 'dist/index.css',
+        ]);
+    }
+}
 ```
 
-#### 4.4 - Rendu des templates avec les hooks Thelia
+La clé `css` est facultative.
 
-Thelia Blocks utilise deux principaux event pour fonctionner :
-
-- `thelia.blocks.plugins` : permet d'ajouter des plugins à Thelia Blocks
-- `thelia.blocks.plugincss` : permet d'injecter du CSS dans les plugins
-
-```xml
-<!-- ./Config/config.xml -->
-
-<hooks>
-  <hook id="modulecitation.hook">
-    <tag name="hook.event_listener" event="thelia.blocks.plugins" type="back" render="import-plugin.html" />
-  </hook>
-</hooks>
-```
-
-### 5 - Création du rendu Smarty
+### 5 - Création du rendu Twig
 
 Votre plugin est désormais disponible dans Thelia Blocks, la dernière étape consiste à définir la structure HTML qu'il doit générer une fois que Thelia l'affichera sur votre site.
 
 #### 5.1 - Création de votre rendu
 
-Pour commencer, créez un fichier nommé `"[id_du_plugin].html"` dans le dossier `./templates/frontOffice/default/blocks`
+Pour commencer, créez un fichier nommé `"[id_du_plugin].html.twig"` dans le dossier `./templates/frontOffice/default/blocks`
 
 L'ID a été défini dans la structure du plugin, il est important que votre fichier ai exactement le même nom que l'id, sinon Thelia ne trouvera pas votre plugin et rien ne sera affiché.
 
 Exemple :
 
-```smarty
-<!-- ./templates/frontOffice/default/blocks/blockQuote.html -->
+```twig
+{# ./templates/frontOffice/default/blocks/blockQuote.html.twig #}
 
-<figure class="tb-{$type["id"]}">
-  <blockquote>{$data["quote"]}</blockquote>
-  <figcaption>-{$data["author"]}</figcaption>
+<figure class="tb-{{ type.id }}">
+  <blockquote>{{ data.quote }}</blockquote>
+  <figcaption>-{{ data.author }}</figcaption>
 </figure>
 ```
 

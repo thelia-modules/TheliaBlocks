@@ -13,6 +13,7 @@
 namespace TheliaBlocks\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Template\TemplateDefinition;
@@ -83,7 +84,7 @@ class ConfigurationController extends BaseAdminController
             }
         }
 
-        throw $this->createNotFoundException(
+        throw new NotFoundHttpException(
             sprintf('Template %s cannot be found for module %s.', $templateName, TheliaBlocks::getModuleCode())
         );
     }

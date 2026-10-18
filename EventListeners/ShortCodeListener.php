@@ -17,31 +17,28 @@ use ShortCode\Event\ShortCodeEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Thelia\Core\HttpFoundation\Request;
-use Thelia\Core\Template\Parser\ParserResolver;
-use Thelia\Core\Template\ParserInterface;
 use Thelia\Model\CategoryQuery;
 use Thelia\Model\ContentQuery;
 use Thelia\Model\FolderQuery;
 use Thelia\Model\Lang;
 use Thelia\Model\ProductQuery;
 use TheliaBlocks\Model\BlockGroupQuery;
+use TheliaBlocks\Service\JsonBlockService;
 use TheliaBlocks\TheliaBlocks;
 
 class ShortCodeListener implements EventSubscriberInterface
 {
     protected ?Request $request = null;
-    protected ?ParserInterface $parser = null;
 
     /**
      * @throws \Exception
      */
     public function __construct(
         protected RequestStack $requestStack,
-        protected ParserResolver $parserResolver,
+        protected JsonBlockService $jsonBlockService,
         protected LoggerInterface $logger,
     ) {
         $this->request = $requestStack->getCurrentRequest();
-        $this->parser = $this->parserResolver->getCurrentParser();
     }
 
     public static function getSubscribedEvents(): array
@@ -79,27 +76,11 @@ class ShortCodeListener implements EventSubscriberInterface
             : Lang::getDefaultLanguage();
         $blockGroup->setLocale($lang->getLocale());
 
-        $blocks = json_decode($blockGroup->getJsonContent(), true);
-
-        if (!\is_array($blocks)) {
+        if (!\is_array(json_decode($blockGroup->getJsonContent(), true))) {
             return;
         }
 
-        // Todo return the raw value of block group
-        $raw = isset($attributes['raw']) && (bool) json_decode(strtolower($attributes['raw'])) === true;
-
-        if ($raw) {
-            $event->setResult($this->parser->render('blocks/rawBlockGroup.html', compact('blocks')));
-
-            return;
-        }
-
-        $blockRenders = [];
-        foreach ($blocks as $block) {
-            $blockRenders[] = $this->parser->render('blocks' . DS . $block['type']['id'] . '.html', $block);
-        }
-
-        $event->setResult(implode(' ', $blockRenders));
+        $event->setResult($this->jsonBlockService->renderJsonBlocks($blockGroup->getJsonContent()));
     }
 
     public function renderProductLink(ShortCodeEvent $event): void
