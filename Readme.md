@@ -21,8 +21,8 @@ Vous êtes évidemment libre de structurer votre module comme vous le souhaitez.
 │   ├── Config/
 │   │	├── module.xml
 │   │   └── config.xml
-│   ├── Hook/
-│   │   └── BackHook.php
+│   ├── EventListeners/
+│   │   └── TheliaBlocksPluginListener.php
 │   └── templates/
 │   │	├── frontOffice/default/blocks/
 │   │	│	├── blockCitation.html.twig
