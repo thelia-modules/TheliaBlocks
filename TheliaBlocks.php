@@ -13,6 +13,7 @@
 namespace TheliaBlocks;
 
 use Propel\Runtime\Connection\ConnectionInterface;
+use Propel\Runtime\Propel;
 use ShortCode\ShortCode;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ServicesConfigurator;
 use Symfony\Component\Finder\Finder;
@@ -52,14 +53,20 @@ class TheliaBlocks extends BaseModule
         }
     }
 
+    /**
+     * Create the tables on a fresh install.
+     *
+     * The install script starts with DROP TABLE, so it only runs when the tables are missing.
+     * The database is asked rather than an "is_initialized" flag in the module configuration:
+     * a shop whose tables were created another way, or whose configuration was lost, would
+     * otherwise have every block group wiped by a mere reactivation.
+     */
     public function preActivation(?ConnectionInterface $con = null): bool
     {
-        if (!$this->getConfigValue('is_initialized', false)) {
-            $database = new Database($con);
+        $con ??= Propel::getWriteConnection('TheliaMain');
 
-            $database->insertSql(null, [__DIR__.'/Config/TheliaMain.sql']);
-
-            $this->setConfigValue('is_initialized', true);
+        if (!$this->hasTable($con, 'block_group')) {
+            (new Database($con))->insertSql(null, [__DIR__.'/Config/TheliaMain.sql']);
         }
 
         return true;
@@ -109,6 +116,7 @@ class TheliaBlocks extends BaseModule
                 __DIR__ . '/I18n/*',
                 __DIR__ . '/Config/**/*.php',
                 __DIR__ . '/TheliaBlocks.php',
+                __DIR__ . '/Tests/*',
             ])
             ->autowire(true)
             ->autoconfigure(true);
@@ -121,5 +129,13 @@ class TheliaBlocks extends BaseModule
         ShortCode::createNewShortCodeIfNotExist(self::PRODUCT_LINK, self::PRODUCT_LINK);
         ShortCode::createNewShortCodeIfNotExist(self::FOLDER_LINK, self::FOLDER_LINK);
         ShortCode::createNewShortCodeIfNotExist(self::CONTENT_LINK, self::CONTENT_LINK);
+    }
+
+    private function hasTable(ConnectionInterface $con, string $table): bool
+    {
+        $statement = $con->prepare('SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :table');
+        $statement->execute(['table' => $table]);
+
+        return (int) $statement->fetchColumn() > 0;
     }
 }
