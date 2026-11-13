@@ -11,5 +11,6 @@
  */
 
 return [
+    'Content blocks' => 'Blocs de contenus',
     // 'an english string' => 'La traduction française de la chaine',
 ];

@@ -11,5 +11,6 @@
  */
 
 return [
+    'Content blocks' => 'Content blocks',
     // 'an english string' => 'The displayed english string',
 ];
